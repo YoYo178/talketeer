@@ -63,6 +63,9 @@ importers:
       '@types/cookie-parser':
         specifier: ^1.4.9
         version: 1.4.9(@types/express@5.0.3)
+      '@types/express':
+        specifier: ^5.0.3
+        version: 5.0.3
       '@types/find':
         specifier: ^0.2.4
         version: 0.2.4
