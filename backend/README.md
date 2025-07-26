@@ -18,48 +18,48 @@ app.use(helmet());
 
 ## Available Scripts
 
-### `npm run clean-install`
+### `pnpm run clean-install`
 
 Remove the existing `node_modules/` folder, `package-lock.json`, and reinstall all library modules.
 
 
-### `npm run dev` or `npm run dev:hot` (hot reloading)
+### `pnpm run dev` or `pnpm run dev:hot` (hot reloading)
 
 Run the server in development mode.<br/>
 
-**IMPORTANT** development mode uses `swc` for performance reasons which DOES NOT check for typescript errors. Run `npm run type-check` to check for type errors. NOTE: you should use your IDE to prevent most type errors.
+**IMPORTANT** development mode uses `swc` for performance reasons which DOES NOT check for typescript errors. Run `pnpm run type-check` to check for type errors. NOTE: you should use your IDE to prevent most type errors.
 
 
-### `npm test` or `npm run test:hot` (hot reloading)
+### `pnpm test` or `pnpm run test:hot` (hot reloading)
 
 Run all unit-tests.
 
 
-### `npm test -- "name of test file" (i.e. users).`
+### `pnpm test -- "name of test file" (i.e. users).`
 
 Run a single unit-test.
 
 
-### `npm run lint`
+### `pnpm run lint`
 
 Check for linting errors.
 
 
-### `npm run build`
+### `pnpm run build`
 
 Build the project for production.
 
 
-### `npm start`
+### `pnpm start`
 
 Run the production build (Must be built first).
 
 
-### `npm run type-check`
+### `pnpm run type-check`
 
 Check for typescript errors.
 
 
 ## Additional Notes
 
-- If `npm run dev` gives you issues with bcrypt on MacOS you may need to run: `npm rebuild bcrypt --build-from-source`. 
+- If `pnpm run dev` gives you issues with bcrypt on MacOS you may need to run: `pnpm rebuild bcrypt --build-from-source`. 
