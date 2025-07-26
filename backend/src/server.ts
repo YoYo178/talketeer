@@ -3,7 +3,7 @@ import helmet from 'helmet';
 import express from 'express';
 
 import ENV from '@src/common/constants/ENV';
-import { NodeEnvs } from '@src/common/constants';
+import { NodeEnvs } from '@src/common/constants/constants';
 
 
 /******************************************************************************
