@@ -5,6 +5,7 @@ import express from 'express';
 import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
 
+import APIRouter from './routes';
 
 /******************************************************************************
                                 Setup
@@ -32,6 +33,7 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
   }
 }
 
+app.use('/api', APIRouter);
 /******************************************************************************
                                 Export default
 ******************************************************************************/
