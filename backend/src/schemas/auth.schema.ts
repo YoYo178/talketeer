@@ -18,4 +18,4 @@ export const signupSchema = z.object({
     password: z.string().min(8)
 })
 
-export type TSignUpBody = z.infer<typeof loginSchema>
+export type TSignUpBody = z.infer<typeof signupSchema>
