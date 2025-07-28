@@ -5,6 +5,8 @@ import express from 'express';
 import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
 
+import { errorHandler } from './middlewares';
+
 import APIRouter from './routes';
 
 /******************************************************************************
@@ -34,6 +36,8 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
 }
 
 app.use('/api', APIRouter);
+app.use(errorHandler);
+
 /******************************************************************************
                                 Export default
 ******************************************************************************/
