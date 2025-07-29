@@ -14,6 +14,9 @@ const ENV = jetEnv({
 
   /** MongoDB */
   MongodbUri: str,
+
+  AccessTokenSecret: str,
+  RefreshTokenSecret: str,
 });
 
 
