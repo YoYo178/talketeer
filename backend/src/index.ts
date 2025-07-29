@@ -3,6 +3,7 @@ import logger from 'jet-logger';
 import ENV from '@src/common/ENV';
 import server from './server';
 
+import { connectDB } from './config';
 
 /******************************************************************************
                                 Constants
@@ -16,6 +17,8 @@ const SERVER_START_MSG = (
 /******************************************************************************
                                   Run
 ******************************************************************************/
+
+connectDB()
 
 // Start the server
 server.listen(ENV.Port, err => {
