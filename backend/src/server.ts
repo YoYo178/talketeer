@@ -1,12 +1,14 @@
 import morgan from 'morgan';
 import helmet from 'helmet';
 import express from 'express';
+import cors from 'cors';
 
 import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
 
-import { errorHandler } from './middlewares';
 
+import { CORSConfig } from './config';
+import { errorHandler } from './middlewares';
 import APIRouter from './routes';
 
 /******************************************************************************
@@ -17,6 +19,8 @@ const app = express();
 
 
 // **** Middleware **** //
+
+app.use(cors(CORSConfig))
 
 // Basic middleware
 app.use(express.json());
