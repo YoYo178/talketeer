@@ -1,11 +1,6 @@
+import { ValidationSchemas } from "@src/types";
 import type { Request, Response, NextFunction } from "express"
-import { z, type ZodError, type ZodType } from "zod"
-
-interface ValidationSchemas {
-    body?: ZodType;
-    query?: ZodType;
-    params?: ZodType;
-}
+import type { ZodError } from "zod"
 
 export const validate = (schemas: ValidationSchemas) => {
     return (req: Request, res: Response, next: NextFunction) => {
