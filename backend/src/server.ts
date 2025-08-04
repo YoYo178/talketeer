@@ -2,6 +2,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
@@ -25,6 +26,8 @@ app.use(cors(CORSConfig))
 // Basic middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser())
 
 // Show routes called in console during development
 if (ENV.NodeEnv === NodeEnvs.Dev) {
