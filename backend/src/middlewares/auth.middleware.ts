@@ -6,7 +6,7 @@ import HttpStatusCodes from "@src/common/HttpStatusCodes";
 
 import { cookieConfig, tokenConfig } from "@src/config";
 import { User } from "@src/models";
-import { IUser, TalketeerSocket } from "@src/types";
+import { TalketeerSocket, TVerifyAuthReturn } from "@src/types";
 import { generateAccessToken, verifyAccessToken, verifyRefreshToken } from "@src/utils";
 
 const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<TVerifyAuthReturn> => {
