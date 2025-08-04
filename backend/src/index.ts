@@ -1,9 +1,13 @@
+import http from 'http';
 import logger from 'jet-logger';
+import { Server as SocketIOServer } from 'socket.io';
 
 import ENV from '@src/common/ENV';
-import server from './server';
+import app from './server';
 
-import { connectDB } from './config';
+import { connectDB, CORSConfig } from './config';
+import { setupSocket } from './sockets/socket';
+import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './types';
 
 /******************************************************************************
                                 Constants
@@ -20,11 +24,17 @@ const SERVER_START_MSG = (
 
 connectDB()
 
+const server = http.createServer(app);
+
+// Setup Socket.IO on the same server
+const io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
+  cors: CORSConfig,
+  serveClient: false
+});
+
+setupSocket(io);
+
 // Start the server
-server.listen(ENV.Port, err => {
-  if (!!err) {
-    logger.err(err.message);
-  } else {
-    logger.info(SERVER_START_MSG);
-  }
+server.listen(ENV.Port, () => {
+  logger.info(SERVER_START_MSG);
 });
