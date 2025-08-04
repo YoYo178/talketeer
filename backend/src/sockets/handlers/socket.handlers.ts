@@ -1,12 +1,12 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
 
 export function registerSocketHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
     socket.on('disconnect', (reason, description) => {
-        console.log(`${socket.id} disconnected`);
+        console.log(`${socket.data.user.username} disconnected`);
     });
 
     socket.on('disconnecting', (reason, description) => {
-        console.log(`${socket.id} disconnecting`)
+        console.log(`${socket.data.user.username} disconnecting`)
     });
 
     socket.on('error', (err) => {
