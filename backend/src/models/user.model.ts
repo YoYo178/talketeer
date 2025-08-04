@@ -1,5 +1,5 @@
 import { IUser, IUserFriend } from "@src/types";
-import { MongooseModel } from "@src/utils/db.utils";
+import { MongooseModel } from "@src/utils";
 import mongoose from "mongoose";
 
 const userFriendSchema = new mongoose.Schema<IUserFriend>({
