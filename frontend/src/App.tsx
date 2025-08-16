@@ -13,6 +13,7 @@ function App() {
         <RootLayout>
           <Routes>
             <Route index element={<LandingPage />} />
+            <Route path='/auth' element={<Auth />} />
           </Routes>
         </RootLayout>
       </BrowserRouter>

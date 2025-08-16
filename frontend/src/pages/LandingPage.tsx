@@ -12,7 +12,7 @@ export const LandingPage = () => {
             <p className="text-muted-foreground text-center max-w-md mb-8">
                 Real-time chat made simple. Connect with friends, join rooms, and share your thoughts instantly.
             </p>
-            <Button size="lg" className="px-8 text-lg cursor-pointer" onClick={() => navigate('/login')}>
+            <Button size="lg" className="px-8 text-lg cursor-pointer" onClick={() => navigate('/auth')}>
                 Get Started
             </Button>
         </div>
