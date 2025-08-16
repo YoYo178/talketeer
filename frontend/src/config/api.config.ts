@@ -27,6 +27,10 @@ export const APIEndpoints: Endpoints = {
         METHOD: 'POST',
         URL: '/auth/signup'
     },
+    CHECK_EMAIL: {
+        METHOD: 'POST',
+        URL: '/auth/check-email'
+    },
 
     // Friend routes
     SEND_FRIEND_REQUEST: {

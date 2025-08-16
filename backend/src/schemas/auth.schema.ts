@@ -8,6 +8,13 @@ export const loginSchema = z.object({
 
 export type TLoginBody = z.infer<typeof loginSchema>
 
+// CheckEmail
+export const checkEmailSchema = z.object({
+    email: z.email()
+})
+
+export type TCheckEmailBody = z.infer<typeof checkEmailSchema>
+
 // Sign-up
 export const signupSchema = z.object({
     username: z.string().nonempty(),

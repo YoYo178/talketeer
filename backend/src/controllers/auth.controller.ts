@@ -4,9 +4,32 @@ import type { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 
 import { User } from "@src/models";
-import { TLoginBody, TSignUpBody } from "@src/schemas";
+import { TCheckEmailBody, TLoginBody, TSignUpBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
+
+export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
+    // Enforce types
+    const { email } = req.body as TCheckEmailBody;
+
+    // Fetch the user with the given email
+    const user = await User.findOne({ email }).select('-password').lean().exec();
+
+    // If the user does not exist, respond with a 404 Not Found
+    if (!user) {
+        res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'No user exists with the specified email.' });
+        return;
+    }
+
+    // If the user does exist, respond with a 200 OK
+    res.status(HttpStatusCodes.OK).json({
+        success: true,
+        message: 'User exists',
+        data: {
+            user: { email }
+        }
+    });
+}
 
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body as TLoginBody;
