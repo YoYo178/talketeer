@@ -22,7 +22,8 @@ export interface IUser {
     email: string;
 
     /** User's password hash */
-    passwordHash: string;
+    // We don't need this at the frontend :)
+    // passwordHash: string;
 
     /** User's bio */
     bio: string;
