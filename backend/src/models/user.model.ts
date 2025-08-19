@@ -17,6 +17,8 @@ const userSchema = new mongoose.Schema<IUser>({
 
     passwordHash: { type: String, required: true },
 
+    role: { type: String, required: false, default: 'user' },
+
     bio: { type: String, required: false, default: '' },
     avatarURL: { type: String, required: false, default: '' },
 

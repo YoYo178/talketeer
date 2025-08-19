@@ -1,6 +1,5 @@
 import { ObjectId } from "mongoose";
 
-
 export interface IUserFriend {
     userId: ObjectId;
     status: 'confirmed' | 'pending';
@@ -24,6 +23,9 @@ export interface IUser {
 
     /** User's password hash */
     passwordHash: string;
+
+    /** User's global role */
+    role: 'admin' | 'user';
 
     /** User's bio */
     bio: string;
