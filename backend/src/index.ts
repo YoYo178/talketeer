@@ -8,6 +8,7 @@ import app from './server';
 import { connectDB, CORSConfig } from './config';
 import { setupSocket } from './sockets/socket';
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './types';
+import { populateRoomData } from './utils/room.utils';
 
 /******************************************************************************
                                 Constants
@@ -37,4 +38,6 @@ setupSocket(io);
 // Start the server
 server.listen(ENV.Port, () => {
   logger.info(SERVER_START_MSG);
+
+  populateRoomData();
 });
