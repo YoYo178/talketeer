@@ -1,8 +1,10 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
+import { Room } from "@src/models";
 import type { Request, Response, NextFunction } from "express";
 
-export const getAllRooms = (req: Request, res: Response, next: NextFunction) => {
-    res.status(HttpStatusCodes.OK).json({ success: true, message: 'getAllRooms: TODO!' })
+export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
+    const rooms = await Room.find({});
+    res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } })
 }
 
 export const getRoomById = (req: Request, res: Response, next: NextFunction) => {
