@@ -1,5 +1,7 @@
+import { UserLayout } from '@/layouts/UserLayout'
+
 export const Chat = () => {
   return (
-    <h1>TODO!</h1>
+    <UserLayout />
   )
 }
