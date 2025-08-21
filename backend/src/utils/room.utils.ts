@@ -3,15 +3,13 @@ import { Room } from "@src/models"
 
 export const populateRoomData = async () => {
     const rooms = await Room.find({ isSystemGenerated: true }).lean().exec();
-    const roomsToBeGenerated = MAX_SYSTEM_ROOMS - rooms.length;
 
-    if (roomsToBeGenerated <= 0)
+    if (MAX_SYSTEM_ROOMS - rooms.length <= 0)
         return;
 
-    console.info('Populating rooms data...');
-    console.info('Rooms to be generated:', roomsToBeGenerated);
+    console.info('Generating system rooms...');
 
-    for (let i = 0; i != roomsToBeGenerated; i++) {
+    for (let i = 0; i != MAX_SYSTEM_ROOMS; i++) {
         const roomCode = `tkt${String(i + 1).padStart(3, '0')}`;
 
         if (rooms.find(room => room.code === roomCode))
