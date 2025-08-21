@@ -66,8 +66,6 @@ export function AuthForm({
         payload: { email: validatedData.email }
       })
 
-      console.log({ response })
-
       if (response?.success) {
         // If the User exists, show login form
         setFormState("login")
