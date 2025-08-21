@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import RootLayout from './layouts/RootLayout';
+import { GuestLayout } from './layouts/GuestLayout.tsx';
 import { Provider } from 'react-redux'
 import { store } from './store/index.ts'
 
@@ -17,17 +17,17 @@ function App() {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter basename='/talketeer/'>
-          <RootLayout>
             <Routes>
               <Route element={<UserRoute />}>
                 <Route path='/chat' element={<Chat />} />
               </Route>
               <Route element={<GuestRoute />}>
-                <Route index element={<LandingPage />} />
-                <Route path='/auth' element={<Auth />} />
+                <Route element={<GuestLayout />}>
+                  <Route index element={<LandingPage />} />
+                  <Route path='/auth' element={<Auth />} />
+                </Route>
               </Route>
             </Routes>
-          </RootLayout>
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>
