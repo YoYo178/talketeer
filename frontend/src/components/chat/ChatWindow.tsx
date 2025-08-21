@@ -13,7 +13,7 @@ export const ChatWindow = ({ selectedRoom }: { selectedRoom: IRoom | null }) => 
     }
 
     return (
-        <div className='flex-1 bg-card mt-3 p-0 rounded-xl flex flex-col h-full'>
+        <div className='flex-1 bg-card m-3 ml-0 p-0 rounded-xl flex flex-col'>
             <div className='flex-1 overflow-y-auto p-4'>
                 {/* Messages list placeholder until backend is ready */}
                 <div className='text-sm text-muted-foreground'>No messages yet.</div>
