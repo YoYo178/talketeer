@@ -16,7 +16,10 @@ export const UserLayout = () => {
                     onSelectRoom={setSelectedRoom}
                     selectedRoomId={selectedRoom?._id || null}
                 />
-                <ChatWindow selectedRoom={selectedRoom} />
+                <ChatWindow
+                    onSelectRoom={setSelectedRoom}
+                    selectedRoom={selectedRoom}
+                />
             </div>
         </div>
     )
