@@ -8,12 +8,16 @@ export const UserLayout = () => {
     const [selectedRoom, setSelectedRoom] = useState<IRoom | null>(null)
 
     return (
-        <>
+        <div className="flex flex-col h-screen">
             <ChatHeader />
-            <div className='flex flex-col md:flex-row h-screen'>
-                <ChatSidebar onSelectRoom={setSelectedRoom} selectedRoomId={selectedRoom?._id || null} />
+            
+            <div className="flex flex-col md:flex-row flex-1">
+                <ChatSidebar
+                    onSelectRoom={setSelectedRoom}
+                    selectedRoomId={selectedRoom?._id || null}
+                />
                 <ChatWindow selectedRoom={selectedRoom} />
             </div>
-        </>
+        </div>
     )
 }
