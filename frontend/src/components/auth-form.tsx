@@ -10,6 +10,7 @@ import { useLoginMutation } from "@/hooks/network/auth/useLoginMutation"
 import { useSignupMutation } from "@/hooks/network/auth/useSignupMutation"
 import { useCheckEmailMutation } from "@/hooks/network/auth/useCheckEmailMutation"
 import { AxiosError } from "axios"
+import { useNavigate } from "react-router-dom"
 
 // Validation schemas
 const emailSchema = z.object({
@@ -52,6 +53,8 @@ export function AuthForm({
   const signupMutation = useSignupMutation({ queryKey: ["auth", "signup"] })
   const checkEmailMutation = useCheckEmailMutation({ queryKey: ["auth", "check-email"] })
 
+  const navigate = useNavigate();
+
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setErrors({})
@@ -61,7 +64,7 @@ export function AuthForm({
       setEmail(validatedData.email)
       setFormData(prev => ({ ...prev, email: validatedData.email }))
 
-      // Use the actual API to check if user exists
+      // check if user exists
       const response = await checkEmailMutation.mutateAsync({
         payload: { email: validatedData.email }
       })
@@ -113,7 +116,9 @@ export function AuthForm({
       await loginMutation.mutateAsync({
         payload: validatedData
       })
-      // Handle successful login (redirect, etc.)
+
+      navigate('/chat');
+
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {}
