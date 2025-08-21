@@ -4,7 +4,7 @@ import { ChatButton } from './utility/ChatButton'
 export const AttachFileButton = () => {
     return (
         <ChatButton>
-            <Paperclip className='size-5'/>
+            <Paperclip className='size-5' />
         </ChatButton>
     )
 }

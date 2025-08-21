@@ -5,7 +5,7 @@ import { ChatButton } from './utility/ChatButton'
 export const SendButton = () => {
     return (
         <ChatButton>
-            <SendHorizontal className='size-5'/>
+            <SendHorizontal className='size-5' />
         </ChatButton>
     )
 }

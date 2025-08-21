@@ -17,17 +17,17 @@ function App() {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter basename='/talketeer/'>
-            <Routes>
-              <Route element={<UserRoute />}>
-                <Route path='/chat' element={<Chat />} />
+          <Routes>
+            <Route element={<UserRoute />}>
+              <Route path='/chat' element={<Chat />} />
+            </Route>
+            <Route element={<GuestRoute />}>
+              <Route element={<GuestLayout />}>
+                <Route index element={<LandingPage />} />
+                <Route path='/auth' element={<Auth />} />
               </Route>
-              <Route element={<GuestRoute />}>
-                <Route element={<GuestLayout />}>
-                  <Route index element={<LandingPage />} />
-                  <Route path='/auth' element={<Auth />} />
-                </Route>
-              </Route>
-            </Routes>
+            </Route>
+          </Routes>
         </BrowserRouter>
       </QueryClientProvider>
     </Provider>
