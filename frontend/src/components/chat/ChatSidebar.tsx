@@ -42,7 +42,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoom, selectedRoomId
                         <div className='flex items-center gap-2'>
                             <div className='font-medium'>{room.name}</div>
                             {room.isSystemGenerated && (
-                                <span className='text-[10px] px-1.5 py-0.5 rounded-md bg-secondary text-secondary-foreground'>SYSTEM</span>
+                                <span className='text-[10px] px-1.5 py-0.5 rounded-md bg-secondary-foreground text-primary-foreground font-bold'>SYSTEM</span>
                             )}
                         </div>
                         <div className='text-xs text-muted-foreground'>Members: {room.currentMemberCount}/{room.memberLimit}</div>
