@@ -1,6 +1,6 @@
 import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
 
-export function registerSocketHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
+export function registerGeneralHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
     socket.on('disconnect', (reason, description) => {
         console.log(`${socket.data.user.username} disconnected`);
     });

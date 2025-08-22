@@ -1,5 +1,5 @@
 import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
-import { registerSocketHandlers } from "./handlers/socket.handlers";
+import { registerGeneralHandlers } from "./handlers/general.sockets";
 
 export function handleSocketConnection(io: TalketeerSocketServer, socket: TalketeerSocket) {
     console.log(`Client connected: ${socket.data.user.username}`);
