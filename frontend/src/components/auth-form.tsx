@@ -33,10 +33,19 @@ const signupSchema = z.object({
 
 type FormState = "email" | "login" | "signup"
 
+type AuthFormProps = {
+  onLoginSuccess?: () => void;
+  onSignupSuccess?: () => void;
+  onEmailSubmitSuccess?: () => void;
+} & React.ComponentProps<'div'>;
+
 export function AuthForm({
   className,
+  onLoginSuccess,
+  onSignupSuccess,
+  onEmailSubmitSuccess,
   ...props
-}: React.ComponentProps<"div">) {
+}: AuthFormProps) {
   const [formState, setFormState] = useState<FormState>("email")
   const [email, setEmail] = useState("")
   const [formData, setFormData] = useState({
@@ -72,6 +81,7 @@ export function AuthForm({
       if (response?.success) {
         // If the User exists, show login form
         setFormState("login")
+        onEmailSubmitSuccess?.();
       } else {
         // Otherwise display the signup form
         setFormState("signup")
@@ -118,6 +128,7 @@ export function AuthForm({
       })
 
       navigate('/chat');
+      onLoginSuccess?.();
 
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -167,7 +178,8 @@ export function AuthForm({
           password: validatedData.password
         }
       })
-      // Handle successful signup (redirect, etc.)
+
+      onSignupSuccess?.();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {}
@@ -410,9 +422,9 @@ export function AuthForm({
             href="#"
             className="flex flex-col items-center gap-2 font-medium"
           >
-            <div className="flex size-8 items-center justify-center rounded-md">
+            <Button className="flex size-8 items-center justify-center rounded-md bg-transparent text-primary hover:bg-primary-foreground" onClick={() => navigate('/')}>
               <MessagesSquare className="size-6" />
-            </div>
+            </Button>
             <span className="sr-only">Talketeer</span>
           </a>
           <h1 className="text-xl font-bold">Welcome to Talketeer</h1>
