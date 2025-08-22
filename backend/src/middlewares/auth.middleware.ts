@@ -34,24 +34,31 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
     }
 
     // Verify access token
-    const decodedAccessToken = verifyAccessToken(accessToken || '');
+    const decodedAccessToken = verifyAccessToken(accessToken);
 
-    // Invalid access token, prompt the user to log in again even if the refresh token is valid
-    // as this can be a sign of maliciousness
-    if (!decodedAccessToken.valid) {
-        returnObj.error = {
-            message: 'Invalid token, please log in again.',
-            code: HttpStatusCodes.UNAUTHORIZED
+    // (This is a slightly hackish workaround!)
+    // The token verification result will return isBlank as true if the token was, well.. blank (lol)
+    //   The reason we need to check for blank tokens as well is because
+    //   while tokens do expire, the 'maxAge' attribute also auto-deletes the tokens
+    //   so we won't receive a token at all instead of receiving an 'expired token'
+    if (!decodedAccessToken.isBlank) {
+        // Invalid access token, prompt the user to log in again even if the refresh token is valid
+        // as this can be a sign of maliciousness
+        if (!decodedAccessToken.valid) {
+            returnObj.error = {
+                message: 'Invalid token, please log in again.',
+                code: HttpStatusCodes.UNAUTHORIZED
+            }
+            return returnObj;
         }
-        return returnObj;
-    }
 
-    // Access token and Refresh token mismatch, malicious user spotted
-    // Add the user to blacklist
-    const isMaliciousUser = decodedRefreshToken.data.user.id !== decodedAccessToken.data.user.id;
-    if (isMaliciousUser) {
-        returnObj.isMaliciousUser = true;
-        return returnObj;
+        // Access token and Refresh token mismatch, malicious user spotted
+        // Add the user to blacklist
+        const isMaliciousUser = decodedRefreshToken.data.user.id !== decodedAccessToken.data.user.id;
+        if (isMaliciousUser) {
+            returnObj.isMaliciousUser = true;
+            return returnObj;
+        }
     }
 
     // Fetch the user via ID from database, and exclude password because we ain't need any of that
@@ -67,7 +74,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
     }
 
     // Silent access token refresh (yes checking this late is intentional)
-    if (decodedAccessToken.expired)
+    if (decodedAccessToken.expired || decodedAccessToken.isBlank)
         returnObj.data.accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
 
     // Update object state and finally return, as shrimple as that

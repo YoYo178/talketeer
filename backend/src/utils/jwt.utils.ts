@@ -23,18 +23,21 @@ export function generateRefreshToken(data: TRefreshTokenPayload): string {
     return refreshToken;
 }
 
-export function verifyAccessToken(token: string): TDecodedToken<TAccessTokenPayload> {
+export function verifyAccessToken(token: string | undefined): TDecodedToken<TAccessTokenPayload> & { isBlank: boolean } {
+    if (!token?.length)
+        return { valid: false, expired: false, isBlank: true, data: {} as TAccessTokenPayload };
+
     try {
         const decoded = jwt.verify(token, ENV.AccessTokenSecret) as TAccessTokenPayload;
-        return { valid: true, expired: false, data: decoded };
+        return { valid: true, expired: false, isBlank: false, data: decoded };
     } catch (err) {
         const error = err as JsonWebTokenError;
         console.error('An error occured while verifying access token!\nError details:', error.message || '')
 
         if (err instanceof TokenExpiredError)
-            return { valid: true, expired: true, data: {} as TAccessTokenPayload };
+            return { valid: true, expired: true, isBlank: false, data: {} as TAccessTokenPayload };
 
-        return { valid: false, expired: true, data: {} as TAccessTokenPayload };
+        return { valid: false, expired: true, isBlank: false, data: {} as TAccessTokenPayload };
     }
 }
 
