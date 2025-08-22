@@ -1,5 +1,6 @@
 import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { registerGeneralHandlers } from "./handlers/general.sockets";
+import { registerRoomHandlers } from "./handlers/room.sockets";
 
 export function handleSocketConnection(io: TalketeerSocketServer, socket: TalketeerSocket) {
     console.log(`Client connected: ${socket.data.user.username}`);
@@ -7,5 +8,6 @@ export function handleSocketConnection(io: TalketeerSocketServer, socket: Talket
     // Have the user join a room by their own ObjectId for a stable identity
     socket.join(socket.data.user.id);
 
-    registerSocketHandlers(io, socket);
+    registerGeneralHandlers(io, socket);
+    registerRoomHandlers(io, socket);
 }

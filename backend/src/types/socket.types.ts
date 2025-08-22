@@ -20,6 +20,8 @@ export interface ServerToClientEvents {
 
 // TODO
 export interface ClientToServerEvents {
+    roomJoined: (userId: string, roomId: string) => void;
+    roomLeft: (userId: string, roomId: string) => void;
 }
 
 // TODO
