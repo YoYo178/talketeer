@@ -22,13 +22,13 @@ export interface IRoom {
     owner: DBRef<IUser>
 
     /** Room members array */
-    members: DBRef<IRoomMember[]>;
 
     /** Current member count of the room */
     currentMemberCount: number;
+    members: IRoomMember[];
 
     /** Room messages array */
-    messages: DBRef<IMessage[]>;
+    messages: DBRef<IMessage>[];
 
     /** Room member limit (2 > n > 10) */
     memberLimit: number;
