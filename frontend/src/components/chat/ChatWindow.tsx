@@ -5,9 +5,23 @@ import { Button } from '../ui/button';
 import { Users } from 'lucide-react';
 import { ChatButton } from './rich-text/utility/ChatButton';
 import { MessageList } from './messages/MessageList';
+import { socket } from '@/socket';
+import { stopListeningRoomEvents } from '@/sockets/room.sockets';
 
 export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom | null, onSelectRoom: (room: IRoom | null) => void }) => {
     const [message, setMessage] = useState('');
+
+    const handleRoomLeave = () => {
+        if (!selectedRoom)
+            return;
+
+        socket.emit('roomLeft', selectedRoom._id, (success: boolean) => {
+            if (success) {
+                stopListeningRoomEvents(socket);
+                onSelectRoom(null);
+            }
+        });
+    }
 
     if (!selectedRoom) {
         return (
@@ -26,7 +40,7 @@ export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom
                 <p className='text-xl'>{selectedRoom.name}</p>
                 <div className='ml-auto flex gap-2'>
                     <ChatButton><Users className='size-5' /></ChatButton>
-                    <Button onClick={() => onSelectRoom(null)}>Leave room</Button>
+                    <Button onClick={handleRoomLeave}>Leave room</Button>
                 </div>
             </div>
 
