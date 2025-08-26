@@ -38,8 +38,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",
-    "@stylistic/eslint-plugin-js": "^4.4.1",
-    "@stylistic/eslint-plugin-ts": "^4.4.1",
+    "@stylistic/eslint-plugin": "^5.2.3",
     "@swc/core": "^1.13.5",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.9",
