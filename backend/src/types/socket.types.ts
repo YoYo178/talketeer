@@ -15,13 +15,15 @@ export interface ServerToClientEvents {
     memberKicked: (userId: string, userName: string, reason: string) => void;
     memberBanned: (userId: string, userName: string, reason: string) => void;
 
-    messageReceived: (from: ObjectId, content: string) => void;
+    newMessage: (roomId: string, userId: string, message: string) => void;
 }
 
 // TODO
 export interface ClientToServerEvents {
-    roomJoined: (userId: string, roomId: string) => void;
-    roomLeft: (userId: string, roomId: string) => void;
+    roomJoined: (userId: string, roomId: string, ack: (success: boolean) => void) => void;
+    roomLeft: (userId: string, roomId: string, ack: (success: boolean) => void) => void;
+
+    sendMessage: (roomId: string, userId: string, message: string, ack: (success: boolean) => void) => void;
 }
 
 // TODO
