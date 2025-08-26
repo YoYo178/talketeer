@@ -37,7 +37,7 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
                 ack(true);
 
                 // Broadcast the member join event to everyone in this room
-                io.to(roomId).emit('memberJoined', socket.data.user.id, socket.data.user.username);
+                io.to(roomId).emit('memberJoined', socket.data.user.id);
 
                 // Let other people (even ones not in the room) refetch the latest room details
                 io.emit('roomUpdated', roomId);
@@ -78,7 +78,7 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
                 ack(true)
 
                 // Broadcast the member leave event to everyone in this room
-                io.to(roomId).emit('memberLeft', socket.data.user.id, socket.data.user.username);
+                io.to(roomId).emit('memberLeft', socket.data.user.id);
 
                 // Let other people (even ones not in the room) refetch the latest room details
                 io.emit('roomUpdated', roomId);

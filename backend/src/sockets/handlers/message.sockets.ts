@@ -18,7 +18,7 @@ export function registerMessageHandlers(io: TalketeerSocketServer, socket: Talke
             await room.save();
 
             console.log(`${socket.data.user.username} sent message: ${messageContent}`)
-            io.to(roomId).emit('newMessage', roomId, socket.data.user.id, messageContent);
+            io.to(roomId).emit('newMessage', socket.data.user.id, messageContent);
             ack(true);
         } catch (err) {
             ack(false)
