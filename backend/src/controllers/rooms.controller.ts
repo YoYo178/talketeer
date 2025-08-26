@@ -1,5 +1,6 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { Room } from "@src/models";
+import { TRoomIdParams } from "@src/schemas";
 import type { Request, Response, NextFunction } from "express";
 
 export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
@@ -7,8 +8,17 @@ export const getAllRooms = async (req: Request, res: Response, next: NextFunctio
     res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } })
 }
 
-export const getRoomById = (req: Request, res: Response, next: NextFunction) => {
-    res.status(HttpStatusCodes.OK).json({ success: true, message: 'getRoomById: TODO!' })
+export const getRoomById = async (req: Request, res: Response, next: NextFunction) => {
+    const { roomId } = req.params as TRoomIdParams;
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+        res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'Room not found' })
+        return;
+    }
+
+    res.status(HttpStatusCodes.OK).json({ success: true, data: { room: room.toObject() } })
 }
 
 export const createRoom = (req: Request, res: Response, next: NextFunction) => {
