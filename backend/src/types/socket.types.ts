@@ -6,7 +6,7 @@ import { IUser } from "./user.types";
 export interface ServerToClientEvents {
     roomCreated: (roomId: string, roomName: string, memberCount: number, owner: IUser) => void;
 
-    roomUpdated: (roomId: string, roomName: string, memberCount: number) => void;
+    roomUpdated: (roomId: string) => void;
     roomDeleted: (roomId: string, roomName: string) => void;
 
     memberJoined: (userId: string, userName: string) => void;
