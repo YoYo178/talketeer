@@ -11,7 +11,7 @@ export const UserLayout = () => {
         <div className="flex flex-col h-screen">
             <ChatHeader />
 
-            <div className="flex flex-col md:flex-row flex-1">
+            <div className="flex flex-col md:flex-row flex-1 h-0"> {/* this 'h-0' is very necessary, just don't ask why */}
                 <ChatSidebar
                     onSelectRoom={setSelectedRoom}
                     selectedRoom={selectedRoom}
