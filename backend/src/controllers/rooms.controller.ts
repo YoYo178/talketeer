@@ -4,14 +4,14 @@ import { TRoomIdParams } from "@src/schemas";
 import type { Request, Response, NextFunction } from "express";
 
 export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
-    const rooms = await Room.find({});
+    const rooms = await Room.find({}).populate('messages');
     res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } })
 }
 
 export const getRoomById = async (req: Request, res: Response, next: NextFunction) => {
     const { roomId } = req.params as TRoomIdParams;
 
-    const room = await Room.findById(roomId);
+    const room = await Room.findById(roomId).populate('messages');
 
     if (!room) {
         res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'Room not found' })
