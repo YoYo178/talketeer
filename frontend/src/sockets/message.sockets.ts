@@ -1,6 +1,8 @@
 import type { Socket } from "socket.io-client";
 
 export function startListeningMessageEvents(socket: Socket) {
+    stopListeningMessageEvents(socket);
+
     socket.on('newMessage', (userId: string, message: string) => {
         console.log(`Received new message from ${userId}: ${message}`);
     });

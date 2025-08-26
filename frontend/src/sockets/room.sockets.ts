@@ -2,6 +2,8 @@ import type { Socket } from "socket.io-client"
 import { startListeningMessageEvents, stopListeningMessageEvents } from "./message.sockets";
 
 export function startListeningRoomEvents(socket: Socket) {
+    stopListeningRoomEvents(socket);
+
     socket.on('memberJoined', (userId: string) => {
         console.log("A new member joined the room:", userId)
     });
