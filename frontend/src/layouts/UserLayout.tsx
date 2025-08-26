@@ -14,7 +14,7 @@ export const UserLayout = () => {
             <div className="flex flex-col md:flex-row flex-1">
                 <ChatSidebar
                     onSelectRoom={setSelectedRoom}
-                    selectedRoomId={selectedRoom?._id || null}
+                    selectedRoom={selectedRoom}
                 />
                 <ChatWindow
                     onSelectRoom={setSelectedRoom}

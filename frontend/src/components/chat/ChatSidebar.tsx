@@ -7,10 +7,10 @@ import type { FC } from 'react'
 
 interface ChatSidebarProps {
     onSelectRoom: (room: IRoom | null) => void;
-    selectedRoomId: string | null
+    selectedRoom: IRoom | null
 }
 
-export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoom, selectedRoomId }) => {
+export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoom, selectedRoom }) => {
     const [searchText, setSearchText] = useState('')
     const { data } = useGetRoomsQuery({ queryKey: ['rooms'] })
 
