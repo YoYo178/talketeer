@@ -1,6 +1,6 @@
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
 import { socket } from '@/socket';
-import { handleSocketConnection, handleSocketDisconnection } from '@/utils/socket.utils';
+import { handleSocketConnection, handleSocketDisconnection } from '@/sockets/general.sockets';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
