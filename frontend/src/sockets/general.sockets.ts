@@ -8,7 +8,7 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
     });
 
     socket.on('notification', () => {
-        // TODO
+        console.log('You have received a new notification')
     });
 }
 
