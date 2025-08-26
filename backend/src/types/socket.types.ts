@@ -20,10 +20,10 @@ export interface ServerToClientEvents {
 
 // TODO
 export interface ClientToServerEvents {
-    roomJoined: (userId: string, roomId: string, ack: (success: boolean) => void) => void;
-    roomLeft: (userId: string, roomId: string, ack: (success: boolean) => void) => void;
+    roomJoined: (roomId: string, ack: (success: boolean) => void) => void;
+    roomLeft: (roomId: string, ack: (success: boolean) => void) => void;
 
-    sendMessage: (roomId: string, userId: string, message: string, ack: (success: boolean) => void) => void;
+    sendMessage: (roomId: string, message: string, ack: (success: boolean) => void) => void;
 }
 
 // TODO

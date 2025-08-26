@@ -2,27 +2,27 @@ import { Room, User } from '@src/models';
 import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
 
 export function registerRoomHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
-    socket.on('roomJoined', async (userId, roomId, ack) => {
+    socket.on('roomJoined', async (roomId, ack) => {
         try {
-            const user = await User.findById(userId).select('-passwordHash').lean().exec();
+            const user = await User.findById(socket.data.user.id).select('-passwordHash').lean().exec();
             if (!user) return;
 
             if (user.room?.toString() === roomId) return;
 
             // Set user's current room
             await User.updateOne(
-                { _id: userId },
+                { _id: socket.data.user.id },
                 { $set: { room: roomId } }
             );
             const room = await Room.findById(roomId).lean().exec();
-            if (!room?.members.some(mem => mem.user.toString() === user._id.toString())) {
+            if (!room?.members.some(mem => mem.user.toString() === socket.data.user.id)) {
                 // Add user to the room members
                 await Room.updateOne(
                     { _id: roomId },
                     {
                         $push: {
                             members: {
-                                user: user._id,
+                                user: socket.data.user.id,
                                 roomRole: 'member',
                                 joinTimestamp: Date.now()
                             }
@@ -37,7 +37,7 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
                 ack(true);
 
                 // Broadcast the member join event to everyone in this room
-                io.to(roomId).emit('memberJoined', userId, socket.data.user.username);
+                io.to(roomId).emit('memberJoined', socket.data.user.id, socket.data.user.username);
 
                 // Let other people (even ones not in the room) refetch the latest room details
                 io.emit('roomUpdated', roomId);
@@ -49,26 +49,26 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
         }
     });
 
-    socket.on('roomLeft', async (userId, roomId, ack) => {
+    socket.on('roomLeft', async (roomId, ack) => {
         try {
-            const user = await User.findById(userId).select('-passwordHash').lean().exec();
+            const user = await User.findById(socket.data.user.id).select('-passwordHash').lean().exec();
             if (!user) return;
 
             if (!user.room?.toString()) return;
 
             // Clear user's current room
             await User.updateOne(
-                { _id: userId },
+                { _id: socket.data.user.id },
                 { $set: { room: null } }
             );
 
             const room = await Room.findById(roomId).lean().exec();
-            if (room?.members.some(mem => mem.user.toString() === user._id.toString())) {
+            if (room?.members.some(mem => mem.user.toString() === socket.data.user.id)) {
                 // Remove user from the room
                 await Room.updateOne(
                     { _id: roomId },
                     {
-                        $pull: { members: { user: user._id } }
+                        $pull: { members: { user: socket.data.user.id } }
                     }
                 );
 
@@ -78,7 +78,7 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
                 ack(true)
 
                 // Broadcast the member leave event to everyone in this room
-                io.to(roomId).emit('memberLeft', userId, socket.data.user.username);
+                io.to(roomId).emit('memberLeft', socket.data.user.id, socket.data.user.username);
 
                 // Let other people (even ones not in the room) refetch the latest room details
                 io.emit('roomUpdated', roomId);
