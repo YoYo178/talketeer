@@ -1,19 +1,28 @@
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
 import { socket } from '@/socket';
+import { handleSocketConnection, handleSocketDisconnection } from '@/utils/socket.utils';
+import { useQueryClient } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 export const UserRoute = () => {
+    const queryClient = useQueryClient();
     const { data, isLoading, error } = useGetMeQuery({ queryKey: ['users', 'me'] });
     const [isLoggedIn, setIsLoggedIn] = useState(data?.data?.user);
 
     useEffect(() => {
         if (data?.data?.user) {
             setIsLoggedIn(true);
-            socket.connect();
+            if (!socket.connected) {
+                socket.connect();
+                handleSocketConnection(socket, queryClient);
+            }
         } else {
             setIsLoggedIn(false);
-            socket.disconnect();
+            if (socket.connected) {
+                socket.disconnect();
+                handleSocketDisconnection(socket);
+            }
         }
     }, [data])
 
