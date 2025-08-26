@@ -41,7 +41,7 @@ export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom
 
             <div className="border-t border-border/40" />
 
-            <ChatComposer message={message} onMessageInput={setMessage} />
+            <ChatComposer roomId={selectedRoom._id} message={message} onMessageInput={setMessage} />
         </div>
     )
 }
