@@ -1,6 +1,5 @@
-import { ObjectId } from "mongoose";
-import { Server, Socket } from "socket.io";
-import { IUser } from "./user.types";
+import { Socket } from "socket.io-client";
+import type { IUser } from "./user.types";
 
 // TODO
 export interface ServerToClientEvents {
@@ -43,5 +42,4 @@ export interface SocketData {
     };
 }
 
-export type TalketeerSocketServer = Server<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
-export type TalketeerSocket = Socket<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>;
+export type TalketeerSocket = Socket<ServerToClientEvents, ClientToServerEvents>;
