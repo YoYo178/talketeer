@@ -1,4 +1,6 @@
 import { ObjectId } from "mongoose";
+import { IRoom } from "./room.types";
+import { DBRef } from "./db.types";
 
 export interface IUserFriend {
     userId: ObjectId;
@@ -35,6 +37,9 @@ export interface IUser {
 
     /** User's friends */
     friends: IUserFriend[];
+
+    /** The room the user is currently in */
+    room: DBRef<IRoom> | null;
 
     createdAt: number;
     updatedAt: number;

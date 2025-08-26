@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema<IUser>({
     avatarURL: { type: String, required: false, default: '' },
 
     friends: { type: [userFriendSchema], required: false, default: [] },
+
+    room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', default: null },
 }, { timestamps: true })
 
 export const User = MongooseModel<IUser>('User', userSchema)
