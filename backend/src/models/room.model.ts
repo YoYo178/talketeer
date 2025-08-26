@@ -11,7 +11,6 @@ const roomMemberSchema = new mongoose.Schema<IRoomMember>({
 const roomSchema = new mongoose.Schema<IRoom>({
     name: { type: String, required: true },
     code: { type: String, required: true },
-    currentMemberCount: { type: Number, required: false, default: 0 },
     memberLimit: { type: Number, required: false, default: 10 },
     members: { type: [roomMemberSchema], required: false, default: [] },
     messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message', required: true }],

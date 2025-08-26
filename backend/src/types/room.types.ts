@@ -22,9 +22,6 @@ export interface IRoom {
     owner: DBRef<IUser>
 
     /** Room members array */
-
-    /** Current member count of the room */
-    currentMemberCount: number;
     members: IRoomMember[];
 
     /** Room messages array */

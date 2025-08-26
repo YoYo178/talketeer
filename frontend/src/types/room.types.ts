@@ -10,7 +10,6 @@ export interface IRoom {
     code: string;
     owner: string | null;
     members: IRoomMemberRef[];
-    currentMemberCount: number;
     messages: string[];
     memberLimit: number;
     isSystemGenerated: boolean;
