@@ -4,6 +4,7 @@ import { ChatComposer } from './rich-text/ChatComposer';
 import { Button } from '../ui/button';
 import { Users } from 'lucide-react';
 import { ChatButton } from './rich-text/utility/ChatButton';
+import { MessageList } from './messages/MessageList';
 
 export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom | null, onSelectRoom: (room: IRoom | null) => void }) => {
     const [message, setMessage] = useState('');
@@ -31,13 +32,16 @@ export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom
 
             <div className="border-t border-border/40" />
 
-            <div className='flex-1 flex overflow-y-auto p-4'>
-                {/* Messages list placeholder until backend is ready */}
-                <div className='flex-1 self-center text-center'>
-                    <p className='text-xl text-card-foreground'>This room currently has no messages.</p>
-                    <p className='text-m text-muted-foreground'>Send a message to get started!</p>
+            {selectedRoom.messages.length === 0 ? (
+                <div className='flex-1 items-center content-center'>
+                    <div className='text-center'>
+                        <p className='text-xl text-card-foreground'>This room currently has no messages.</p>
+                        <p className='text-m text-muted-foreground'>Send a message to get started!</p>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <MessageList messages={selectedRoom.messages /* Array.from({ length: 32 }) */} /> /* TODO: temporary! */
+            )}
 
             <div className="border-t border-border/40" />
 
