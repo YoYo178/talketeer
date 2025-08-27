@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { Server, Socket } from "socket.io";
 import { IUser } from "./user.types";
+import { IMessage } from "./message.types";
 
 // TODO
 export interface ServerToClientEvents {
@@ -17,9 +18,9 @@ export interface ServerToClientEvents {
     memberKicked: (userId: string, kickedBy: string, reason: string) => void;
     memberBanned: (userId: string, bannedBy: string, reason: string) => void;
 
-    newMessage: (userId: string, message: string) => void;
-    messageEdited: (userId: string, oldMessage: string, newMessage: string) => void;
-    messageDeleted: (userId: string, deletedBy: string, message: string) => void;
+    newMessage: (roomId: string, userId: string, message: string, rawMessage?: IMessage) => void;
+    messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
+    messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
 }
 
 // TODO
