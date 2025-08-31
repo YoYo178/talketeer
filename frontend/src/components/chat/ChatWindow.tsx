@@ -54,7 +54,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
                 </div>
             </div>
 
-            <div className="border-t border-border/40" />
+            <div className='border-t border-border/40' />
 
             {selectedRoom.messages.length === 0 ? (
                 <div className='flex-1 items-center content-center'>
@@ -67,7 +67,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
                 <MessageList messages={selectedRoom.messages /* Array.from({ length: 32 }) */} /> /* TODO: temporary! */
             )}
 
-            <div className="border-t border-border/40" />
+            <div className='border-t border-border/40' />
 
             <ChatComposer roomId={selectedRoom._id} />
         </div>
