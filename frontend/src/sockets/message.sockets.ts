@@ -1,9 +1,29 @@
+import type { IMessage } from "@/types/message.types";
+import type { IRoom } from "@/types/room.types";
+import { QueryClient } from "@tanstack/react-query";
 import type { Socket } from "socket.io-client";
 
-export function startListeningMessageEvents(socket: Socket) {
+export function startListeningMessageEvents(socket: Socket, queryClient?: QueryClient) {
     stopListeningMessageEvents(socket);
 
     socket.on('newMessage', (roomId: string, userId: string, message: string, rawMessage?: IMessage) => {
+        console.log({ roomId, userId, message, rawMessage })
+        if (rawMessage) {
+            queryClient?.setQueryData(['rooms', roomId], (old: { data: { room: IRoom } }) => {
+                if (!old) return old;
+
+                return {
+                    ...old,
+                    data: {
+                        ...old.data,
+                        room: {
+                            ...old.data.room,
+                            messages: [...old.data.room.messages, rawMessage]
+                        }
+                    }
+                };
+            })
+        }
         console.log(`Received new message from ${userId}: ${message}`);
     });
 

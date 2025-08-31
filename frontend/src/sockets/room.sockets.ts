@@ -1,7 +1,8 @@
 import type { Socket } from "socket.io-client"
 import { startListeningMessageEvents, stopListeningMessageEvents } from "./message.sockets";
+import type { QueryClient } from "@tanstack/react-query";
 
-export function startListeningRoomEvents(socket: Socket) {
+export function startListeningRoomEvents(socket: Socket, queryClient?: QueryClient) {
     stopListeningRoomEvents(socket);
 
     socket.on('memberJoined', (userId: string) => {
@@ -20,7 +21,7 @@ export function startListeningRoomEvents(socket: Socket) {
         console.log(`${userId} has been banned from the room by ${bannedBy} due to the following reason:`, reason)
     });
 
-    startListeningMessageEvents(socket);
+    startListeningMessageEvents(socket, queryClient);
 }
 
 export function stopListeningRoomEvents(socket: Socket) {
