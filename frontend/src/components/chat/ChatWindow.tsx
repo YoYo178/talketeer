@@ -7,9 +7,21 @@ import { ChatButton } from './rich-text/utility/ChatButton';
 import { MessageList } from './messages/MessageList';
 import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
+import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 
-export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom | null, onSelectRoom: (room: IRoom | null) => void }) => {
+interface ChatWindowProps {
+    selectedRoomId: string | null;
+    onSelectRoomId: (roomId: string | null) => void;
+}
+
+export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId }) => {
     const [message, setMessage] = useState('');
+    const { data } = useGetRoomByIdQuery({
+        queryKey: ['rooms', selectedRoomId || ''],
+        pathParams: { roomId: selectedRoomId || '' },
+        enabled: !!selectedRoomId
+    });
+    const selectedRoom = data?.data?.room;
 
     const handleRoomLeave = () => {
         if (!selectedRoom)
@@ -18,7 +30,7 @@ export const ChatWindow = ({ selectedRoom, onSelectRoom }: { selectedRoom: IRoom
         socket.emit('roomLeft', selectedRoom._id, (success: boolean) => {
             if (success) {
                 stopListeningRoomEvents(socket);
-                onSelectRoom(null);
+                onSelectRoomId(null);
             }
         });
     }

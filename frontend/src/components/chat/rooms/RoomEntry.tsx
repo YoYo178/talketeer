@@ -6,11 +6,11 @@ import { type FC } from 'react'
 
 interface RoomEntryProps {
     room: IRoom;
-    onSelectRoom: (room: IRoom) => void;
-    selectedRoom: IRoom | null;
+    onSelectRoomId: (roomId: string | null) => void;
+    selectedRoomId: string | null;
 }
 
-export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoom, selectedRoom }) => {
+export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId, selectedRoomId }) => {
     const { data } = useGetRoomByIdQuery(
         {
             queryKey: ['rooms', localRoom._id],
@@ -21,18 +21,18 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoom, s
     const room = data?.data?.room ?? localRoom;
 
     const handleRoomJoin = async () => {
-        if (!room || room._id === selectedRoom?._id)
+        if (!room || room._id === selectedRoomId)
             return;
 
-        if (!!selectedRoom) {
-            socket.emit('roomLeft', selectedRoom._id, (success: boolean) => {
+        if (!!selectedRoomId) {
+            socket.emit('roomLeft', selectedRoomId, (success: boolean) => {
                 if (success) {
                     stopListeningRoomEvents(socket);
 
                     socket.emit('roomJoined', room._id, (success: boolean) => {
                         if (success) {
                             startListeningRoomEvents(socket);
-                            onSelectRoom(room);
+                            onSelectRoomId(room._id);
                         }
                     });
                 }
@@ -41,7 +41,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoom, s
             socket.emit('roomJoined', room._id, (success: boolean) => {
                 if (success) {
                     startListeningRoomEvents(socket);
-                    onSelectRoom(room);
+                    onSelectRoomId(room._id);
                 }
             });
         }
@@ -51,7 +51,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoom, s
         <button
             key={room?._id}
             onClick={handleRoomJoin}
-            className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${selectedRoom?._id === room?._id ? 'bg-accent/60' : ''}`}
+            className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${selectedRoomId === room?._id ? 'bg-accent/60' : ''}`}
         >
             <div className='flex items-center gap-2'>
                 <div className='font-medium'>{room?.name}</div>

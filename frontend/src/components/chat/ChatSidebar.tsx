@@ -7,11 +7,11 @@ import type { FC } from 'react'
 import { RoomList } from './rooms/RoomList'
 
 interface ChatSidebarProps {
-    onSelectRoom: (room: IRoom | null) => void;
-    selectedRoom: IRoom | null
+    onSelectRoomId: (roomId: string | null) => void;
+    selectedRoomId: string | null
 }
 
-export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoom, selectedRoom }) => {
+export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoomId }) => {
     const [searchText, setSearchText] = useState('')
     const { data } = useGetRoomsQuery({ queryKey: ['rooms'] })
 
@@ -30,7 +30,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoom, selectedRoom }
                 <Button className='whitespace-nowrap'>New room</Button> {/* TODO: functionality */}
             </div>
 
-            <RoomList rooms={filteredRooms} onSelectRoom={onSelectRoom} selectedRoom={selectedRoom} />
+            <RoomList rooms={filteredRooms} onSelectRoomId={onSelectRoomId} selectedRoomId={selectedRoomId} />
         </div>
     )
 }
