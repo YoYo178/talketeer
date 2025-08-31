@@ -1,5 +1,4 @@
-import type { IRoom } from '@/types/room.types'
-import { useState } from 'react'
+import { type FC } from 'react'
 import { ChatComposer } from './rich-text/ChatComposer';
 import { Button } from '../ui/button';
 import { Users } from 'lucide-react';
@@ -15,7 +14,6 @@ interface ChatWindowProps {
 }
 
 export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId }) => {
-    const [message, setMessage] = useState('');
     const { data } = useGetRoomByIdQuery({
         queryKey: ['rooms', selectedRoomId || ''],
         pathParams: { roomId: selectedRoomId || '' },
@@ -71,7 +69,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
 
             <div className="border-t border-border/40" />
 
-            <ChatComposer roomId={selectedRoom._id} message={message} onMessageInput={setMessage} />
+            <ChatComposer roomId={selectedRoom._id} />
         </div>
     )
 }

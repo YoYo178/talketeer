@@ -1,22 +1,20 @@
 import { Input } from '@/components/ui/input'
-import type { FC } from 'react';
+import { useState, type FC } from 'react';
 import { SendButton } from './SendButton';
 import { AttachFileButton } from './AttachFileButton';
 import { socket } from '@/socket';
 
 interface ChatComposerProps {
     roomId: string;
-    message: string;
-    onMessageInput: (message: string) => void;
 }
 
-export const ChatComposer: FC<ChatComposerProps> = ({ roomId, message, onMessageInput }) => {
+export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
+    const [message, setMessage] = useState('');
     const sendMessage = () => {
 
         socket.emit('sendMessage', roomId, message, (success: boolean) => {
-            if (success) {
-                onMessageInput('');
-            }
+            if (success)
+                setMessage('');
         })
     }
 
@@ -33,7 +31,7 @@ export const ChatComposer: FC<ChatComposerProps> = ({ roomId, message, onMessage
             <Input
                 placeholder='Start typing...'
                 value={message}
-                onChange={(e) => onMessageInput(e.target.value)}
+                onChange={(e) => setMessage(e.target.value)}
                 className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary'
             />
             <SendButton />
