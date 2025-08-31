@@ -2,7 +2,8 @@ import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { socket } from '@/socket';
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
 import type { IRoom } from '@/types/room.types'
-import { type FC } from 'react'
+import { useQueryClient } from '@tanstack/react-query';
+import type { FC } from 'react'
 
 interface RoomEntryProps {
     room: IRoom;
@@ -11,6 +12,7 @@ interface RoomEntryProps {
 }
 
 export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId, selectedRoomId }) => {
+    const queryClient = useQueryClient();
     const { data } = useGetRoomByIdQuery(
         {
             queryKey: ['rooms', localRoom._id],
@@ -31,7 +33,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
 
                     socket.emit('roomJoined', room._id, (success: boolean) => {
                         if (success) {
-                            startListeningRoomEvents(socket);
+                            startListeningRoomEvents(socket, queryClient);
                             onSelectRoomId(room._id);
                         }
                     });
@@ -40,7 +42,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
         } else {
             socket.emit('roomJoined', room._id, (success: boolean) => {
                 if (success) {
-                    startListeningRoomEvents(socket);
+                    startListeningRoomEvents(socket, queryClient);
                     onSelectRoomId(room._id);
                 }
             });
