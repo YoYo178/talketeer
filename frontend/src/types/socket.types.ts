@@ -1,5 +1,6 @@
 import { Socket } from "socket.io-client";
 import type { IUser } from "./user.types";
+import type { IMessage } from "./message.types";
 
 // TODO
 export interface ServerToClientEvents {
@@ -16,9 +17,9 @@ export interface ServerToClientEvents {
     memberKicked: (userId: string, kickedBy: string, reason: string) => void;
     memberBanned: (userId: string, bannedBy: string, reason: string) => void;
 
-    newMessage: (userId: string, message: string) => void;
-    messageEdited: (userId: string, oldMessage: string, newMessage: string) => void;
-    messageDeleted: (userId: string, deletedBy: string, message: string) => void;
+    newMessage: (roomId: string, userId: string, message: string, rawMessage?: IMessage) => void;
+    messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
+    messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
 }
 
 // TODO
@@ -32,14 +33,6 @@ export interface ClientToServerEvents {
 // TODO
 export interface InterServerEvents {
     ping: () => void;
-}
-
-export interface SocketData {
-    user: {
-        id: string,
-        username: string,
-        email: string,
-    };
 }
 
 export type TalketeerSocket = Socket<ServerToClientEvents, ClientToServerEvents>;

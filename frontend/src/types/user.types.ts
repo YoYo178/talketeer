@@ -37,3 +37,13 @@ export interface IUser {
     createdAt: number;
     updatedAt: number;
 }
+
+export type IPublicUser = Omit<
+    IUser,
+    'name' |
+    'email' |
+    'passwordHash' |
+    'friends' |
+    'room' |
+    'updatedAt'
+>
