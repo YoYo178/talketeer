@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, type FC } from 'react'
 import { MessageBlock } from './MessageBlock'
 import type { IMessage } from '@/types/message.types';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface MessageListProps {
     messages: IMessage[];
@@ -61,9 +62,9 @@ export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) 
     }, [messages])
 
     return (
-        <div className='flex flex-col flex-1 p-4 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
+        <ScrollArea className='flex flex-col flex-1 p-4 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
             {messageElements}
             <div ref={chatEndRef} />
-        </div>
-    )
+        </ScrollArea>
+    );
 }
