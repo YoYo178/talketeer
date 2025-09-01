@@ -62,7 +62,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) 
     }, [messages])
 
     return (
-        <ScrollArea className='flex flex-col flex-1 p-4 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
+        <ScrollArea className='flex flex-col flex-1 p-4 pt-0 pb-0 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
             {messageElements}
             <div ref={chatEndRef} />
         </ScrollArea>
