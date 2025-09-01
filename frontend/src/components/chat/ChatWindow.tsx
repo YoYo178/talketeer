@@ -1,7 +1,7 @@
 import { type FC } from 'react'
 import { ChatComposer } from './rich-text/ChatComposer';
 import { Button } from '../ui/button';
-import { Users } from 'lucide-react';
+import { Users, X } from 'lucide-react';
 import { ChatButton } from './rich-text/utility/ChatButton';
 import { MessageList } from './messages/MessageList';
 import { socket } from '@/socket';
@@ -50,7 +50,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
                 <p className='text-xl'>{selectedRoom.name}</p>
                 <div className='ml-auto flex gap-2'>
                     <ChatButton><Users className='size-5' /></ChatButton>
-                    <Button onClick={handleRoomLeave}>Leave room</Button>
+                    <Button onClick={handleRoomLeave}><X />Leave room</Button>
                 </div>
             </div>
 
