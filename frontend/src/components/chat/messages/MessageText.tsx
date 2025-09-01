@@ -7,6 +7,6 @@ interface MessageTextProps {
 
 export const MessageText: FC<MessageTextProps> = ({ content, className }) => {
     return (
-        <div className={'wrap-anywhere max-w-[50%] ' + (className ? className : '')}>{content}</div>
+        <div className={'break-words max-w-[80%] ' + (className ? className : '')}>{content}</div>
     )
 }
