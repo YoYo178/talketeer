@@ -45,7 +45,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
     }
 
     return (
-        <div className='flex-1 bg-card m-3 ml-0 p-0 rounded-xl flex flex-col'>
+        <div className='flex-1 flex flex-col bg-card rounded-xl overflow-auto'>
             <div className='flex p-4'>
                 <p className='text-xl'>{selectedRoom.name}</p>
                 <div className='ml-auto flex gap-2'>

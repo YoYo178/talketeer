@@ -28,7 +28,7 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
         }>
             {isSelfMessage ? (
                 <>
-                    <div className='flex flex-col items-end w-full'>
+                    <div className='flex flex-col items-end max-w-[80%]'>
                         <p className='text-muted-foreground text-[14px]'>
                             {new Date(messages[0].createdAt).toLocaleString()}
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>
@@ -41,7 +41,7 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
             ) : (
                 <>
                     <MessageProfilePicture avatarURL={userData?.data?.user.avatarURL} />
-                    <div className='flex flex-col items-start w-full'>
+                    <div className='flex flex-col items-start max-w-[80%]'>
                         <p className='text-muted-foreground text-[14px]'>
                             {userData?.data?.user.username}
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>

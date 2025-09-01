@@ -16,7 +16,7 @@ export const ChatHeader = () => {
     }
 
     return (
-        <div className='flex w-[calc(100%-1.5rem)] bg-(--color-primary-foreground) m-3 mb-0 p-5 rounded-xl'>
+        <div className='flex bg-(--color-primary-foreground) p-5 rounded-xl'>
             <h1 className='text-2xl font-bold'>Talketeer</h1>
             <div className='ml-auto flex gap-3'>
                 <ToggleThemeButton />

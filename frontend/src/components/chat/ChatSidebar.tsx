@@ -24,8 +24,8 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoom
     }, [rooms, searchText])
 
     return (
-        <div className='w-full md:w-64 lg:w-72 bg-card m-3 p-3 rounded-xl flex flex-col gap-3'>
-            <div className='flex gap-2'>
+        <div className='flex flex-col gap-3 w-72 p-3 rounded-xl bg-card'>
+            <div className='flex gap-2 max-w-full'>
                 <Input placeholder='Search rooms…' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
                 <Button className='whitespace-nowrap'>New room</Button> {/* TODO: functionality */}
             </div>
