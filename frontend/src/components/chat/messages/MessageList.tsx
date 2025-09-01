@@ -56,7 +56,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) 
             messageGroups.push(currentGroup);
 
         return messageGroups.map(group => (
-            <MessageBlock senderId={group[0].sender} messages={group} />
+            <MessageBlock key={group[0]._id} senderId={group[0].sender} messages={group} />
         ))
     }, [messages])
 

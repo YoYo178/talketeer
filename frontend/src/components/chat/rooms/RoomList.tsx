@@ -15,7 +15,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms, onSelectRoomId, selectedRoo
                 <div className='p-3 text-sm text-muted-foreground'>No rooms found</div>
             )}
             {rooms.map(room => (
-                <RoomEntry onSelectRoomId={onSelectRoomId} room={room} selectedRoomId={selectedRoomId} />
+                <RoomEntry key={room._id} onSelectRoomId={onSelectRoomId} room={room} selectedRoomId={selectedRoomId} />
             ))}
         </div>
     )
