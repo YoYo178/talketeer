@@ -64,7 +64,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
                     </div>
                 </div>
             ) : (
-                <MessageList messages={selectedRoom.messages /* Array.from({ length: 32 }) */} /> /* TODO: temporary! */
+                <MessageList messages={selectedRoom.messages} selectedRoomId={selectedRoomId} />
             )}
 
             <div className='border-t border-border/40' />
