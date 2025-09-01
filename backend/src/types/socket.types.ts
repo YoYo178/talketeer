@@ -1,4 +1,3 @@
-import { ObjectId } from "mongoose";
 import { Server, Socket } from "socket.io";
 import { IUser } from "./user.types";
 import { IMessage } from "./message.types";
