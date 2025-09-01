@@ -7,7 +7,6 @@ export function startListeningMessageEvents(socket: Socket, queryClient?: QueryC
     stopListeningMessageEvents(socket);
 
     socket.on('newMessage', (roomId: string, userId: string, message: string, rawMessage?: IMessage) => {
-        console.log({ roomId, userId, message, rawMessage })
         if (rawMessage) {
             queryClient?.setQueryData(['rooms', roomId], (old: { data: { room: IRoom } }) => {
                 if (!old) return old;

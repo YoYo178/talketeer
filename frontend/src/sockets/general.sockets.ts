@@ -5,7 +5,6 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
     handleSocketDisconnection(socket);
 
     socket.on('roomUpdated', (roomId: string) => {
-        console.log("roomUpdated")
         queryClient?.invalidateQueries({ queryKey: ['rooms', roomId] });
     });
 
