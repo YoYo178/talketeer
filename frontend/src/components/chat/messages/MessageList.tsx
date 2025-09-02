@@ -61,6 +61,17 @@ export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) 
         ))
     }, [messages])
 
+    if (!messageElements.length) {
+        return (
+            <div className='flex-1 items-center content-center'>
+                <div className='text-center'>
+                    <p className='text-xl text-card-foreground'>This room currently has no messages.</p>
+                    <p className='text-m text-muted-foreground'>Send a message to get started!</p>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <ScrollArea className='flex flex-col flex-1 p-4 pt-0 pb-0 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
             {messageElements}
