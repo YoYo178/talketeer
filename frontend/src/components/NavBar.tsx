@@ -1,10 +1,10 @@
 import { useLogoutMutation } from '@/hooks/network/auth/useLogoutMutation'
-import ToggleThemeButton from '../scheme/theme-button'
-import { Button } from '../ui/button'
+import ToggleThemeButton from './scheme/theme-button'
+import { Button } from './ui/button'
 import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, MessagesSquare } from 'lucide-react';
 
-export const ChatHeader = () => {
+export const NavBar = () => {
     const queryClient = useQueryClient();
 
     const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
