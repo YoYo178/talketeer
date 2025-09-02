@@ -10,10 +10,14 @@ export const ChatHeader = () => {
     const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
 
     const handleLogout = async () => {
-        await logoutMutation.mutateAsync({});
+        try {
+            await logoutMutation.mutateAsync({});
 
-        if (logoutMutation.isSuccess)
             queryClient.invalidateQueries({ queryKey: ['users'] });
+        } catch (e: any) {
+            console.error('An error occured while logging out!')
+            console.error(e?.message || e);
+        }
     }
 
     return (
