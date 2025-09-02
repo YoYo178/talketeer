@@ -1,12 +1,8 @@
 import { type FC } from 'react'
 import { ChatComposer } from './rich-text/ChatComposer';
-import { Button } from '../ui/button';
-import { Users, X } from 'lucide-react';
-import { ChatButton } from './rich-text/utility/ChatButton';
 import { MessageList } from './messages/MessageList';
-import { socket } from '@/socket';
-import { stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
+import { ChatHeader } from './ChatHeader';
 
 interface ChatWindowProps {
     selectedRoomId: string | null;
@@ -21,18 +17,6 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
     });
     const selectedRoom = data?.data?.room;
 
-    const handleRoomLeave = () => {
-        if (!selectedRoom)
-            return;
-
-        socket.emit('roomLeft', selectedRoom._id, (success: boolean) => {
-            if (success) {
-                stopListeningRoomEvents(socket);
-                onSelectRoomId(null);
-            }
-        });
-    }
-
     if (!selectedRoom) {
         return (
             <div className='flex-1 bg-background p-6 flex items-center justify-center'>
@@ -46,13 +30,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
 
     return (
         <div className='flex-1 flex flex-col bg-card rounded-xl overflow-auto'>
-            <div className='flex p-4'>
-                <p className='text-xl'>{selectedRoom.name}</p>
-                <div className='ml-auto flex gap-2'>
-                    <ChatButton><Users className='size-5' /></ChatButton>
-                    <Button onClick={handleRoomLeave}><X />Leave room</Button>
-                </div>
-            </div>
+            <ChatHeader selectedRoom={selectedRoom} onSelectRoomId={onSelectRoomId} />
 
             <div className='border-t border-border/40' />
 
