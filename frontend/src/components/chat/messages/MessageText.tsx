@@ -7,6 +7,6 @@ interface MessageTextProps {
 
 export const MessageText: FC<MessageTextProps> = ({ content, className }) => {
     return (
-        <div className={'wrap-anywhere ' + (className ? className : '')}>{content}</div>
+        <div className={'whitespace-pre-wrap wrap-anywhere ' + (className ? className : '')}>{content}</div>
     )
 }
