@@ -3,6 +3,7 @@ import { ChatComposer } from './rich-text/ChatComposer';
 import { MessageList } from './messages/MessageList';
 import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { ChatHeader } from './ChatHeader';
+import { Separator } from '../ui/separator';
 
 interface ChatWindowProps {
     selectedRoomId: string | null;
@@ -31,13 +32,9 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
     return (
         <div className='flex-1 flex flex-col bg-card rounded-xl overflow-auto'>
             <ChatHeader selectedRoom={selectedRoom} onSelectRoomId={onSelectRoomId} />
-
-            <div className='border-t border-border/40' />
-
+            <Separator />
             <MessageList messages={selectedRoom.messages} selectedRoomId={selectedRoomId} />
-
-            <div className='border-t border-border/40' />
-
+            <Separator />
             <ChatComposer roomId={selectedRoom._id} />
         </div>
     )
