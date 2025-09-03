@@ -30,6 +30,9 @@ export interface IRoom {
     /** True for system generated rooms */
     isSystemGenerated: boolean;
 
+    /** Room's visibility */
+    visibility: 'public' | 'private';
+
     createdAt: number;
     updatedAt: number;
 }

@@ -16,7 +16,7 @@ const roomSchema = new mongoose.Schema<IRoom>({
     messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message', required: true }],
     isSystemGenerated: { type: Boolean, required: true },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-
+    visibility: { type: String, enum: ['public', 'private'], default: 'public' }
 }, { timestamps: true })
 
 export const Room = MongooseModel<IRoom>('Room', roomSchema)

@@ -9,4 +9,5 @@ export const DEFAULT_SYSTEM_ROOM_CONFIG: Omit<IRoom, '_id' | 'owner' | 'createdA
     members: [],
     messages: [],
     name: 'Public Chat Room',
+    visibility: 'public'
 }
