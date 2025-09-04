@@ -28,11 +28,11 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
             return;
 
         if (!!selectedRoomId) {
-            socket.emit('roomLeft', selectedRoomId, (success: boolean) => {
+            socket.emit('leaveRoom', selectedRoomId, (success: boolean) => {
                 if (success) {
                     stopListeningRoomEvents(socket);
 
-                    socket.emit('roomJoined', room._id, (success: boolean) => {
+                    socket.emit('joinRoom', room._id, (success: boolean) => {
                         if (success) {
                             startListeningRoomEvents(socket, queryClient);
                             onSelectRoomId(room._id);
@@ -41,7 +41,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                 }
             });
         } else {
-            socket.emit('roomJoined', room._id, (success: boolean) => {
+            socket.emit('joinRoom', room._id, (success: boolean) => {
                 if (success) {
                     startListeningRoomEvents(socket, queryClient);
                     onSelectRoomId(room._id);

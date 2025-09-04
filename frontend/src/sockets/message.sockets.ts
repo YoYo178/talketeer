@@ -27,12 +27,12 @@ export function startListeningMessageEvents(socket: Socket, queryClient?: QueryC
     });
 
     socket.on('messageEdited', (roomId: string, userId: string, oldMessage: string, newMessage: string) => {
-        console.log(`${userId} edited their message from '${oldMessage}' to '${newMessage}'`);
+        console.log(`${userId} edited their message in room ${roomId} from '${oldMessage}' to '${newMessage}'`);
     });
 
     socket.on('messageDeleted', (roomId: string, userId: string, deletedBy: string, message: string) => {
         if (userId === deletedBy)
-            return console.log(`${deletedBy} has deleted their message: ${message}`)
+            return console.log(`${deletedBy} has deleted their message from room ${roomId}: ${message}`)
 
         console.log(`${deletedBy} has deleted ${userId}'s message: ${message}`);
     });

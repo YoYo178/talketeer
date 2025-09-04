@@ -2,7 +2,7 @@ import { Room, User } from '@src/models';
 import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
 
 export function registerRoomHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
-    socket.on('roomJoined', async (roomId, ack) => {
+    socket.on('joinRoom', async (roomId, ack) => {
         try {
             const user = await User.findById(socket.data.user.id).select('-passwordHash').lean().exec();
             if (!user) return;
@@ -49,7 +49,7 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
         }
     });
 
-    socket.on('roomLeft', async (roomId, ack) => {
+    socket.on('leaveRoom', async (roomId, ack) => {
         try {
             const user = await User.findById(socket.data.user.id).select('-passwordHash').lean().exec();
             if (!user) return;

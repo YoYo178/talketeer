@@ -1,6 +1,7 @@
 import { Socket } from "socket.io-client";
 import type { IUser } from "./user.types";
 import type { IMessage } from "./message.types";
+import type { IRoom } from "./room.types";
 
 // TODO
 export interface ServerToClientEvents {
@@ -24,10 +25,15 @@ export interface ServerToClientEvents {
 
 // TODO
 export interface ClientToServerEvents {
-    roomJoined: (roomId: string, ack: (success: boolean) => void) => void;
-    roomLeft: (roomId: string, ack: (success: boolean) => void) => void;
+    createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: (success: boolean) => void) => void;
+    updateRoom: (roomId: string, newRoomData: Partial<Omit<IRoom, '_id'>>, ack: (success: boolean) => void) => void;
+    joinRoom: (roomId: string, ack: (success: boolean) => void) => void;
+    leaveRoom: (roomId: string, ack: (success: boolean) => void) => void;
+    deleteRoom: (roomId: string, ack: (success: boolean) => void) => void;
 
     sendMessage: (roomId: string, message: string, ack: (success: boolean) => void) => void;
+    editMessage: (roomId: string, messageId: string, newContent: string, ack: (success: boolean) => void) => void;
+    deleteMessage: (roomId: string, messageId: string, ack: (success: boolean) => void) => void;
 }
 
 // TODO
