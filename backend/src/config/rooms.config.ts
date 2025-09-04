@@ -11,3 +11,5 @@ export const DEFAULT_SYSTEM_ROOM_CONFIG: Omit<IRoom, '_id' | 'owner' | 'createdA
     name: 'Public Chat Room',
     visibility: 'public'
 }
+
+export const DEFAULT_ROOM_CODE_LENGTH = 6;

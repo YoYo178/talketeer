@@ -1,5 +1,7 @@
+import { DEFAULT_ROOM_CODE_LENGTH } from '@src/config';
 import { Room, User } from '@src/models';
 import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
+import { generateRoomCode } from '@src/utils/room.utils';
 
 export function registerRoomHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
     socket.on('joinRoom', async (roomId, ack) => {
@@ -88,4 +90,90 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
             ack(false)
         }
     });
+
+    socket.on('createRoom', async (name, visibility, memberLimit, ack) => {
+        try {
+            const user = await User.findById(socket.data.user.id).select('-passwordHash').lean().exec();
+            if (!user) return;
+
+            if (user.room?.toString()) {
+                const roomId = user.room.toString();
+                // Clear user's current room
+                await User.updateOne(
+                    { _id: socket.data.user.id },
+                    { $set: { room: null } }
+                );
+
+                const currentRoom = await Room.findById(roomId).lean().exec();
+                if (currentRoom?.members.some(mem => mem.user.toString() === socket.data.user.id)) {
+                    // Remove user from the room
+                    await Room.updateOne(
+                        { _id: roomId },
+                        {
+                            $pull: { members: { user: socket.data.user.id } }
+                        }
+                    );
+
+                    // Leave the specified room for the client
+                    socket.leave(roomId);
+                    console.log(`${socket.data.user.username} left room ${roomId}`);
+
+                    // Broadcast the member leave event to everyone in this room
+                    io.to(roomId).emit('memberLeft', socket.data.user.id);
+
+                    // Let other people (even ones not in the room) refetch the latest room details
+                    io.emit('roomUpdated', roomId);
+                }
+            }
+
+            const room = await Room.create({
+                name,
+                code: generateRoomCode(DEFAULT_ROOM_CODE_LENGTH),
+                memberLimit,
+                members: [],
+                messages: [],
+                isSystemGenerated: false,
+                owner: user._id.toString(),
+                visibility
+            });
+            const roomId = room._id.toString();
+
+            io.emit('roomCreated', room.toObject());
+
+            // Set user's current room
+            await User.updateOne(
+                { _id: socket.data.user.id },
+                { $set: { room: roomId } }
+            );
+
+            // Add user to the room members
+            await Room.updateOne(
+                { _id: roomId },
+                {
+                    $push: {
+                        members: {
+                            user: socket.data.user.id,
+                            roomRole: 'member',
+                            joinTimestamp: Date.now()
+                        }
+                    }
+                }
+            )
+
+            // Join the specified room for the client
+            socket.join(roomId);
+            console.log(`${socket.data.user.username} joined room ${roomId}`);
+
+            // Broadcast the member join event to everyone in this room
+            io.to(roomId).emit('memberJoined', socket.data.user.id);
+
+            // Let other people (even ones not in the room) refetch the latest room details
+            io.emit('roomUpdated', roomId);
+
+            ack(true);
+        } catch (err) {
+            console.error("Error creating room:", err);
+            ack(false)
+        }
+    })
 }
