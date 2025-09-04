@@ -34,6 +34,9 @@ export interface IUser {
     /** User's friends */
     friends: IUserFriend[];
 
+    /** The room the user is currently in */
+    room: string | null;
+
     createdAt: number;
     updatedAt: number;
 }
