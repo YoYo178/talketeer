@@ -2,16 +2,68 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useGetRoomsQuery } from '@/hooks/network/rooms/useGetRoomsQuery'
+import { socket } from '@/socket'
+import { stopListeningRoomEvents, startListeningRoomEvents } from '@/sockets/room.sockets'
+import type { IRoom } from '@/types/room.types'
+import { useQueryClient } from '@tanstack/react-query'
 import { HousePlus } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type FC } from 'react'
 
-export const JoinRoomDialog = () => {
+interface JoinRoomDialogProps {
+    onSelectRoomId: (roomId: string | null) => void;
+    selectedRoomId: string | null
+}
+
+export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, selectedRoomId }) => {
+    const queryClient = useQueryClient();
+    const { data } = useGetRoomsQuery({ queryKey: ['rooms'] });
+    const roomsList: IRoom[] = data?.data.rooms || [];
+
     const [open, setOpen] = useState(false);
     const [code, setCode] = useState('');
+    const [error, setError] = useState('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        // TODO: join room
+
+        const room = roomsList.find(room => room.code === code);
+
+        if (!room) {
+            setError('Invalid code, No associated room was found.');
+            return;
+        }
+
+        if (!!selectedRoomId) {
+            socket.emit('leaveRoom', selectedRoomId, (success: boolean) => {
+                if (success) {
+                    stopListeningRoomEvents(socket);
+
+                    socket.emit('joinRoom', room._id, (success: boolean) => {
+                        if (success) {
+                            startListeningRoomEvents(socket, queryClient);
+                            onSelectRoomId(room._id);
+                            setOpen(false);
+                        }
+                    });
+                }
+            });
+        } else {
+            socket.emit('joinRoom', room._id, (success: boolean) => {
+                if (success) {
+                    startListeningRoomEvents(socket, queryClient);
+                    onSelectRoomId(room._id);
+                    setOpen(false);
+                }
+            });
+        }
+    }
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (error.length)
+            setError('');
+
+        setCode(e.target.value)
     }
 
     return (
@@ -32,15 +84,21 @@ export const JoinRoomDialog = () => {
                 <form onSubmit={handleSubmit} className='grid gap-3' >
 
                     <Label htmlFor='room-code-1'>Room code</Label>
-                    <Input
-                        id='room-code-1'
-                        type='text'
-                        maxLength={6}
-                        value={code}
-                        onChange={(e) => setCode(e.target.value)}
-                        placeholder='Room code'
-                        required
-                    />
+                    <div className='flex flex-col gap-1'>
+                        <Input
+                            id='room-code-1'
+                            type='text'
+                            maxLength={6}
+                            value={code}
+                            onChange={handleInput}
+                            placeholder='Room code'
+                            className={error ? "border-red-500" : ""}
+                            required
+                        />
+                        {error && (
+                            <p className='text-sm text-red-500'>{error}</p>
+                        )}
+                    </div>
 
                     <DialogFooter>
                         <DialogClose asChild>

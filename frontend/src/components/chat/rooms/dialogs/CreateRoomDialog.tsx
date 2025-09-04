@@ -6,11 +6,15 @@ import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
+import { socket } from '@/socket'
+import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets'
 import type { IUser } from '@/types/user.types'
+import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 export const CreateRoomDialog = () => {
+    const queryClient = useQueryClient();
     const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
     const user: IUser | undefined = data?.data?.user;
 
@@ -21,9 +25,15 @@ export const CreateRoomDialog = () => {
     const [memberLimit, setMemberLimit] = useState([10]);
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        console.log(e)
-        // TODO: create room
+        e.preventDefault();
+
+        socket.emit('createRoom', name, visibility, memberLimit[0], (success) => {
+            if (success) {
+                setOpen(false);
+                stopListeningRoomEvents(socket);
+                startListeningRoomEvents(socket, queryClient);
+            }
+        })
     }
 
     return (

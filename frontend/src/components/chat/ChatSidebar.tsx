@@ -28,7 +28,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoom
         <div className='flex flex-col gap-3 w-72 p-3 rounded-xl bg-card'>
             <div className='flex gap-2 max-w-full'>
                 <CreateRoomDialog />
-                <JoinRoomDialog />
+                <JoinRoomDialog onSelectRoomId={onSelectRoomId} selectedRoomId={selectedRoomId}/>
             </div>
 
             <Input placeholder='Search rooms…' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
