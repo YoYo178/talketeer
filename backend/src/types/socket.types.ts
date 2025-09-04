@@ -6,9 +6,9 @@ import { IRoom } from "./room.types";
 // TODO
 export interface ServerToClientEvents {
     /** For users NOT in a room */
-    roomCreated: (roomId: string, roomName: string, memberCount: number, owner: IUser) => void;
+    roomCreated: (room: IRoom) => void;
     roomUpdated: (roomId: string) => void;
-    roomDeleted: (roomId: string, roomName: string) => void;
+    roomDeleted: (roomId: string) => void;
 
     notification: () => void;
 
