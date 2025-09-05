@@ -1,3 +1,1 @@
-import mongoose from "mongoose";
-
-export type DBRef<T> = mongoose.Types.ObjectId | T;
+export type DBRef<T> = string | T;
