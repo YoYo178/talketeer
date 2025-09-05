@@ -1,8 +1,9 @@
-import { Message, Room } from '@src/models';
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
+import { Message, Room } from "@src/models";
+import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { AckFunc } from "@src/types/socket.types";
 
-export function registerMessageHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
-    socket.on('sendMessage', async (roomId, messageContent, ack) => {
+export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {
+    return async (roomId: string, messageContent: string, ack: AckFunc) => {
         try {
             const room = await Room.findById(roomId);
 
@@ -14,7 +15,7 @@ export function registerMessageHandlers(io: TalketeerSocketServer, socket: Talke
                 sender: socket.data.user.id
             })
 
-            room.messages.push(message._id);
+            room.messages.push(message._id.toString());
             await room.save();
 
             console.log(`${socket.data.user.username} sent message: ${messageContent}`)
@@ -23,5 +24,5 @@ export function registerMessageHandlers(io: TalketeerSocketServer, socket: Talke
         } catch (err) {
             ack(false)
         }
-    });
+    }
 }
