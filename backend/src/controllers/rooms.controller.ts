@@ -1,18 +1,23 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { Room } from "@src/models";
 import { TRoomIdParams } from "@src/schemas";
+import { IRoomPublicView, IRoom } from "@src/types";
+import { sanitizeRoomObj } from "@src/utils/room.utils";
 import type { Request, Response, NextFunction } from "express";
 
 export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
-    const rooms = await Room.find({})
+    const dbRooms = await Room.find({})
         .populate({
             path: 'messages',
             options: { sort: { createdAt: -1 } },
             perDocumentLimit: 20
-        });
+        })
+        .lean()
+        .exec();
 
-    rooms.forEach(room => {
+    const rooms: (IRoom | IRoomPublicView)[] = dbRooms.map(room => {
         room.messages = room.messages.reverse();
+        return sanitizeRoomObj(room, req.user.id);
     })
 
     res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } })
@@ -26,7 +31,9 @@ export const getRoomById = async (req: Request, res: Response, next: NextFunctio
             path: 'messages',
             options: { sort: { createdAt: -1 } },
             perDocumentLimit: 20
-        });
+        })
+        .lean()
+        .exec();
 
     if (!room) {
         res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'Room not found' })
@@ -35,7 +42,7 @@ export const getRoomById = async (req: Request, res: Response, next: NextFunctio
 
     room.messages = room.messages.reverse();
 
-    res.status(HttpStatusCodes.OK).json({ success: true, data: { room: room.toObject() } })
+    res.status(HttpStatusCodes.OK).json({ success: true, data: { room: sanitizeRoomObj(room, req.user.id) } })
 }
 
 export const createRoom = (req: Request, res: Response, next: NextFunction) => {
