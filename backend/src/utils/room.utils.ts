@@ -1,5 +1,6 @@
 import { DEFAULT_SYSTEM_ROOM_CONFIG, MAX_SYSTEM_ROOMS } from "@src/config";
 import { Room } from "@src/models"
+import { IRoom, IRoomPublicView } from "@src/types";
 
 export const populateRoomData = async () => {
     const rooms = await Room.find({ isSystemGenerated: true }).lean().exec();
@@ -35,4 +36,20 @@ export function generateRoomCode(length: number): string {
     }
 
     return result;
+}
+
+export function sanitizeRoomObj(room: IRoom, userID: string): IRoom | IRoomPublicView {
+    const isUserInRoom = room.members.some(mem => mem.user.toString() === userID);
+
+    if (!isUserInRoom) {
+        return {
+            ...room,
+            code: undefined,
+            owner: undefined,
+            members: undefined,
+            messages: undefined,
+        };
+    }
+
+    return room;
 }
