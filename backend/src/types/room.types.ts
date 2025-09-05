@@ -19,13 +19,16 @@ export interface IRoom {
     code: string;
 
     /** Room owner */
-    owner: DBRef<IUser>
+    owner: DBRef<IUser> | null;
 
     /** Room members array */
     members: IRoomMember[];
 
     /** Room messages array */
     messages: DBRef<IMessage>[];
+
+    /** Number of members currently in the room */
+    memberCount: number;
 
     /** Room member limit (2 > n > 10) */
     memberLimit: number;
@@ -39,3 +42,5 @@ export interface IRoom {
     createdAt: number;
     updatedAt: number;
 }
+
+export type IRoomPublicView = Omit<IRoom, 'code' | 'owner' | 'members' | 'messages'>;

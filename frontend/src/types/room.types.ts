@@ -1,7 +1,7 @@
 import type { IMessage } from "./message.types";
 
 export interface IRoomMember {
-    user: string; // TODO: IPublicUser
+    user: string;
     roomRole: 'admin' | 'member';
     joinTimestamp: number;
 }
@@ -16,13 +16,16 @@ export interface IRoom {
     code: string;
 
     /** Room owner */
-    owner: string // TODO: IPublicUser
+    owner: string | null
 
     /** Room members array */
     members: IRoomMember[];
 
     /** Room messages array */
     messages: IMessage[];
+
+    /** Number of members currently in the room */
+    memberCount: number;
 
     /** Room member limit (2 > n > 10) */
     memberLimit: number;
@@ -37,4 +40,4 @@ export interface IRoom {
     updatedAt: number;
 }
 
-
+export type IRoomPublicView = Omit<IRoom, 'code' | 'owner' | 'members' | 'messages'>;
