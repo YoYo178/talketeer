@@ -1,9 +1,8 @@
 import { Message, Room } from "@src/models";
-import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
-import { AckFunc } from "@src/types/socket.types";
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 
-export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {
-    return async (roomId: string, messageContent: string, ack: AckFunc) => {
+export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendMessage'] => {
+    return async (roomId, messageContent, ack) => {
         try {
             const room = await Room.findById(roomId);
 
@@ -20,9 +19,13 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
 
             console.log(`${socket.data.user.username} sent message: ${messageContent}`)
             io.to(roomId).emit('newMessage', roomId, socket.data.user.id, messageContent, message.toObject());
-            ack(true);
+
+            ack({ success: true });
         } catch (err) {
-            ack(false)
+            ack({
+                success: true,
+                error: err?.message || 'Unknown error'
+            });
         }
     }
 }

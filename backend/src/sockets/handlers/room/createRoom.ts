@@ -1,32 +1,33 @@
 import { DEFAULT_ROOM_CODE_LENGTH } from "@src/config";
 import { createRoom, joinRoom, leaveRoom } from "@src/services/room.service";
 import { getUser, isUserInRoom } from "@src/services/user.service";
-import { AckFunc, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { generateRoomCode } from "@src/utils/room.utils";
 
-export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {
-    return async (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc) => {
+export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
+    return async (name, visibility, memberLimit, ack) => {
         try {
             const userId = socket.data.user.id;
             const user = await getUser(userId);
             if (!user) return;
 
-            const roomId = user.room?.toString();
-            if (!roomId) return;
-            const userInRoom = await isUserInRoom(userId, roomId);
+            if (user.room?.toString()) {
+                const roomId = user.room.toString();
+                const userInRoom = await isUserInRoom(userId, roomId);
 
-            if (userInRoom) {
-                await leaveRoom(userId, roomId);
+                if (userInRoom) {
+                    await leaveRoom(userId, roomId);
 
-                // Leave the specified room for the client
-                socket.leave(roomId);
-                console.log(`${socket.data.user.username} left room ${roomId}`);
+                    // Leave the specified room for the client
+                    socket.leave(roomId);
+                    console.log(`${socket.data.user.username} left room ${roomId}`);
 
-                // Broadcast the member leave event to everyone in this room
-                io.to(roomId).emit('memberLeft', userId);
+                    // Broadcast the member leave event to everyone in this room
+                    io.to(roomId).emit('memberLeft', userId);
 
-                // Let other people (even ones not in the room) refetch the latest room details
-                io.emit('roomUpdated', roomId);
+                    // Let other people (even ones not in the room) refetch the latest room details
+                    io.emit('roomUpdated', roomId);
+                }
             }
 
             const newRoom = await createRoom({
@@ -39,10 +40,11 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
                 owner: userId,
                 visibility
             })
+            const roomId = newRoom._id.toString();
 
             io.emit('roomCreated', newRoom);
 
-            await joinRoom(userId, newRoom._id.toString());
+            await joinRoom(userId, roomId);
 
             // Join the specified room for the client
             socket.join(roomId);
@@ -54,10 +56,13 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             // Let other people (even ones not in the room) refetch the latest room details
             io.emit('roomUpdated', roomId);
 
-            ack(true);
+            ack({ success: true });
         } catch (err) {
             console.error("Error creating room:", err);
-            ack(false, err?.message || 'Unknown error');
+            ack({
+                success: false,
+                error: err?.message || 'Unknown error'
+            });
         }
     }
 }
