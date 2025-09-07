@@ -12,7 +12,7 @@ export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
     const [message, setMessage] = useState('');
     
     const sendMessage = () => {
-        socket.emit('sendMessage', roomId, message, (success: boolean) => {
+        socket.emit('sendMessage', roomId, message, ({ success }) => {
             if (success)
                 setMessage('');
         })

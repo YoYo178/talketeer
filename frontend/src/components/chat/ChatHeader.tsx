@@ -17,7 +17,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
         if (!selectedRoom)
             return;
 
-        socket.emit('leaveRoom', selectedRoom._id, (success: boolean) => {
+        socket.emit('leaveRoom', selectedRoom._id, ({ success }) => {
             if (success) {
                 stopListeningRoomEvents(socket);
                 onSelectRoomId(null);

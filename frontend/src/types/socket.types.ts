@@ -22,13 +22,14 @@ export interface ServerToClientEvents {
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
 }
 
-export type AckFunc = (success: boolean, error?: string) => void;
+export type AckOptions<T> = { success: boolean, data?: T, error?: string };
+export type AckFunc<T = null> = (options: AckOptions<T>) => void;
 
 // TODO
 export interface ClientToServerEvents {
     createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc) => void;
     updateRoom: (roomId: string, newRoomData: Partial<Omit<IRoom, '_id'>>, ack: AckFunc) => void;
-    joinRoom: (roomId: string, ack: AckFunc) => void;
+    joinRoom: (payload: { method: 'code' | 'id', data: string }, ack: AckFunc<string>) => void;
     leaveRoom: (roomId: string, ack: AckFunc) => void;
     deleteRoom: (roomId: string, ack: AckFunc) => void;
 
