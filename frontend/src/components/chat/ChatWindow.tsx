@@ -4,6 +4,7 @@ import { MessageList } from './messages/MessageList';
 import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { ChatHeader } from './ChatHeader';
 import { Separator } from '../ui/separator';
+import type { IRoom } from '@/types/room.types';
 
 interface ChatWindowProps {
     selectedRoomId: string | null;
@@ -16,7 +17,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
         pathParams: { roomId: selectedRoomId || '' },
         enabled: !!selectedRoomId
     });
-    const selectedRoom = data?.data?.room;
+    const selectedRoom: IRoom = data?.data?.room;
 
     if (!selectedRoom) {
         return (

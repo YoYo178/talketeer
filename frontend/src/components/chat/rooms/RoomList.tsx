@@ -1,10 +1,10 @@
-import type { IRoom } from '@/types/room.types';
+import type { IRoomPublicView } from '@/types/room.types';
 import type { FC } from 'react';
 import { RoomEntry } from './RoomEntry';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface RoomListProps {
-    rooms: IRoom[];
+    rooms: IRoomPublicView[];
     onSelectRoomId: (roomId: string | null) => void;
     selectedRoomId: string | null;
 }

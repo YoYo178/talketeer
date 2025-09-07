@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { useGetRoomsQuery } from '@/hooks/network/rooms/useGetRoomsQuery'
-import type { IRoom } from '@/types/room.types'
+import type { IRoomPublicView } from '@/types/room.types'
 import type { FC } from 'react'
 import { RoomList } from './rooms/RoomList'
 import { CreateRoomDialog } from './rooms/dialogs/CreateRoomDialog'
@@ -16,7 +16,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoom
     const [searchText, setSearchText] = useState('')
     const { data } = useGetRoomsQuery({ queryKey: ['rooms'] })
 
-    const rooms: IRoom[] = data?.data?.rooms || []
+    const rooms: IRoomPublicView[] = data?.data?.rooms || []
 
     const filteredRooms = useMemo(() => {
         const term = searchText.trim().toLowerCase()

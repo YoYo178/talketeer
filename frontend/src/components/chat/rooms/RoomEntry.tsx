@@ -1,13 +1,13 @@
 import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { socket } from '@/socket';
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
-import type { IRoom } from '@/types/room.types'
+import type { IRoomPublicView } from '@/types/room.types'
 import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react'
 import { Lock } from 'lucide-react'
 
 interface RoomEntryProps {
-    room: IRoom;
+    room: IRoomPublicView;
     onSelectRoomId: (roomId: string | null) => void;
     selectedRoomId: string | null;
 }
@@ -21,7 +21,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
         }
     );
 
-    const room: IRoom = data?.data?.room ?? localRoom;
+    const room: IRoomPublicView = data?.data?.room ?? localRoom;
 
     const handleRoomJoin = async () => {
         if (!room || room._id === selectedRoomId)
@@ -66,7 +66,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                     <span className='text-[10px] px-1.5 py-0.5 rounded-md bg-secondary-foreground text-primary-foreground font-bold'>SYSTEM</span>
                 )}
             </div>
-            <div className='text-xs text-muted-foreground'>Members: {room.members?.length}/{room.memberLimit}</div>
+            <div className='text-xs text-muted-foreground'>Members: {room.memberCount}/{room.memberLimit}</div>
         </button>
     )
 }
