@@ -117,7 +117,10 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
         return;
     }
 
-    next(new Error('Something went wrong.'))
+    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ 
+        success: false, 
+        error: 'Authentication failed' 
+    });
 }
 
 export const requireSocketAuth = async (socket: TalketeerSocket, next: (err?: ExtendedError) => void) => {
@@ -146,5 +149,5 @@ export const requireSocketAuth = async (socket: TalketeerSocket, next: (err?: Ex
         return;
     }
 
-    next(new Error('Something went wrong.'));
+    next(new Error('Authentication failed'));
 }
