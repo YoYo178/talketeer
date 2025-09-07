@@ -32,10 +32,10 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
                     });
 
                     // Broadcast the member leave event to everyone in this room
-                    io.to(roomId).emit('memberLeft', userId);
+                    socket.to(roomId).emit('memberLeft', userId);
 
                     // Let other people (even ones not in the room) refetch the latest room details
-                    io.emit('roomUpdated', roomId);
+                    socket.broadcast.emit('roomUpdated', roomId);
                 }
             }
 
@@ -51,7 +51,8 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             })
             const roomId = newRoom._id.toString();
 
-            io.emit('roomCreated', newRoom);
+            // Broadcast room creation to all users (they need to see new rooms)
+            socket.broadcast.emit('roomCreated', newRoom);
 
             await joinRoom(userId, roomId);
 
@@ -65,11 +66,11 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
                 memberLimit
             });
 
-            // Broadcast the member join event to everyone in this room
-            io.to(roomId).emit('memberJoined', socket.data.user.id);
+            // Broadcast the member join event to everyone in this room (except the joiner)
+            socket.to(roomId).emit('memberJoined', socket.data.user.id);
 
             // Let other people (even ones not in the room) refetch the latest room details
-            io.emit('roomUpdated', roomId);
+            socket.broadcast.emit('roomUpdated', roomId);
 
             ack({ success: true });
         } catch (err) {

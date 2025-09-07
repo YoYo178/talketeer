@@ -23,6 +23,7 @@ export const getDisconnectEventCallback = (io: TalketeerSocketServer, socket: Ta
 
         await leaveRoom(userId, user.room.toString());
 
-        io.emit('roomUpdated', user.room.toString());
+        // Broadcast room update to all other users
+        socket.broadcast.emit('roomUpdated', user.room.toString());
     }
 }

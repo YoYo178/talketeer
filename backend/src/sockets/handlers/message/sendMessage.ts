@@ -28,6 +28,8 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
                 roomId,
                 messageLength: messageContent.length
             });
+
+            // Broadcast message to everyone in the room (including sender for confirmation)
             io.to(roomId).emit('newMessage', roomId, socket.data.user.id, messageContent, message.toObject());
 
             ack({ success: true });
