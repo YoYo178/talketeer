@@ -30,14 +30,6 @@ export async function deleteUser(userId: string): Promise<IUser | null> {
     return User.findByIdAndDelete(userId).lean().exec();
 }
 
-export async function isUserInRoom(userId: string, roomId: string): Promise<boolean> {
-    const user = await User.findOne({ _id: userId, room: roomId })
-        .select("_id")
-        .lean()
-        .exec();
-    return !!user;
-}
-
 export async function updateUserRoom(userId: string, roomId: string | null) {
     return User.findByIdAndUpdate(
         userId,
