@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
+import { morganStream } from '@src/utils/logger.utils';
 
 
 import { CORSConfig } from './config';
@@ -32,6 +33,8 @@ app.use(cookieParser())
 // Show routes called in console during development
 if (ENV.NodeEnv === NodeEnvs.Dev) {
   app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined', { stream: morganStream }));
 }
 
 // Security
