@@ -5,6 +5,7 @@ import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { ChatHeader } from './ChatHeader';
 import { Separator } from '../ui/separator';
 import type { IRoom } from '@/types/room.types';
+import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
 
 interface ChatWindowProps {
     selectedRoomId: string | null;
@@ -19,12 +20,15 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
     });
     const selectedRoom: IRoom = data?.data?.room;
 
+    // Detect if we're below md breakpoint (768px)
+    const isMobile = useMediaQuery('(max-width: 767px)');
+
     if (!selectedRoom) {
         return (
             <div className='flex-1 bg-background p-6 flex items-center justify-center'>
                 <div className='text-center'>
                     <div className='text-xl font-semibold mb-1'>Join a room to get started!</div>
-                    <div className='text-sm text-muted-foreground'>Select a room on the left or create a new one.</div>
+                    <div className='text-sm text-muted-foreground'>Select a room {isMobile ? 'from above' : 'on the left'} or create a new one.</div>
                 </div>
             </div>
         )
