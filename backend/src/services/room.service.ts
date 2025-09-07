@@ -10,6 +10,10 @@ export async function getRoom(roomId: string): Promise<IRoom | null> {
     return Room.findById(roomId).lean().exec();
 }
 
+export async function getRoomByCode(code: string): Promise<IRoom | null> {
+    return Room.findOne({ code }).lean().exec();
+}
+
 export async function createRoom(roomData: Partial<Omit<IRoom, '_id' | 'createdAt' | 'updatedAt'>>): Promise<IRoom> {
     const newRoom = await Room.create({ ...roomData });
     return newRoom.toObject();
