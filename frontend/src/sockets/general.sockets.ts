@@ -45,7 +45,19 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
 }
 
 export function handleSocketDisconnection(socket: Socket) {
+    // Remove all general socket events
     socket.off('roomCreated');
     socket.off('roomUpdated');
     socket.off('notification');
+    
+    // Also remove any room-specific events that might still be active
+    socket.off('memberJoined');
+    socket.off('memberLeft');
+    socket.off('memberKicked');
+    socket.off('memberBanned');
+    
+    // Remove message events
+    socket.off('newMessage');
+    socket.off('messageEdited');
+    socket.off('messageDeleted');
 }

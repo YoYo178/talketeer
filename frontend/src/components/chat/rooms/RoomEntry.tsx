@@ -4,6 +4,7 @@ import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/roo
 import type { IRoomPublicView } from '@/types/room.types'
 import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react'
+import { useState } from 'react'
 import { Lock } from 'lucide-react'
 
 interface RoomEntryProps {
@@ -14,6 +15,7 @@ interface RoomEntryProps {
 
 export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId, selectedRoomId }) => {
     const queryClient = useQueryClient();
+    const [isJoining, setIsJoining] = useState(false);
     const { data } = useGetRoomByIdQuery(
         {
             queryKey: ['rooms', localRoom._id],
@@ -24,28 +26,42 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
     const room: IRoomPublicView = data?.data?.room ?? localRoom;
 
     const handleRoomJoin = async () => {
-        if (!room || room._id === selectedRoomId)
+        if (!room || room._id === selectedRoomId || isJoining)
             return;
 
-        if (!!selectedRoomId) {
-            socket.emit('leaveRoom', selectedRoomId, (success: boolean) => {
-                if (success) {
-                    stopListeningRoomEvents(socket);
+        setIsJoining(true);
 
-                    socket.emit('joinRoom', room._id, (success: boolean) => {
-                        if (success) {
-                            startListeningRoomEvents(socket, queryClient);
-                            onSelectRoomId(room._id);
-                        }
-                    });
+        if (!!selectedRoomId) {
+            // First leave the current room
+            socket.emit('leaveRoom', selectedRoomId, ({ success }) => {
+                if (success) {
+                    // Clean up room events for the old room
+                    stopListeningRoomEvents(socket);
+                    
+                    // Small delay to ensure cleanup is complete
+                    setTimeout(() => {
+                        // Join the new room
+                        socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success }) => {
+                            if (success) {
+                                queryClient.invalidateQueries({ queryKey: ['rooms', room._id] })
+                                startListeningRoomEvents(socket, queryClient);
+                                onSelectRoomId(room._id);
+                            }
+                            setIsJoining(false);
+                        });
+                    }, 100);
+                } else {
+                    setIsJoining(false);
                 }
             });
         } else {
-            socket.emit('joinRoom', room._id, (success: boolean) => {
+            socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success }) => {
                 if (success) {
+                    queryClient.invalidateQueries({ queryKey: ['rooms', room._id] })
                     startListeningRoomEvents(socket, queryClient);
                     onSelectRoomId(room._id);
                 }
+                setIsJoining(false);
             });
         }
     }
