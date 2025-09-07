@@ -18,18 +18,21 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
         }
         queryClient?.setQueryData(['rooms'], newRoomsData)
 
-        // Update user object
         const oldMeData: { success: boolean, data: { user: IUser } } | undefined = queryClient?.getQueryData(['users', 'me']);
-        const newMeData: { success: boolean, data: { user: IUser } } = {
-            success: true,
-            data: {
-                user: {
-                    ...oldMeData?.data.user,
-                    room: room._id
+        if (room.owner === oldMeData?.data.user._id) {
+            // Update user object
+            const newMeData: { success: boolean, data: { user: IUser } } = {
+                success: true,
+                data: {
+                    //@ts-ignore
+                    user: {
+                        ...oldMeData?.data.user,
+                        room: room._id
+                    }
                 }
             }
+            queryClient?.setQueryData(['users', 'me'], newMeData);
         }
-        queryClient?.setQueryData(['users', 'me'], newMeData);
     })
 
     socket.on('roomUpdated', (roomId: string) => {
