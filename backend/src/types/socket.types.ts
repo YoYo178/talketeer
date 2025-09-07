@@ -12,10 +12,10 @@ export interface ServerToClientEvents {
     notification: () => void;
 
     /** For users IN a room */
-    memberJoined: (userId: string) => void;
-    memberLeft: (userId: string) => void;
-    memberKicked: (userId: string, kickedBy: string, reason: string) => void;
-    memberBanned: (userId: string, bannedBy: string, reason: string) => void;
+    memberJoined: (roomId: string, userId: string) => void;
+    memberLeft: (roomId: string, userId: string) => void;
+    memberKicked: (roomId: string, userId: string, kickedBy: string, reason: string) => void;
+    memberBanned: (roomId: string, userId: string, bannedBy: string, reason: string) => void;
 
     newMessage: (roomId: string, userId: string, message: string, rawMessage?: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;

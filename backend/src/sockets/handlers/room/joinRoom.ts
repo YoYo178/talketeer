@@ -43,7 +43,7 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
             });
 
             // Broadcast the member join event to everyone in this room (except the joiner)
-            socket.to(roomId).emit('memberJoined', userId);
+            socket.to(roomId).emit('memberJoined', roomId, userId);
 
             // Let other people (even ones not in the room) refetch the latest room details
             socket.broadcast.emit('roomUpdated', roomId);

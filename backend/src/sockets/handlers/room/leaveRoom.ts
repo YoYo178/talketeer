@@ -23,7 +23,7 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
             });
 
             // Broadcast the member leave event to everyone in this room (except the leaver)
-            socket.to(roomId).emit('memberLeft', socket.data.user.id);
+            socket.to(roomId).emit('memberLeft', roomId, socket.data.user.id);
 
             // Let other people (even ones not in the room) refetch the latest room details
             socket.broadcast.emit('roomUpdated', roomId);

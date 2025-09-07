@@ -35,7 +35,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
                     });
 
                     // Broadcast the member leave event to everyone in this room
-                    socket.to(roomId).emit('memberLeft', userId);
+                    socket.to(roomId).emit('memberLeft', roomId, userId);
 
                     // Let other people (even ones not in the room) refetch the latest room details
                     socket.broadcast.emit('roomUpdated', roomId);
@@ -70,7 +70,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             });
 
             // Broadcast the member join event to everyone in this room (except the joiner)
-            socket.to(roomId).emit('memberJoined', socket.data.user.id);
+            socket.to(roomId).emit('memberJoined', roomId, socket.data.user.id);
 
             // Let other people (even ones not in the room) refetch the latest room details
             socket.broadcast.emit('roomUpdated', roomId);
