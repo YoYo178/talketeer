@@ -2,10 +2,8 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useGetRoomsQuery } from '@/hooks/network/rooms/useGetRoomsQuery'
 import { socket } from '@/socket'
 import { stopListeningRoomEvents, startListeningRoomEvents } from '@/sockets/room.sockets'
-import type { IRoom } from '@/types/room.types'
 import { useQueryClient } from '@tanstack/react-query'
 import { HousePlus } from 'lucide-react'
 import { useState, type FC } from 'react'
@@ -17,8 +15,6 @@ interface JoinRoomDialogProps {
 
 export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, selectedRoomId }) => {
     const queryClient = useQueryClient();
-    const { data } = useGetRoomsQuery({ queryKey: ['rooms'] });
-    const roomsList: IRoom[] = data?.data.rooms || [];
 
     const [open, setOpen] = useState(false);
     const [code, setCode] = useState('');
@@ -27,33 +23,32 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        const room = roomsList.find(room => room.code === code);
-
-        if (!room) {
-            setError('Invalid code, No associated room was found.');
-            return;
-        }
-
         if (!!selectedRoomId) {
-            socket.emit('leaveRoom', selectedRoomId, (success: boolean) => {
+            socket.emit('leaveRoom', selectedRoomId, ({ success }) => {
                 if (success) {
                     stopListeningRoomEvents(socket);
 
-                    socket.emit('joinRoom', room._id, (success: boolean) => {
+                    socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
                         if (success) {
                             startListeningRoomEvents(socket, queryClient);
-                            onSelectRoomId(room._id);
+                            onSelectRoomId(data!);
+                            queryClient.invalidateQueries({ queryKey: ['rooms', data!] })
                             setOpen(false);
                         }
                     });
+                } else {
+                    setError(error ?? 'Unknown error')
                 }
             });
         } else {
-            socket.emit('joinRoom', room._id, (success: boolean) => {
+            socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
                 if (success) {
                     startListeningRoomEvents(socket, queryClient);
-                    onSelectRoomId(room._id);
+                    onSelectRoomId(data!);
+                    queryClient.invalidateQueries({ queryKey: ['rooms', data!] })
                     setOpen(false);
+                } else {
+                    setError(error ?? 'Unknown error')
                 }
             });
         }
