@@ -24,7 +24,7 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
         e.preventDefault()
 
         if (!!selectedRoomId) {
-            socket.emit('leaveRoom', selectedRoomId, ({ success }) => {
+            socket.emit('leaveRoom', selectedRoomId, ({ success, error }) => {
                 if (success) {
                     stopListeningRoomEvents(socket);
 
@@ -34,6 +34,8 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
                             onSelectRoomId(data!);
                             queryClient.invalidateQueries({ queryKey: ['rooms', data!] })
                             setOpen(false);
+                        } else {
+                            setError(error ?? 'Unknown error')
                         }
                     });
                 } else {
