@@ -2,12 +2,16 @@ import { ChatSidebar } from '@/components/chat/ChatSidebar'
 import { ChatWindow } from '@/components/chat/ChatWindow'
 import { NavBar } from '@/components/NavBar'
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
+import { useSocketConnection } from '@/hooks/socket/useSocketConnection'
 import { useEffect, useState } from 'react'
 
 export const UserLayout = () => {
     const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
     const userRoomId = data?.data.user.room ?? null;
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+    
+    // Initialize socket connection
+    useSocketConnection();
 
     useEffect(() => {
         setSelectedRoomId(userRoomId);
