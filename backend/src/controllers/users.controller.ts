@@ -4,7 +4,7 @@ import { TUserIdParams } from "@src/schemas";
 import { IPublicUser } from "@src/types";
 import type { Request, Response, NextFunction } from "express";
 
-export const getSelfUser = async (req: Request, res: Response, next: NextFunction) => {
+export const getMe = async (req: Request, res: Response, next: NextFunction) => {
     const user = await User.findById(req.user.id);
 
     const { passwordHash, ...rest } = user!.toObject(); // Non-null assertion due to auth validation middleware
