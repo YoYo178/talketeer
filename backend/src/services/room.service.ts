@@ -1,6 +1,7 @@
 import { Room, User } from '@src/models';
 import { IRoom } from '@src/types';
 import { getUser, updateUserRoom } from './user.service';
+import mongoose from 'mongoose';
 
 export async function getAllRooms(filter = {}): Promise<IRoom[]> {
     return Room.find(filter).lean().exec();
@@ -40,7 +41,7 @@ export async function addUserToRoom(roomId: string, userId: string) {
                 },
             },
         },
-        { new: true, lean: true }
+        { new: true, lean: true, session: undefined } // Remove session for now, will be handled by transaction
     ).exec();
 }
 
@@ -48,7 +49,7 @@ export async function removeUserFromRoom(roomId: string, userId: string) {
     return Room.findByIdAndUpdate(
         roomId,
         { $inc: { memberCount: -1 }, $pull: { members: { user: userId } } },
-        { new: true, lean: true }
+        { new: true, lean: true, session: undefined } // Remove session for now, will be handled by transaction
     ).exec();
 }
 
@@ -61,43 +62,63 @@ export async function isUserInRoom(roomId: string, userId: string): Promise<bool
 }
 
 export async function joinRoom(userId: string, roomId: string) {
-    let user = await getUser(userId);
-    if (!user) throw new Error('User not found');
+    const session = await mongoose.startSession();
 
-    if (user.room?.toString() === roomId) return null;
+    try {
+        return await session.withTransaction(async () => {
+            let user = await getUser(userId);
+            if (!user) throw new Error('User not found');
 
-    let room = await getRoom(roomId);
-    if (!room) throw new Error('Room not found');
+            if (user.room?.toString() === roomId) return null;
 
-    const isAlreadyMember = await isUserInRoom(roomId, userId);
+            let room = await getRoom(roomId);
+            if (!room) throw new Error('Room not found');
 
-    if (!isAlreadyMember) {
-        room = await addUserToRoom(roomId, userId)
+            const isAlreadyMember = await isUserInRoom(roomId, userId);
 
-        // Update user's current room
-        user = await updateUserRoom(userId, roomId);
+            if (!isAlreadyMember) {
+                room = await addUserToRoom(roomId, userId);
+
+                // Update user's current room
+                user = await updateUserRoom(userId, roomId);
+            }
+
+            return { user, room };
+        });
+    } catch (error) {
+        throw new Error(`Failed to join room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+        await session.endSession();
     }
-
-    return { user, room };
 }
 
 export async function leaveRoom(userId: string, roomId: string) {
-    let user = await getUser(userId);
-    if (!user) throw new Error('User not found');
+    const session = await mongoose.startSession();
 
-    if (!user.room?.toString() || user.room?.toString() != roomId) return null;
+    try {
+        return await session.withTransaction(async () => {
+            let user = await getUser(userId);
+            if (!user) throw new Error('User not found');
 
-    let room = await getRoom(roomId);
-    if (!room) throw new Error('Room not found');
+            if (!user.room?.toString() || user.room?.toString() != roomId) return null;
 
-    const isMember = await isUserInRoom(roomId, userId);
+            let room = await getRoom(roomId);
+            if (!room) throw new Error('Room not found');
 
-    if (isMember) {
-        room = await removeUserFromRoom(roomId, userId);
+            const isMember = await isUserInRoom(roomId, userId);
 
-        // Update user's current room
-        user = await updateUserRoom(userId, null);
+            if (isMember) {
+                room = await removeUserFromRoom(roomId, userId);
+
+                // Update user's current room
+                user = await updateUserRoom(userId, null);
+            }
+
+            return { user, room };
+        });
+    } catch (error) {
+        throw new Error(`Failed to leave room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+        await session.endSession();
     }
-
-    return { user, room };
 }
