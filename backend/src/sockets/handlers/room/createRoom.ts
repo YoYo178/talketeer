@@ -6,6 +6,11 @@ import { generateRoomCode } from "@src/utils/room.utils";
 
 export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
     return async (name, visibility, memberLimit, ack) => {
+        if (!socket.data?.user) {
+            console.log('Unauthenticated user');
+            return;
+        }
+        
         try {
             const userId = socket.data.user.id;
             const user = await getUser(userId);

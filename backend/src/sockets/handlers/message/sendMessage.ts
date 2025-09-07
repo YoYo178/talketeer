@@ -3,6 +3,11 @@ import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@s
 
 export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendMessage'] => {
     return async (roomId, messageContent, ack) => {
+        if (!socket.data?.user) {
+            console.log('Unauthenticated user');
+            return;
+        }
+
         try {
             const room = await Room.findById(roomId);
 

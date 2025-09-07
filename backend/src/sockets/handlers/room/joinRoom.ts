@@ -3,6 +3,11 @@ import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@s
 
 export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
     return async ({ method, data }, ack) => {
+        if (!socket.data?.user) {
+            console.log('Unauthenticated user');
+            return;
+        }
+        
         try {
             const userId = socket.data.user.id;
             let roomId: string | null = null;
