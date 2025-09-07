@@ -1,5 +1,6 @@
 import { getRoomByCode, joinRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { joinRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 
 export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
@@ -8,8 +9,16 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
             logger.warn('Unauthenticated user attempted to join room');
             return;
         }
-        
+
         try {
+            // TODO: temporary!!
+            // Validate input
+            const validationResult = joinRoomSchema.safeParse({ method, data });
+            if (!validationResult.success) {
+                ack({ success: false, error: 'Invalid input data' });
+                return;
+            }
+
             const userId = socket.data.user.id;
             let roomId: string | null = null;
 

@@ -3,6 +3,7 @@ import { createRoom, joinRoom, leaveRoom, isUserInRoom } from "@src/services/roo
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { generateRoomCode } from "@src/utils/room.utils";
+import { createRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 
 export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
@@ -11,8 +12,16 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             logger.warn('Unauthenticated user attempted to create room');
             return;
         }
-        
+
         try {
+            // TODO: temporary!!
+            // Validate input
+            const validationResult = createRoomSchema.safeParse({ name, visibility, memberLimit });
+            if (!validationResult.success) {
+                ack({ success: false, error: 'Invalid input data' });
+                return;
+            }
+
             const userId = socket.data.user.id;
             const user = await getUser(userId);
             if (!user) {

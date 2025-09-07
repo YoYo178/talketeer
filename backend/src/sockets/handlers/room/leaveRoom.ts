@@ -1,5 +1,6 @@
 import { leaveRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { leaveRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 
 export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {
@@ -10,6 +11,14 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
         }
 
         try {
+            // TODO: temporary!!
+            // Validate input
+            const validationResult = leaveRoomSchema.safeParse({ roomId });
+            if (!validationResult.success) {
+                ack({ success: false, error: 'Invalid input data' });
+                return;
+            }
+
             const userId = socket.data.user.id;
 
             // Handle database leave process

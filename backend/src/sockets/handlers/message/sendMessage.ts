@@ -1,5 +1,6 @@
 import { Message, Room } from "@src/models";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { sendMessageSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 
 export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendMessage'] => {
@@ -10,6 +11,14 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
         }
 
         try {
+            // TODO: temporary!!
+            // Validate input
+            const validationResult = sendMessageSchema.safeParse({ roomId, message: messageContent });
+            if (!validationResult.success) {
+                ack({ success: false, error: 'Invalid input data' });
+                return;
+            }
+
             const room = await Room.findById(roomId);
 
             if (!room) {
