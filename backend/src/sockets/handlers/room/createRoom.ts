@@ -15,7 +15,10 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         try {
             const userId = socket.data.user.id;
             const user = await getUser(userId);
-            if (!user) return;
+            if (!user) {
+                ack({ success: false, error: 'User not found' });
+                return;
+            }
 
             if (user.room?.toString()) {
                 const roomId = user.room.toString();

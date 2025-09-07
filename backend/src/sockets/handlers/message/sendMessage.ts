@@ -12,8 +12,10 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
         try {
             const room = await Room.findById(roomId);
 
-            if (!room)
+            if (!room) {
+                ack({ success: false, error: 'Room not found' });
                 return;
+            }
 
             const message = await Message.create({
                 content: messageContent,
