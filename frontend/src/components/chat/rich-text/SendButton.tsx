@@ -1,11 +1,18 @@
-
 import { SendHorizontal } from 'lucide-react'
 import { ChatButton } from './utility/ChatButton'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export const SendButton = () => {
     return (
-        <ChatButton type='submit' >
-            <SendHorizontal className='size-5' />
-        </ChatButton>
+        <Tooltip>
+            <TooltipTrigger>
+                <ChatButton type='submit' >
+                    <SendHorizontal className='size-5' />
+                </ChatButton>
+            </TooltipTrigger>
+            <TooltipContent>
+                <p>Send message</p>
+            </TooltipContent>
+        </Tooltip>
     )
 }

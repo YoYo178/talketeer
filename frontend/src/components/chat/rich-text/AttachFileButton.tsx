@@ -1,12 +1,20 @@
 import { Paperclip } from 'lucide-react'
 import { ChatButton } from './utility/ChatButton'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 // TODO: functionality
 
 export const AttachFileButton = () => {
     return (
-        <ChatButton>
-            <Paperclip className='size-5' />
-        </ChatButton>
+        <Tooltip>
+            <TooltipTrigger>
+                <ChatButton>
+                    <Paperclip className='size-5' />
+                </ChatButton>
+            </TooltipTrigger>
+            <TooltipContent>
+                <p>Attach files</p>
+            </TooltipContent>
+        </Tooltip>
     )
 }
