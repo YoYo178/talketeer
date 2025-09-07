@@ -1,6 +1,6 @@
 import { DEFAULT_ROOM_CODE_LENGTH } from "@src/config";
-import { createRoom, joinRoom, leaveRoom } from "@src/services/room.service";
-import { getUser, isUserInRoom } from "@src/services/user.service";
+import { createRoom, joinRoom, leaveRoom, isUserInRoom } from "@src/services/room.service";
+import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { generateRoomCode } from "@src/utils/room.utils";
 
@@ -18,7 +18,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
             if (user.room?.toString()) {
                 const roomId = user.room.toString();
-                const userInRoom = await isUserInRoom(userId, roomId);
+                const userInRoom = await isUserInRoom(roomId, userId);
 
                 if (userInRoom) {
                     await leaveRoom(userId, roomId);
