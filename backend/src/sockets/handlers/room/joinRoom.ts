@@ -1,10 +1,11 @@
 import { getRoomByCode, joinRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import logger from "@src/utils/logger.utils";
 
 export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
     return async ({ method, data }, ack) => {
         if (!socket.data?.user) {
-            console.log('Unauthenticated user');
+            logger.warn('Unauthenticated user attempted to join room');
             return;
         }
         
@@ -35,7 +36,11 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
 
             // Join the specified room for the client
             socket.join(roomId);
-            console.log(`${socket.data.user.username} joined room ${roomId}`);
+            logger.info(`${socket.data.user.username} joined room ${roomId}`, {
+                userId: socket.data.user.id,
+                roomId,
+                method
+            });
 
             // Broadcast the member join event to everyone in this room
             io.to(roomId).emit('memberJoined', userId);
@@ -44,7 +49,13 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
             io.emit('roomUpdated', roomId);
             ack({ success: true, data: roomId });
         } catch (err) {
-            console.error("Error joining room:", err);
+            logger.error("Error joining room", {
+                userId: socket.data.user.id,
+                method,
+                data,
+                error: err?.message || 'Unknown error',
+                stack: err instanceof Error ? err.stack : undefined
+            });
             ack({
                 success: false,
                 error: err?.message || 'Unknown error'

@@ -1,6 +1,7 @@
 import { DEFAULT_SYSTEM_ROOM_CONFIG, MAX_SYSTEM_ROOMS } from "@src/config";
 import { Room } from "@src/models"
 import { IRoom, IRoomPublicView } from "@src/types";
+import logger from "./logger.utils";
 
 export const populateRoomData = async () => {
     const rooms = await Room.find({ isSystemGenerated: true }).lean().exec();
@@ -8,7 +9,7 @@ export const populateRoomData = async () => {
     if (MAX_SYSTEM_ROOMS - rooms.length <= 0)
         return;
 
-    console.info('Generating system rooms...');
+    logger.info('Generating system rooms...');
 
     for (let i = 0; i != MAX_SYSTEM_ROOMS; i++) {
         const roomCode = `tkt${String(i + 1).padStart(3, '0')}`;
@@ -23,7 +24,7 @@ export const populateRoomData = async () => {
             owner: null, // TODO: owner is not nullable
         })
 
-        console.info(`Created room "${roomCode}" successfully.`)
+        logger.info(`Created room "${roomCode}" successfully.`)
     }
 }
 

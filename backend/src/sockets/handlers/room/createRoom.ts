@@ -3,11 +3,12 @@ import { createRoom, joinRoom, leaveRoom, isUserInRoom } from "@src/services/roo
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { generateRoomCode } from "@src/utils/room.utils";
+import logger from "@src/utils/logger.utils";
 
 export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
     return async (name, visibility, memberLimit, ack) => {
         if (!socket.data?.user) {
-            console.log('Unauthenticated user');
+            logger.warn('Unauthenticated user attempted to create room');
             return;
         }
         
@@ -25,7 +26,10 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
                     // Leave the specified room for the client
                     socket.leave(roomId);
-                    console.log(`${socket.data.user.username} left room ${roomId}`);
+                    logger.info(`${socket.data.user.username} left room ${roomId} to create new room`, {
+                        userId: socket.data.user.id,
+                        oldRoomId: roomId
+                    });
 
                     // Broadcast the member leave event to everyone in this room
                     io.to(roomId).emit('memberLeft', userId);
@@ -53,7 +57,13 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
             // Join the specified room for the client
             socket.join(roomId);
-            console.log(`${socket.data.user.username} joined room ${roomId}`);
+            logger.info(`${socket.data.user.username} created and joined room ${roomId}`, {
+                userId: socket.data.user.id,
+                roomId,
+                roomName: name,
+                visibility,
+                memberLimit
+            });
 
             // Broadcast the member join event to everyone in this room
             io.to(roomId).emit('memberJoined', socket.data.user.id);
@@ -63,7 +73,11 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
             ack({ success: true });
         } catch (err) {
-            console.error("Error creating room:", err);
+            logger.error("Error creating room", {
+                userId: socket.data.user.id,
+                error: err?.message || 'Unknown error',
+                stack: err instanceof Error ? err.stack : undefined
+            });
             ack({
                 success: false,
                 error: err?.message || 'Unknown error'

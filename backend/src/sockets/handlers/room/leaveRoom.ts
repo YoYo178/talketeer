@@ -1,10 +1,11 @@
 import { leaveRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import logger from "@src/utils/logger.utils";
 
 export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {
     return async (roomId, ack) => {
         if (!socket.data?.user) {
-            console.log('Unauthenticated user');
+            logger.warn('Unauthenticated user attempted to leave room');
             return;
         }
 
@@ -16,7 +17,10 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
 
             // Leave the specified room for the client
             socket.leave(roomId);
-            console.log(`${socket.data.user.username} left room ${roomId}`);
+            logger.info(`${socket.data.user.username} left room ${roomId}`, {
+                userId: socket.data.user.id,
+                roomId
+            });
 
             // Broadcast the member leave event to everyone in this room
             io.to(roomId).emit('memberLeft', socket.data.user.id);
@@ -26,7 +30,12 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
 
             ack({ success: true })
         } catch (err) {
-            console.error("Error leaving room:", err);
+            logger.error("Error leaving room", {
+                userId: socket.data.user.id,
+                roomId,
+                error: err?.message || 'Unknown error',
+                stack: err instanceof Error ? err.stack : undefined
+            });
             ack({
                 success: false,
                 error: err?.message || 'Unknown error'

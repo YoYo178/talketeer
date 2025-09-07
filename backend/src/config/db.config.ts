@@ -1,10 +1,11 @@
 import ENV from "@src/common/ENV"
 import { Room, User } from "@src/models";
 import mongoose from "mongoose"
+import logger from "@src/utils/logger.utils";
 
 async function clearStaleData() {
     try {
-        console.info('Attempting to clear stale data from the database...')
+        logger.info('Attempting to clear stale data from the database...');
 
         // Clear all members in all rooms
         await Room.updateMany({}, { $set: { members: [], memberCount: 0 } });
@@ -12,19 +13,24 @@ async function clearStaleData() {
         // Clear users' room references
         await User.updateMany({}, { $unset: { room: '' } });
 
-        console.info('Cleared stale data from the database.')
+        logger.info('Cleared stale data from the database.');
     } catch (e) {
-        console.error('An error occured while attempting to clear stale data.')
-        console.error(e?.message || e)
+        logger.error('Error occurred while attempting to clear stale data', {
+            error: e instanceof Error ? e.message : 'Unknown error',
+            stack: e instanceof Error ? e.stack : undefined
+        });
     }
 }
 
 export const connectDB = async () => {
     try {
         await mongoose.connect(ENV.MongodbUri);
-        console.info("Connected to MongoDB successfully.")
+        logger.info("Connected to MongoDB successfully.");
         clearStaleData();
     } catch (error) {
-        console.error("Couldn't connect to MongoDB!\nExtra details: " + error?.message)
+        logger.error("Couldn't connect to MongoDB", {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined
+        });
     }
 }
