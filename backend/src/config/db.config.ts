@@ -7,7 +7,7 @@ async function clearStaleData() {
         console.info('Attempting to clear stale data from the database...')
 
         // Clear all members in all rooms
-        await Room.updateMany({}, { $set: { members: [] } });
+        await Room.updateMany({}, { $set: { members: [], memberCount: 0 } });
 
         // Clear users' room references
         await User.updateMany({}, { $unset: { room: '' } });

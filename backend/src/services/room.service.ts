@@ -27,6 +27,7 @@ export async function addUserToRoom(roomId: string, userId: string) {
     return Room.findByIdAndUpdate(
         roomId,
         {
+            $inc: { memberCount: 1 },
             $push: {
                 members: {
                     user: userId,
@@ -42,7 +43,7 @@ export async function addUserToRoom(roomId: string, userId: string) {
 export async function removeUserFromRoom(roomId: string, userId: string) {
     return Room.findByIdAndUpdate(
         roomId,
-        { $pull: { members: { user: userId } } },
+        { $inc: { memberCount: -1 }, $pull: { members: { user: userId } } },
         { new: true, lean: true }
     ).exec();
 }
