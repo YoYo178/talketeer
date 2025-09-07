@@ -37,6 +37,8 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                 if (success) {
                     // Clean up room events for the old room
                     stopListeningRoomEvents(socket);
+
+                    queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoomId] });
                     
                     // Small delay to ensure cleanup is complete
                     setTimeout(() => {

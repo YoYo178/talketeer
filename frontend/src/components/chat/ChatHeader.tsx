@@ -6,6 +6,7 @@ import type { FC } from 'react';
 import { useState } from 'react';
 import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ChatHeaderProps {
     selectedRoom: IRoomPublicView;
@@ -13,6 +14,7 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }) => {
+    const queryClient = useQueryClient();
     const [isLeaving, setIsLeaving] = useState(false);
 
     const handleRoomLeave = () => {
@@ -22,6 +24,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
         setIsLeaving(true);
         socket.emit('leaveRoom', selectedRoom._id, ({ success }) => {
             if (success) {
+                queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoom._id] });
                 stopListeningRoomEvents(socket);
                 onSelectRoomId(null);
             }
