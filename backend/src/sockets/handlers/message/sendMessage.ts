@@ -28,7 +28,7 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
             ack({ success: true });
         } catch (err) {
             ack({
-                success: true,
+                success: false,
                 error: err?.message || 'Unknown error'
             });
         }
