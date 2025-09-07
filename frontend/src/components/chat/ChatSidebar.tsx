@@ -25,7 +25,7 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoom
     }, [rooms, searchText])
 
     return (
-        <div className='flex flex-col gap-3 w-72 p-3 rounded-xl bg-card'>
+        <div className='flex flex-col gap-3 w-full md:w-72 p-3 rounded-xl bg-card'>
             <div className='flex gap-2 max-w-full'>
                 <CreateRoomDialog />
                 <JoinRoomDialog onSelectRoomId={onSelectRoomId} selectedRoomId={selectedRoomId}/>
