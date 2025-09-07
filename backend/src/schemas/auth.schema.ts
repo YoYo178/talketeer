@@ -20,7 +20,7 @@ export const signupSchema = z.object({
     username: z.string().nonempty(),
     name: z.string().nonempty(),
     displayName: z.string().nonempty(),
-    
+
     email: z.email(),
     password: z.string().min(8)
 })
