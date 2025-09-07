@@ -1,7 +1,6 @@
 import { ObjectId } from "mongoose";
 import { IUser } from "./user.types";
 import { DBRef } from "./db.types";
-import { IRoom } from "./room.types";
 
 export interface IMessage {
     _id: ObjectId;
