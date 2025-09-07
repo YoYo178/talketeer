@@ -13,7 +13,7 @@ interface ChatWindowProps {
 }
 
 export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId }) => {
-    const { data } = useGetRoomByIdQuery({
+    const { data, isLoading } = useGetRoomByIdQuery({
         queryKey: ['rooms', selectedRoomId || ''],
         pathParams: { roomId: selectedRoomId || '' },
         enabled: !!selectedRoomId
@@ -38,7 +38,7 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
         <div className='flex-1 flex flex-col bg-card rounded-xl overflow-auto'>
             <ChatHeader selectedRoom={selectedRoom} onSelectRoomId={onSelectRoomId} />
             <Separator />
-            <MessageList messages={selectedRoom.messages} selectedRoomId={selectedRoomId} />
+            <MessageList messages={selectedRoom.messages} selectedRoomId={selectedRoomId} areMessagesLoading={isLoading} />
             <Separator />
             <ChatComposer roomId={selectedRoom._id} />
         </div>

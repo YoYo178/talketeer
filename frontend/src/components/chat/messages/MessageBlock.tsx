@@ -1,9 +1,35 @@
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
 import { memo, type FC } from 'react'
-import { MessageProfilePicture } from './MessageProfilePicture';
-import { MessageText } from './MessageText';
+import { MessageProfilePicture, MessageProfilePictureSkeleton } from './MessageProfilePicture';
+import { MessageText, MessageTextSkeleton } from './MessageText';
 import { useGetUserQuery } from '@/hooks/network/users/useGetUserQuery';
 import type { IMessage } from '@/types/message.types';
+
+interface MessageBlockSkeletonProps {
+    align: 'start' | 'end';
+}
+
+export const MessageBlockSkeleton: FC<MessageBlockSkeletonProps> = ({ align }) => {
+    const generateArbitraryLines = (minLines: number, maxLines: number, minLength: number, maxLength: number) => {
+        const lines = Math.max(minLines, Math.floor(Math.random() * maxLines));
+
+        return Array.from({ length: lines }).map(() => {
+            const lineLength = Math.max(minLength, Math.floor(Math.random() * maxLength));
+            return (
+                <MessageTextSkeleton height={1} width={lineLength} />
+            )
+        })
+    }
+
+    return (
+        <div className={`flex self-${align} gap-2 p-2 pb-1 mb-2 overflow-hidden` + (align === 'end' ? ' flex-row-reverse' : '')}>
+            <MessageProfilePictureSkeleton />
+            <div className={`flex flex-col gap-2 items-${align}`}>
+                {...generateArbitraryLines(2, 5, 6, 10)}
+            </div>
+        </div>
+    )
+}
 
 interface MessageBlockProps {
     messages: IMessage[];

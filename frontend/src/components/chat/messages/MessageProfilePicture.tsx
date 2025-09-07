@@ -1,5 +1,15 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import { UserRound } from 'lucide-react'
 import type { FC } from 'react';
+import React from 'react';
+
+export const MessageProfilePictureSkeleton = React.memo(() => {
+    return (
+        <Skeleton
+            className='flex items-center justify-center size-10 min-w-10 max-w-10 aspect-square rounded-full bg-[#d8d8d8] dark:bg-[#242429] self-start'
+        />
+    )
+})
 
 interface MessageProfilePictureProps {
     avatarURL?: string;

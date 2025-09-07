@@ -1,14 +1,31 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, type FC } from 'react'
-import { MessageBlock } from './MessageBlock'
+import { MessageBlock, MessageBlockSkeleton } from './MessageBlock'
 import type { IMessage } from '@/types/message.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import React from 'react';
+
+const MessageListSkeleton = () => {
+    const alignArr: ('start' | 'end')[] = ['start', 'end']
+    const skeletons = Array.from({ length: 5 }, () => ({
+        align: alignArr[Math.floor(Math.random() * alignArr.length)]
+    }));
+
+    return (
+        <div className='flex-1 flex flex-col'>
+            {skeletons.map((skeleton, i) => (
+                <MessageBlockSkeleton key={i} align={skeleton.align as 'start' | 'end'} />
+            ))}
+        </div>
+    );
+}
 
 interface MessageListProps {
     messages: IMessage[];
     selectedRoomId?: string | null;
+    areMessagesLoading: boolean;
 }
 
-export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) => {
+export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId, areMessagesLoading }) => {
     const isAtBottom = useRef(false);
 
     const chatEndRef = useRef<HTMLDivElement>(null);
@@ -34,7 +51,7 @@ export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) 
     }, [messages])
 
     const messageElements = useMemo(() => {
-        if (!messages.length) return [];
+        if (!messages?.length) return [];
 
         const messageGroups = [];
 
@@ -63,12 +80,16 @@ export const MessageList: FC<MessageListProps> = ({ messages, selectedRoomId }) 
 
     if (!messageElements.length) {
         return (
-            <div className='flex-1 items-center content-center'>
-                <div className='text-center'>
-                    <p className='text-xl text-card-foreground'>This room currently has no messages.</p>
-                    <p className='text-m text-muted-foreground'>Send a message to get started!</p>
-                </div>
-            </div>
+            <div className='flex-1 flex items-center justify-center overflow-hidden m-6'>
+                {areMessagesLoading ? (
+                    <MessageListSkeleton />
+                ) : (
+                    <div className='text-center'>
+                        <p className='text-xl text-card-foreground'>This room currently has no messages.</p>
+                        <p className='text-m text-muted-foreground'>Send a message to get started!</p>
+                    </div>
+                )}
+            </div >
         )
     }
 
