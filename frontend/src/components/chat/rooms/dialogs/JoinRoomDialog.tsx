@@ -28,11 +28,15 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
                 if (success) {
                     stopListeningRoomEvents(socket);
 
+                    queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoomId] });
+                    queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+
                     socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
                         if (success) {
                             startListeningRoomEvents(socket, queryClient);
                             onSelectRoomId(data!);
-                            queryClient.invalidateQueries({ queryKey: ['rooms', data!] })
+                            queryClient.invalidateQueries({ queryKey: ['rooms', data!] });
+                            queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                             setOpen(false);
                         } else {
                             setError(error ?? 'Unknown error')
@@ -47,7 +51,8 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
                 if (success) {
                     startListeningRoomEvents(socket, queryClient);
                     onSelectRoomId(data!);
-                    queryClient.invalidateQueries({ queryKey: ['rooms', data!] })
+                    queryClient.invalidateQueries({ queryKey: ['rooms', data!] });
+                    queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     setOpen(false);
                 } else {
                     setError(error ?? 'Unknown error')

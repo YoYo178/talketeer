@@ -39,13 +39,15 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                     stopListeningRoomEvents(socket);
 
                     queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoomId] });
+                    queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     
                     // Small delay to ensure cleanup is complete
                     setTimeout(() => {
                         // Join the new room
                         socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success }) => {
                             if (success) {
-                                queryClient.invalidateQueries({ queryKey: ['rooms', room._id] })
+                                queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
+                                queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                                 startListeningRoomEvents(socket, queryClient);
                                 onSelectRoomId(room._id);
                             }
@@ -59,7 +61,8 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
         } else {
             socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success }) => {
                 if (success) {
-                    queryClient.invalidateQueries({ queryKey: ['rooms', room._id] })
+                    queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
+                    queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     startListeningRoomEvents(socket, queryClient);
                     onSelectRoomId(room._id);
                 }

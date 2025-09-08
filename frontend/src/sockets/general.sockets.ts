@@ -7,7 +7,6 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
     handleSocketDisconnection(socket);
 
     socket.on('roomCreated', (room: IRoom) => {
-
         // Update rooms data
         const oldRoomsData: { success: boolean, data: { rooms: IRoom[] } } | undefined = queryClient?.getQueryData(['rooms']);
         const newRoomsData: { success: boolean, data: { rooms: IRoom[] } } = {
@@ -19,20 +18,8 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
         queryClient?.setQueryData(['rooms'], newRoomsData)
 
         const oldMeData: { success: boolean, data: { user: IUser } } | undefined = queryClient?.getQueryData(['users', 'me']);
-        if (room.owner === oldMeData?.data.user._id) {
-            // Update user object
-            const newMeData: { success: boolean, data: { user: IUser } } = {
-                success: true,
-                data: {
-                    //@ts-ignore
-                    user: {
-                        ...oldMeData?.data.user,
-                        room: room._id
-                    }
-                }
-            }
-            queryClient?.setQueryData(['users', 'me'], newMeData);
-        }
+        if (room.owner === oldMeData?.data.user._id)
+            queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     })
 
     socket.on('roomUpdated', (roomId: string) => {
@@ -49,13 +36,13 @@ export function handleSocketDisconnection(socket: Socket) {
     socket.off('roomCreated');
     socket.off('roomUpdated');
     socket.off('notification');
-    
+
     // Also remove any room-specific events that might still be active
     socket.off('memberJoined');
     socket.off('memberLeft');
     socket.off('memberKicked');
     socket.off('memberBanned');
-    
+
     // Remove message events
     socket.off('newMessage');
     socket.off('messageEdited');
