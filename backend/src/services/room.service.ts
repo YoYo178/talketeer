@@ -61,6 +61,14 @@ export async function isUserInRoom(roomId: string, userId: string): Promise<bool
     return !!room;
 }
 
+export async function isUserRoomOwner(userId: string, roomId: string): Promise<boolean> {
+    const room = await Room.findOne({ _id: roomId, owner: userId })
+        .select('_id')
+        .lean()
+        .exec();
+    return !!room;
+}
+
 export async function joinRoom(userId: string, roomId: string) {
     const session = await mongoose.startSession();
 
