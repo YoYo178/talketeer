@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
 import { socket } from '@/socket'
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets'
+import type { IRoom } from '@/types/room.types'
 import type { IUser } from '@/types/user.types'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
@@ -27,8 +28,20 @@ export const CreateRoomDialog = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        socket.emit('createRoom', name, visibility, memberLimit[0], (success) => {
+        socket.emit('createRoom', name, visibility, memberLimit[0], ({ success, data }) => {
             if (success) {
+                if (data) {
+                    const oldRoomsData: { success: boolean, data: { rooms: IRoom[] } } | undefined = queryClient.getQueryData(['rooms']);
+                    const newRoomsData: { success: boolean, data: { rooms: IRoom[] } } = {
+                        success: true,
+                        data: { rooms: [...(oldRoomsData?.data.rooms || []), data] }
+                    }
+
+                    queryClient.setQueryData(['rooms'], newRoomsData);
+
+                    queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+                }
+
                 setOpen(false);
                 stopListeningRoomEvents(socket);
                 startListeningRoomEvents(socket, queryClient);

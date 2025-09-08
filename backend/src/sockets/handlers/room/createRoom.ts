@@ -84,7 +84,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             // Let other people (even ones not in the room) refetch the latest room details
             socket.broadcast.emit('roomUpdated', roomId);
 
-            ack({ success: true });
+            ack({ success: true, data: newRoom });
         } catch (err) {
             logger.error("Error creating room", {
                 userId: socket.data.user.id,

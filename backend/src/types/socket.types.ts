@@ -27,7 +27,7 @@ export type AckFunc<T = null> = (options: AckOptions<T>) => void;
 
 // TODO
 export interface ClientToServerEvents {
-    createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc) => void;
+    createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc<IRoom>) => void;
     updateRoom: (roomId: string, newRoomData: Partial<Omit<IRoom, '_id'>>, ack: AckFunc) => void;
     joinRoom: (payload: { method: 'code' | 'id', data: string }, ack: AckFunc<string>) => void;
     leaveRoom: (roomId: string, ack: AckFunc) => void;
