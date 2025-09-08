@@ -37,8 +37,10 @@ export const CreateRoomDialog = () => {
                         data: { rooms: [...(oldRoomsData?.data.rooms || []), data] }
                     }
 
+                    // Add created room to cache
                     queryClient.setQueryData(['rooms'], newRoomsData);
 
+                    // Refetch our own user object to get the latest 'room' property state
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                 }
 
