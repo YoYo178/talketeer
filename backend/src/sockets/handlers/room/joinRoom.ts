@@ -1,4 +1,4 @@
-import { getRoomByCode, joinRoom } from "@src/services/room.service";
+import { getRoom, getRoomByCode, joinRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { joinRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
@@ -14,22 +14,24 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
             // TODO: temporary!!
             // Validate input
             const validationResult = joinRoomSchema.safeParse({ method, data });
-            if (!validationResult.success) {
-                ack({ success: false, error: 'Invalid input data' });
-                return;
-            }
+            if (!validationResult.success)
+                throw new Error('Invalid input data');
 
             const userId = socket.data.user.id;
             let roomId: string | null = null;
 
             switch (method) {
                 case "id":
+                    const roomById = await getRoom(data);
+                    if (!roomById)
+                        throw new Error('Room not found');
                     roomId = data;
                     break;
 
                 case "code":
                     const roomByCode = await getRoomByCode(data);
-                    if (!roomByCode) throw new Error("Room not found");
+                    if (!roomByCode)
+                        throw new Error("Room not found");
                     roomId = roomByCode._id.toString();
                     break;
 

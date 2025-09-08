@@ -17,17 +17,13 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             // TODO: temporary!!
             // Validate input
             const validationResult = createRoomSchema.safeParse({ name, visibility, memberLimit });
-            if (!validationResult.success) {
-                ack({ success: false, error: 'Invalid input data' });
-                return;
-            }
+            if (!validationResult.success)
+                throw new Error('Invalid input data');
 
             const userId = socket.data.user.id;
             const user = await getUser(userId);
-            if (!user) {
-                ack({ success: false, error: 'User not found' });
-                return;
-            }
+            if (!user)
+                throw new Error('User not found');
 
             if (user.room?.toString()) {
                 const roomId = user.room.toString();

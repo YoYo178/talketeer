@@ -14,10 +14,8 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
             // TODO: temporary!!
             // Validate input
             const validationResult = leaveRoomSchema.safeParse({ roomId });
-            if (!validationResult.success) {
-                ack({ success: false, error: 'Invalid input data' });
-                return;
-            }
+            if (!validationResult.success)
+                throw new Error('Invalid input data');
 
             const userId = socket.data.user.id;
 
