@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 export const AttachFileButton = () => {
     return (
         <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
                 <ChatButton>
                     <Paperclip className='size-5' />
                 </ChatButton>

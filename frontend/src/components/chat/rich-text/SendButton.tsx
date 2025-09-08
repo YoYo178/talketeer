@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 export const SendButton = () => {
     return (
         <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger asChild>
                 <ChatButton type='submit' >
                     <SendHorizontal className='size-5' />
                 </ChatButton>
