@@ -1,21 +1,44 @@
-import { Users, X } from 'lucide-react'
+import { Trash, Users, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { ChatButton } from './rich-text/utility/ChatButton'
-import type { IRoomPublicView } from '@/types/room.types'
+import type { IRoom } from '@/types/room.types'
 import type { FC } from 'react';
 import { useState } from 'react';
 import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useQueryClient } from '@tanstack/react-query';
+import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
+import type { IUser } from '@/types/user.types';
+import { AlertDialog, AlertDialogFooter, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from '../ui/alert-dialog';
 
 interface ChatHeaderProps {
-    selectedRoom: IRoomPublicView;
+    selectedRoom: IRoom;
     onSelectRoomId: (roomId: string | null) => void;
 }
 
 export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }) => {
     const queryClient = useQueryClient();
     const [isLeaving, setIsLeaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    const { data: meData } = useGetMeQuery({ queryKey: ['users', 'me'] });
+    const me: IUser | undefined = meData?.data.user;
+
+    const isRoomOwner = selectedRoom.owner === me?._id;
+
+    const handleRoomDelete = () => {
+        if (!isRoomOwner || isDeleting)
+            return;
+
+        setIsDeleting(true);
+        socket.emit('deleteRoom', selectedRoom._id, ({ success }) => {
+            if (success) {
+                stopListeningRoomEvents(socket);
+                onSelectRoomId(null);
+            }
+            setIsDeleting(false);
+        })
+    }
 
     const handleRoomLeave = () => {
         if (!selectedRoom || isLeaving)
@@ -36,6 +59,34 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
         <div className='flex p-4'>
             <p className='text-xl'>{selectedRoom.name}</p>
             <div className='ml-auto flex gap-2'>
+                {isRoomOwner && (
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <ChatButton>
+                                <Trash className='size-5' />
+                            </ChatButton>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    <p>You are about to permanently delete this room.</p>
+                                    <p>All members will be kicked and the messages will be deleted.</p>
+                                    <br />
+                                    <p>This action cannot be undone.</p>
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel asChild>
+                                    <Button className='text-primary' variant='outline'>Cancel</Button>
+                                </AlertDialogCancel>
+                                <AlertDialogAction asChild>
+                                    <Button className='text-primary bg-red-600 hover:bg-red-500' onClick={handleRoomDelete}>Delete</Button>
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                )}
                 <ChatButton><Users className='size-5' /></ChatButton>
                 <Button onClick={handleRoomLeave}><X />Leave room</Button>
             </div>

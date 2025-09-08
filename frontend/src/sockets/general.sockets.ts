@@ -22,6 +22,22 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     })
 
+    socket.on('roomDeleted', (roomId: string) => {
+        // Update rooms data
+        const oldRoomsData: { success: boolean, data: { rooms: IRoom[] } } | undefined = queryClient?.getQueryData(['rooms']);
+        const newRoomsData: { success: boolean, data: { rooms: IRoom[] } } = {
+            success: true,
+            data: {
+                rooms: [...(oldRoomsData?.data.rooms || []).filter(room => room._id !== roomId)]
+            }
+        }
+        queryClient?.setQueryData(['rooms'], newRoomsData)
+
+        const oldMeData: { success: boolean, data: { user: IUser } } | undefined = queryClient?.getQueryData(['users', 'me']);
+        if (oldMeData?.data.user.room === roomId)
+            queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
+    })
+
     socket.on('roomUpdated', (roomId: string) => {
         queryClient?.invalidateQueries({ queryKey: ['rooms', roomId] });
     });
@@ -34,6 +50,7 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
 export function handleSocketDisconnection(socket: Socket) {
     // Remove all general socket events
     socket.off('roomCreated');
+    socket.off('roomDeleted');
     socket.off('roomUpdated');
     socket.off('notification');
 
