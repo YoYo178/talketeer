@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
 import { AlertDialog, AlertDialogFooter, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from '../ui/alert-dialog';
+import { EditRoomDialog } from './rooms/dialogs/EditRoomDialog';
 
 interface ChatHeaderProps {
     selectedRoom: IRoom;
@@ -57,8 +58,11 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
 
     return (
         <div className='flex p-4'>
-            <p className='text-xl'>{selectedRoom.name}</p>
-            <div className='ml-auto flex gap-2'>
+            <div className='flex gap-2 items-center'>
+                <p className='text-xl'>{selectedRoom.name}</p>
+                <EditRoomDialog selectedRoom={selectedRoom} />
+            </div>
+            <div className='flex gap-2 ml-auto'>
                 {isRoomOwner && (
                     <AlertDialog>
                         <AlertDialogTrigger asChild>
