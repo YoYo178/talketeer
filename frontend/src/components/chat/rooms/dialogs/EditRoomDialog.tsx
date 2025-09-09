@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Pencil } from 'lucide-react'
 import { useState, type FC } from 'react'
 import { ChatButton } from '../../rich-text/utility/ChatButton'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface EditRoomDialogProps {
     selectedRoom: IRoom
@@ -43,11 +44,18 @@ export const EditRoomDialog: FC<EditRoomDialogProps> = ({ selectedRoom }) => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <ChatButton>
-                    <Pencil className='size-4.5' />
-                </ChatButton>
-            </DialogTrigger>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <DialogTrigger asChild>
+                        <ChatButton>
+                            <Pencil className='size-4.5' />
+                        </ChatButton>
+                    </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>Edit room settings</p>
+                </TooltipContent>
+            </Tooltip>
 
             <DialogContent>
 

@@ -1,11 +1,12 @@
 import { useLogoutMutation } from '@/hooks/network/auth/useLogoutMutation'
-import ToggleThemeButton from './scheme/theme-button'
+import { ToggleThemeButton } from './scheme/theme-button'
 import { Button } from './ui/button'
 import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, MessagesSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export const NavBar = () => {
     const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
@@ -30,7 +31,7 @@ export const NavBar = () => {
 
             <div className='flex gap-2 items-center'>
                 <MessagesSquare className='size-8' />
-            <h1 className='text-2xl font-bold'>Talketeer</h1>
+                <h1 className='text-2xl font-bold'>Talketeer</h1>
             </div>
 
             {/* temporary, until i come up with a proper layout and a proper place */}
@@ -47,7 +48,15 @@ export const NavBar = () => {
             </div>
 
             <div className='ml-auto flex gap-3'>
-                <ToggleThemeButton />
+
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <ToggleThemeButton />
+                    </TooltipTrigger>
+                    <TooltipContent side='bottom'>
+                        <p>Toggle theme</p>
+                    </TooltipContent>
+                </Tooltip>
                 <Button className='ml-auto' onClick={handleLogout}><LogOut />Log out</Button>
             </div>
 

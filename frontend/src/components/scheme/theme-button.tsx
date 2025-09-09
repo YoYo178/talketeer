@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { forwardRef, useEffect, useState } from "react"
 import { Sun, Moon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -12,7 +12,10 @@ function getInitialIsDark(): boolean {
     return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
 }
 
-export function ToggleThemeButton({ className }: React.ComponentProps<"button">) {
+export const ToggleThemeButton = forwardRef<
+    HTMLButtonElement,
+    React.ComponentProps<typeof Button>
+>(({ className, ...props }, ref) => {
     const [isDark, setIsDark] = useState<boolean>(getInitialIsDark)
 
     useEffect(() => {
@@ -28,18 +31,16 @@ export function ToggleThemeButton({ className }: React.ComponentProps<"button">)
 
     return (
         <Button
+            ref={ref}
             type="button"
             size="icon"
             variant="outline"
             aria-label="Toggle theme"
             className={`rounded-full shadow-md ${className}`}
             onClick={() => setIsDark(v => !v)}
+            {...props}
         >
             {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </Button>
     )
-}
-
-export default ToggleThemeButton
-
-
+})

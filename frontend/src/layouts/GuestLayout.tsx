@@ -1,4 +1,4 @@
-import ToggleThemeButton from "@/components/scheme/theme-button"
+import { ToggleThemeButton } from "@/components/scheme/theme-button"
 import { Outlet } from "react-router-dom"
 
 export function GuestLayout() {

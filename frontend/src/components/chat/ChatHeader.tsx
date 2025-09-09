@@ -10,6 +10,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
 import { AlertDialog, AlertDialogFooter, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from '../ui/alert-dialog';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { EditRoomDialog } from './rooms/dialogs/EditRoomDialog';
 
 interface ChatHeaderProps {
@@ -65,11 +66,18 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
             <div className='flex gap-2 ml-auto'>
                 {isRoomOwner && (
                     <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <ChatButton>
-                                <Trash className='size-5' />
-                            </ChatButton>
-                        </AlertDialogTrigger>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <AlertDialogTrigger asChild>
+                                    <ChatButton>
+                                        <Trash className='size-5' />
+                                    </ChatButton>
+                                </AlertDialogTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Delete room</p>
+                            </TooltipContent>
+                        </Tooltip>
                         <AlertDialogContent>
                             <AlertDialogHeader>
                                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -91,7 +99,17 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
                         </AlertDialogContent>
                     </AlertDialog>
                 )}
-                <ChatButton><Users className='size-5' /></ChatButton>
+
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <ChatButton>
+                            <Users className='size-5' />
+                        </ChatButton>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>Member list</p>
+                    </TooltipContent>
+                </Tooltip>
                 <Button onClick={handleRoomLeave}><X />Leave room</Button>
             </div>
         </div>
