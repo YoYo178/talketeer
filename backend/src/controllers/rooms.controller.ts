@@ -9,16 +9,13 @@ export const getAllRooms = async (req: Request, res: Response, next: NextFunctio
     const dbRooms = await Room.find({})
         .populate({
             path: 'messages',
-            options: { sort: { createdAt: -1 } },
+            options: { sort: { createdAt: 1 } },
             perDocumentLimit: 20
         })
         .lean()
         .exec();
 
-    const rooms: (IRoom | IRoomPublicView)[] = dbRooms.map(room => {
-        room.messages = room.messages.reverse();
-        return sanitizeRoomObj(room, req.user.id);
-    })
+    const rooms: (IRoom | IRoomPublicView)[] = dbRooms.map(room => sanitizeRoomObj(room, req.user.id))
 
     res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } })
 }
@@ -29,7 +26,7 @@ export const getRoomById = async (req: Request, res: Response, next: NextFunctio
     const room = await Room.findById(roomId)
         .populate({
             path: 'messages',
-            options: { sort: { createdAt: -1 } },
+            options: { sort: { createdAt: 1 } },
             perDocumentLimit: 20
         })
         .lean()
@@ -39,8 +36,6 @@ export const getRoomById = async (req: Request, res: Response, next: NextFunctio
         res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'Room not found' })
         return;
     }
-
-    room.messages = room.messages.reverse();
 
     res.status(HttpStatusCodes.OK).json({ success: true, data: { room: sanitizeRoomObj(room, req.user.id) } })
 }
