@@ -90,13 +90,13 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
     const authDetails = await verifyAuth(refreshToken, accessToken);
 
     if (!authDetails.success && authDetails.error) {
-        res.status(authDetails.error.code).json({ success: false, error: authDetails.error.message });
+        res.status(authDetails.error.code).json({ success: false, message: authDetails.error.message });
         return;
     }
 
     if (authDetails.isMaliciousUser) {
         // TODO: Blacklist by IP
-        res.status(HttpStatusCodes.FORBIDDEN).json({ success: false, error: 'Malicious activity detected, you have been added to the blacklist.' });
+        res.status(HttpStatusCodes.FORBIDDEN).json({ success: false, message: 'Malicious activity detected, you have been added to the blacklist.' });
         return;
     }
 
