@@ -57,49 +57,69 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
         });
     }
 
+    if (isRoomOwner)
+        return (
+            <div className='flex p-4'>
+                <div className='flex gap-2 items-center'>
+                    <p className='text-xl'>{selectedRoom.name}</p>
+                    <EditRoomDialog selectedRoom={selectedRoom} />
+                </div>
+                <div className='flex gap-2 ml-auto'>
+                    {isRoomOwner && (
+                        <AlertDialog>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <AlertDialogTrigger asChild>
+                                        <ChatButton>
+                                            <Trash className='size-5' />
+                                        </ChatButton>
+                                    </AlertDialogTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Delete room</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        <p>You are about to permanently delete this room.</p>
+                                        <p>All members will be kicked and the messages will be deleted.</p>
+                                        <br />
+                                        <p>This action cannot be undone.</p>
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel asChild>
+                                        <Button className='text-primary' variant='outline'>Cancel</Button>
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction asChild>
+                                        <Button className='text-primary bg-red-600 hover:bg-red-500' onClick={handleRoomDelete}>Delete</Button>
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    )}
+
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <ChatButton>
+                                <Users className='size-5' />
+                            </ChatButton>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>Member list</p>
+                        </TooltipContent>
+                    </Tooltip>
+                    <Button onClick={handleRoomLeave}><X />Leave room</Button>
+                </div>
+            </div>
+        )
+
     return (
         <div className='flex p-4'>
-            <div className='flex gap-2 items-center'>
-                <p className='text-xl'>{selectedRoom.name}</p>
-                <EditRoomDialog selectedRoom={selectedRoom} />
-            </div>
+            <p className='text-xl'>{selectedRoom.name}</p>
             <div className='flex gap-2 ml-auto'>
-                {isRoomOwner && (
-                    <AlertDialog>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <AlertDialogTrigger asChild>
-                                    <ChatButton>
-                                        <Trash className='size-5' />
-                                    </ChatButton>
-                                </AlertDialogTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Delete room</p>
-                            </TooltipContent>
-                        </Tooltip>
-                        <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    <p>You are about to permanently delete this room.</p>
-                                    <p>All members will be kicked and the messages will be deleted.</p>
-                                    <br />
-                                    <p>This action cannot be undone.</p>
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel asChild>
-                                    <Button className='text-primary' variant='outline'>Cancel</Button>
-                                </AlertDialogCancel>
-                                <AlertDialogAction asChild>
-                                    <Button className='text-primary bg-red-600 hover:bg-red-500' onClick={handleRoomDelete}>Delete</Button>
-                                </AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                )}
-
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <ChatButton>
