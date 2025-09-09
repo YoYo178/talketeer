@@ -1,4 +1,5 @@
 import { ValidationSchemas } from "@src/types";
+import logger from "@src/utils/logger.utils";
 import type { Request, Response, NextFunction } from "express"
 import type { ZodError } from "zod"
 
@@ -14,15 +15,13 @@ export const validate = (schemas: ValidationSchemas) => {
             if (schemas.query) {
                 const result = schemas.query.safeParse(req.query);
                 if (!result.success) throw result.error;
-                // @ts-ignore
-                req.query = result.data;
+                Object.assign(req.query, result.data);
             }
 
             if (schemas.params) {
                 const result = schemas.params.safeParse(req.params);
                 if (!result.success) throw result.error;
-                // @ts-ignore
-                req.params = result.data;
+                Object.assign(req.params, result.data);
             }
 
             next();
