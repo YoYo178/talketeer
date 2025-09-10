@@ -24,7 +24,8 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
 
             const message = await Message.create({
                 content: messageContent,
-                sender: socket.data.user.id
+                sender: socket.data.user.id,
+                room: roomId
             })
 
             room.messages.push(message._id.toString());
