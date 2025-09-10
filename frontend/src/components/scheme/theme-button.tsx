@@ -29,6 +29,11 @@ export const ToggleThemeButton = forwardRef<
         }
     }, [isDark])
 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+        props?.onClick?.(e);
+        setIsDark(v => !v)
+    }
+
     return (
         <Button
             ref={ref}
@@ -37,8 +42,8 @@ export const ToggleThemeButton = forwardRef<
             variant="outline"
             aria-label="Toggle theme"
             className={`rounded-full shadow-md ${className}`}
-            onClick={() => setIsDark(v => !v)}
             {...props}
+            onClick={handleClick}
         >
             {isDark ? <Sun className="size-5" /> : <Moon className="size-5" />}
         </Button>
