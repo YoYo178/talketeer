@@ -15,3 +15,9 @@ export type Endpoint = {
 export type Endpoints = {
     [key in API_ROUTES]: Endpoint
 }
+
+export interface APIResponse<T = {}> {
+    success: boolean,
+    message?: string,
+    data?: T
+}
