@@ -22,8 +22,9 @@ export interface ServerToClientEvents {
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
 }
 
-export type AckOptions<T> = { success: boolean, data?: T, error?: string };
+// This generic represents the data type that is to be sent with the ack, null by default
 export type AckFunc<T = null> = (options: AckOptions<T>) => void;
+export type AckOptions<T> = { success: boolean, data?: T, error?: string };
 
 // TODO
 export interface ClientToServerEvents {
