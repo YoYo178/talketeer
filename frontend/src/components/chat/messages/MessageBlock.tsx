@@ -38,14 +38,16 @@ interface MessageBlockProps {
 
 export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId }) => {
     const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
+    const me = data?.data?.user;
 
-    const isSelfMessage = senderId === data?.data?.user._id;
+    const isSelfMessage = senderId === me?._id;
 
     const { data: userData } = useGetUserQuery({
         queryKey: ['users', senderId],
         pathParams: { userId: senderId },
         enabled: !isSelfMessage
     })
+    const otherUser = userData?.data?.user;
 
     return (
         <div className={
@@ -62,14 +64,14 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                         </p>
                         {messages.map(message => <MessageText key={message._id} content={message.content} />)}
                     </div>
-                    <MessageProfilePicture avatarURL={data?.data?.user.avatarURL} />
+                    <MessageProfilePicture avatarURL={me?.avatarURL} />
                 </>
             ) : (
                 <>
-                    <MessageProfilePicture avatarURL={userData?.data?.user.avatarURL} />
+                    <MessageProfilePicture avatarURL={otherUser?.avatarURL} />
                     <div className='flex flex-col items-start max-w-[80%]'>
                         <p className='text-muted-foreground text-[14px]'>
-                            {userData?.data?.user.username}
+                            {otherUser?.username}
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>
                             {new Date(messages[0].createdAt).toLocaleString()}
                         </p>

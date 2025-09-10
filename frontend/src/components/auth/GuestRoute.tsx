@@ -4,11 +4,13 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 export const GuestRoute = () => {
     const { data, isLoading, error } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const [isLoggedIn, setIsLoggedIn] = useState(!!data?.data.user._id);
+    const me = data?.data?.user;
+
+    const [isLoggedIn, setIsLoggedIn] = useState(!!me?._id);
 
     useEffect(() => {
-        setIsLoggedIn(!!data?.data.user._id);
-    }, [data?.data.user._id]);
+        setIsLoggedIn(!!me?._id);
+    }, [me?._id]);
 
     if (error)
         return (<Outlet />)

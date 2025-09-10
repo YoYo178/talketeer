@@ -8,7 +8,6 @@ import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useQueryClient } from '@tanstack/react-query';
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
-import type { IUser } from '@/types/user.types';
 import { AlertDialog, AlertDialogFooter, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from '../ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { EditRoomDialog } from './rooms/dialogs/EditRoomDialog';
@@ -20,12 +19,12 @@ interface ChatHeaderProps {
 
 export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }) => {
     const queryClient = useQueryClient();
+
     const [isLeaving, setIsLeaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const { data: meData } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const me: IUser | undefined = meData?.data.user;
-
+    const me = meData?.data?.user;
     const isRoomOwner = selectedRoom.owner === me?._id;
 
     const handleRoomDelete = () => {

@@ -9,9 +9,10 @@ import type { IUser } from '@/types/user.types';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export const NavBar = () => {
-    const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const user: IUser | undefined = data?.data.user;
     const queryClient = useQueryClient();
+
+    const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
+    const me: IUser | undefined = data?.data?.user;
 
     const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
 
@@ -37,13 +38,13 @@ export const NavBar = () => {
             {/* temporary, until i come up with a proper layout and a proper place */}
             <div className='flex justify-center ml-40 gap-4 relative'>
                 <Avatar className='outline-1 outline-muted-foreground size-12'>
-                    <AvatarImage src={user?.avatarURL} />
-                    <AvatarFallback>{user?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
+                    <AvatarImage src={me?.avatarURL} />
+                    <AvatarFallback>{me?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
                 </Avatar>
 
                 <div className='flex flex-col mt-[0.1rem]'>
-                    <p className='text-primary text-l font-bold relative'>{user?.displayName}</p>
-                    <p className='absolute text-muted-foreground text-sm translate-y-5'>@{user?.username}</p>
+                    <p className='text-primary text-l font-bold relative'>{me?.displayName}</p>
+                    <p className='absolute text-muted-foreground text-sm translate-y-5'>@{me?.username}</p>
                 </div>
             </div>
 
