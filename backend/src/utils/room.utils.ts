@@ -50,6 +50,11 @@ export function sanitizeRoomObj(room: IRoom, userID: string): IRoom | IRoomPubli
             members: undefined,
             messages: undefined,
         };
+    } else if (isUserInRoom) {
+        return {
+            ...room,
+            messages: undefined
+        }
     }
 
     return room;
