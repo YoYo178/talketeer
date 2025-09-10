@@ -2,32 +2,40 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError, type AxiosResponse } from "axios";
 
 import { API } from "../../config/api.config";
-import type { Endpoint } from "../../types/api.types";
+import type { APIResponse, Endpoint } from "../../types/api.types";
 import { injectPathParams, injectQueryParams } from "../../utils/api.utils";
 
-export const useMutationBase = <T>(
+interface MutationBaseParams<PayloadType> {
+    payload?: PayloadType
+    queryParams?: Record<string, string>
+    pathParams?: Record<string, string>
+}
+
+export const useMutationBase = <PayloadType, ResponseType = {}>(
     endpoint: Endpoint,
     actionName: string,
     sendAndAcceptCookies: boolean = false,
     options?: {
-        optimisticUpdate?: (variables: { payload: T }, oldData: any) => any;
+        optimisticUpdate?: (variables: { payload: PayloadType }, oldData: any) => any;
     }
 ) => {
     return ({ queryKey = [] }: { queryKey?: string[]; }) => {
         const queryClient = useQueryClient();
 
         return useMutation({
-            mutationFn: async ({ payload, queryParams, pathParams }: { payload?: T, queryParams?: Record<string, string>, pathParams?: Record<string, string> }) => {
+            mutationFn: async ({ payload, queryParams = {}, pathParams = {} }: MutationBaseParams<PayloadType>) => {
                 // @ts-ignore
                 const HTTPFunc = API[endpoint.METHOD.toLowerCase()];
-                const URL =
-                    pathParams
-                        ? injectPathParams(endpoint.URL, pathParams)       // if pathParams
-                        : queryParams
-                            ? injectQueryParams(endpoint.URL, queryParams) // else if queryParams
-                            : endpoint.URL;                                // else
 
-                let response: AxiosResponse<any> | null = null;
+                let URL = endpoint.URL;
+
+                if (Object.keys(pathParams).length)
+                    URL = injectPathParams(URL, pathParams);
+
+                if (Object.keys(queryParams).length)
+                    URL = injectQueryParams(URL, queryParams)
+
+                let response: AxiosResponse<APIResponse<ResponseType>> | null = null;
 
                 if (["POST", "PUT", "PATCH"].includes(endpoint.METHOD))
                     response = await HTTPFunc(URL, payload, { withCredentials: sendAndAcceptCookies });
@@ -47,7 +55,7 @@ export const useMutationBase = <T>(
                 const previousData = queryClient.getQueryData(queryKey);
 
                 if (queryKey.length && options?.optimisticUpdate) {
-                    const updated = options.optimisticUpdate(variables as { payload: T }, previousData);
+                    const updated = options.optimisticUpdate(variables as { payload: PayloadType }, previousData);
                     queryClient.setQueryData(queryKey, updated);
                 }
 
