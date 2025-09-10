@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { IUser } from "./user.types";
 import { DBRef } from "./db.types";
+import { IRoom } from "./room.types";
 
 export interface IMessage {
     _id: ObjectId;
@@ -12,7 +13,7 @@ export interface IMessage {
     content: string;
 
     /** The room the message was sent in */
-    // room: DBRef<IRoom>;
+    room: DBRef<IRoom>;
 
     updatedAt: number;
     createdAt: number;

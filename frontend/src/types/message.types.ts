@@ -8,7 +8,7 @@ export interface IMessage {
     content: string;
 
     /** The room the message was sent in */
-    // room: DBRef<IRoom>;
+    room: string;
 
     updatedAt: number;
     createdAt: number;
