@@ -47,29 +47,9 @@ export const APIEndpoints: Endpoints = {
         METHOD: 'GET',
         URL: '/rooms'
     },
-    CREATE_ROOM: {
-        METHOD: 'POST',
-        URL: '/rooms'
-    },
     GET_ROOM_BY_ID: {
         METHOD: 'GET',
         URL: '/rooms/:roomId'
-    },
-    JOIN_ROOM: {
-        METHOD: 'POST',
-        URL: '/rooms/:roomId/members'
-    },
-    LEAVE_ROOM: {
-        METHOD: 'DELETE',
-        URL: '/rooms/:roomId/members/me'
-    },
-    KICK_USER_FROM_ROOM: {
-        METHOD: 'DELETE',
-        URL: '/rooms/:roomId/members/:userId'
-    },
-    BAN_USER_FROM_ROOM: {
-        METHOD: 'PATCH',
-        URL: '/rooms/:roomId/members/:userId'
     },
 
     // User routes
