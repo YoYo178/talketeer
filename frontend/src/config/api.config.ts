@@ -52,6 +52,16 @@ export const APIEndpoints: Endpoints = {
         URL: '/rooms/:roomId'
     },
 
+    // Message routes
+    GET_MESSAGES: {
+        METHOD: 'GET',
+        URL: '/messages'
+    },
+    GET_MESSAGE_BY_ID: {
+        METHOD: 'GET',
+        URL: '/messages/:messageId'
+    },
+
     // User routes
     GET_ME: {
         METHOD: 'GET',
