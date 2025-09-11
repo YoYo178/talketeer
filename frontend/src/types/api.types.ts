@@ -22,3 +22,9 @@ export interface APIResponse<T = {}> {
     message?: string,
     data?: T
 }
+
+export interface APICursorResponse<T = {}> {
+    success: boolean,
+    data: T & { nextCursor: string | null },
+    message?: string,
+}
