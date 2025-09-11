@@ -64,11 +64,11 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                         </p>
                         {messages.map(message => <MessageText key={message._id} content={message.content} />)}
                     </div>
-                    <MessageProfilePicture avatarURL={me?.avatarURL} />
+                    <MessageProfilePicture user={me} />
                 </>
             ) : (
                 <>
-                    <MessageProfilePicture avatarURL={otherUser?.avatarURL} />
+                    <MessageProfilePicture user={otherUser} />
                     <div className='flex flex-col items-start max-w-[80%]'>
                         <p className='text-muted-foreground text-[14px]'>
                             {otherUser?.username}
