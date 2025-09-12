@@ -28,6 +28,7 @@ interface MessageListProps {
 export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
     const chatEndRef = useRef<HTMLDivElement>(null);
     const isAtBottom = useRef(false);
+    const hasScrolled = useRef(false);
 
     const { data, isLoading, fetchNextPage, hasNextPage } = useGetMessagesQuery({
         queryKey: ['messages', selectedRoomId],
@@ -89,13 +90,16 @@ export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
         if (chatEndRef.current)
             chatEndRef.current.scrollIntoView({ behavior: 'auto' });
     };
-
-    // This might look awkward, but is intended
-    // this hook must only run when messageElements
-    // transitions from empty to non-empty
+    
     useLayoutEffect(() => {
-        scrollToBottom();
-    }, [messageElements.length === 0])
+        if (hasScrolled.current)
+            return;
+
+        if (messageElements.length > 0) {
+            scrollToBottom();
+            hasScrolled.current = true;
+        }
+    }, [messageElements.length])
 
     if (!messageElements.length) {
         return (
