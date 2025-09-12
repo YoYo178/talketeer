@@ -10,7 +10,7 @@ interface ChatComposerProps {
 
 export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
     const [message, setMessage] = useState('');
-    
+
     const sendMessage = () => {
         socket.emit('sendMessage', roomId, message, ({ success }) => {
             if (success)
@@ -41,7 +41,7 @@ export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary min-h-0 resize-none max-h-24 overflow-y-auto'
+                className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary min-h-0 resize-none max-h-24 overflow-y-auto whitespace-pre-wrap wrap-anywhere'
             />
             <SendButton />
         </form>
