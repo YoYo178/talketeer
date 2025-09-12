@@ -17,18 +17,20 @@ export const getMessages = async (req: Request, res: Response, next: NextFunctio
         query._id = { $gt: after }
 
     const messages = await Message.find(query)
-        .sort({ createdAt: -1 }) // newest first
-        .limit(MESSAGES_PER_PAGE + 1)
+        .sort({ createdAt: -1 }) // Fetch in Descending order (newest to oldest)
         .lean()
         .exec();
 
     const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
-    const sliced = moreMessagesExist ? messages.slice(0, -1) : messages;
+    const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
+
+    // Sort this specific batch in ascending order (oldest to newest) before returning
+    sliced.reverse();
 
     res.status(200).json({
         success: true, data: {
             messages: sliced,
-            nextCursor: moreMessagesExist ? sliced[sliced.length - 1]._id : null,
+            nextCursor: moreMessagesExist ? sliced[0]._id : null,
         }
     });
 }

@@ -33,7 +33,10 @@ export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
         queryKey: ['messages', selectedRoomId],
         queryParams: { roomId: selectedRoomId }
     })
-    const messagePages = data?.pages || [];
+    const messagePages = useMemo(
+        () => [...(data?.pages || [])].reverse(),
+        [data?.pages]
+    )
 
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         const element = e.target as HTMLDivElement;
@@ -54,7 +57,7 @@ export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
 
     const messageElements = useMemo(() => {
         return messagePages.flatMap(page => {
-            const messages = (page.data?.messages || []).reverse();
+            const messages = (page.data?.messages || []);
             if (!messages.length) return [];
 
             const messageGroups: IMessage[][] = [];
@@ -79,7 +82,7 @@ export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
             return messageGroups.map(group => (
                 <MessageBlock key={group[0]._id} senderId={group[0].sender} messages={group} />
             ))
-        }).reverse()
+        })
     }, [messagePages])
 
     const scrollToBottom = () => {
