@@ -1,29 +1,21 @@
 import type { IMessage } from "@/types/message.types";
-import type { IRoom } from "@/types/room.types";
 import { QueryClient } from "@tanstack/react-query";
 import type { Socket } from "socket.io-client";
 
 export function startListeningMessageEvents(socket: Socket, queryClient?: QueryClient) {
     stopListeningMessageEvents(socket);
 
-    socket.on('newMessage', (roomId: string, userId: string, message: string, rawMessage?: IMessage) => {
-        if (rawMessage) {
-            queryClient?.setQueryData(['rooms', roomId], (old: { data: { room: IRoom } }) => {
-                if (!old) return old;
+    socket.on('newMessage', (roomId: string, userId: string, message: IMessage) => {
+        console.log(`Received new message from ${userId}: ${message.content}`);
 
-                return {
-                    ...old,
-                    data: {
-                        ...old.data,
-                        room: {
-                            ...old.data.room,
-                            messages: [...old.data.room.messages, rawMessage]
-                        }
-                    }
-                };
-            })
-        }
-        console.log(`Received new message from ${userId}: ${message}`);
+        const oldMessagePages = queryClient?.getQueryData<{ pages: { success: true, data: { messages: IMessage[], nextCursor: string | null } }[], pageParams: string[] }>(['messages', roomId]);
+        if (!oldMessagePages)
+            return;
+
+        const newMessagePages = structuredClone(oldMessagePages);
+        newMessagePages.pages[0].data.messages.push(message);
+
+        queryClient?.setQueryData(['messages', roomId], newMessagePages)
     });
 
     socket.on('messageEdited', (roomId: string, userId: string, oldMessage: string, newMessage: string) => {

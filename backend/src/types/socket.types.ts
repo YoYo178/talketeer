@@ -17,7 +17,7 @@ export interface ServerToClientEvents {
     memberKicked: (roomId: string, userId: string, kickedBy: string, reason: string) => void;
     memberBanned: (roomId: string, userId: string, bannedBy: string, reason: string) => void;
 
-    newMessage: (roomId: string, userId: string, message: string, rawMessage?: IMessage) => void;
+    newMessage: (roomId: string, userId: string, message: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
 }
@@ -37,6 +37,9 @@ export interface ClientToServerEvents {
     sendMessage: (roomId: string, message: string, ack: AckFunc) => void;
     editMessage: (roomId: string, messageId: string, newContent: string, ack: AckFunc) => void;
     deleteMessage: (roomId: string, messageId: string, ack: AckFunc) => void;
+
+    kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string, ack: AckFunc) => void;
+    banFromRoom: (roomId: string, userId: string, bannedBy: string, reason: string, ack: AckFunc) => void;
 }
 
 // TODO

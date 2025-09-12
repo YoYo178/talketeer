@@ -17,7 +17,7 @@ export interface ServerToClientEvents {
     memberKicked: (roomId: string, userId: string, kickedBy: string, reason: string) => void;
     memberBanned: (roomId: string, userId: string, bannedBy: string, reason: string) => void;
 
-    newMessage: (roomId: string, userId: string, message: string, rawMessage?: IMessage) => void;
+    newMessage: (roomId: string, userId: string, message: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
 }
