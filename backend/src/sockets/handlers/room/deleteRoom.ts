@@ -34,6 +34,7 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             if (!isOwner)
                 throw new Error('You are not the owner of this room');
 
+            // Leave room for admin
             await leaveRoom(userId, roomId);
 
             // Leave the specified room for the client
@@ -47,6 +48,9 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
                 userId: socket.data.user.id,
                 roomId
             });
+
+            // Leave room for everyone else
+            await Promise.all(room.members.map(mem => leaveRoom(mem.user.toString(), roomId)));
 
             // Emit event before kicking clients
             io.emit('roomDeleted', roomId);
