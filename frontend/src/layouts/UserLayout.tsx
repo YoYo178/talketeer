@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 
 export const UserLayout = () => {
     const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const userRoomId = data?.data.user.room ?? null;
+    const userRoomId = data?.data?.user.room ?? null;
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
     
     // Initialize socket connection
