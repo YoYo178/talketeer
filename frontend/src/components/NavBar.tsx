@@ -28,7 +28,7 @@ export const NavBar = () => {
     }
 
     return (
-        <div className='flex items-center bg-(--color-primary-foreground) p-5 rounded-xl'>
+        <div className='flex items-center bg-(--color-primary-foreground) p-5 rounded-xl overflow-hidden'> {/* temp!! */}
 
             <div className='flex gap-2 items-center'>
                 <MessagesSquare className='size-8' />
