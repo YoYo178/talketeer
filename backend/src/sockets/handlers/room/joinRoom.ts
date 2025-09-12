@@ -39,8 +39,13 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
                     throw new Error('Unknown join method');
             }
 
-            if (!roomId)
+            const room = await getRoom(roomId);
+
+            if (!room)
                 throw new Error('Room ID not found');
+
+            if (room.memberCount >= room.memberLimit)
+                throw new Error('The room you are trying to join is full!')
 
             // Handle database join process
             await joinRoom(userId, roomId);
