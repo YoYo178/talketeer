@@ -1,4 +1,4 @@
-import { useCallback, useLayoutEffect, useMemo, useRef, type FC } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, type FC } from 'react'
 import { MessageBlock, MessageBlockSkeleton } from './MessageBlock'
 import type { IMessage } from '@/types/message.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -100,6 +100,12 @@ export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
             hasScrolled.current = true;
         }
     }, [messageElements.length])
+
+    // Scroll to bottom on new messages
+    useEffect(() => {
+        if (isAtBottom.current)
+            scrollToBottom();
+    }, [messagePages[0]?.data.messages.length])
 
     if (!messageElements.length) {
         return (
