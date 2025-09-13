@@ -1,5 +1,7 @@
+import { useDialogStore } from "@/hooks/state/useDialogStore";
+import type { APIResponse } from "@/types/api.types";
 import type { IRoom } from "@/types/room.types";
-import type { IUser } from "@/types/user.types";
+import type { IPublicUser, IUser } from "@/types/user.types";
 import type { QueryClient } from "@tanstack/react-query";
 import type { Socket } from "socket.io-client";
 
@@ -8,17 +10,17 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
 
     socket.on('roomCreated', (room: IRoom) => {
         // Update rooms data
-        const oldRoomsData: { success: boolean, data: { rooms: IRoom[] } } | undefined = queryClient?.getQueryData(['rooms']);
-        const newRoomsData: { success: boolean, data: { rooms: IRoom[] } } = {
+        const oldRoomsData: APIResponse<{ rooms: IRoom[] }> | undefined = queryClient?.getQueryData(['rooms']);
+        const newRoomsData: APIResponse<{ rooms: IRoom[] }> = {
             success: true,
             data: {
-                rooms: [...(oldRoomsData?.data.rooms || []), room]
+                rooms: [...(oldRoomsData?.data?.rooms || []), room]
             }
         }
         queryClient?.setQueryData(['rooms'], newRoomsData)
 
-        const oldMeData: { success: boolean, data: { user: IUser } } | undefined = queryClient?.getQueryData(['users', 'me']);
-        if (room.owner === oldMeData?.data.user._id)
+        const oldMeData: APIResponse<{ user: IUser }> | undefined = queryClient?.getQueryData(['users', 'me']);
+        if (room.owner === oldMeData?.data?.user._id)
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     })
 

@@ -8,6 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
 import { socket } from '@/socket'
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets'
+import type { APIResponse } from '@/types/api.types'
 import type { IRoom } from '@/types/room.types'
 import type { IUser } from '@/types/user.types'
 import { useQueryClient } from '@tanstack/react-query'
@@ -31,10 +32,10 @@ export const CreateRoomDialog = () => {
         socket.emit('createRoom', name, visibility, memberLimit[0], ({ success, data }) => {
             if (success) {
                 if (data) {
-                    const oldRoomsData: { success: boolean, data: { rooms: IRoom[] } } | undefined = queryClient.getQueryData(['rooms']);
-                    const newRoomsData: { success: boolean, data: { rooms: IRoom[] } } = {
+                    const oldRoomsData: APIResponse<{ rooms: IRoom[] }> | undefined = queryClient.getQueryData(['rooms']);
+                    const newRoomsData: APIResponse<{ rooms: IRoom[] }> = {
                         success: true,
-                        data: { rooms: [...(oldRoomsData?.data.rooms || []), data] }
+                        data: { rooms: [...(oldRoomsData?.data?.rooms || []), data] }
                     }
 
                     // Add created room to cache
