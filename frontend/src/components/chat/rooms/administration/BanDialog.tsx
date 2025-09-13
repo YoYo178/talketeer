@@ -58,7 +58,7 @@ export const BanDialog: FC<BanDialogProps> = ({ admin, user, room }) => {
                         <Button className='text-primary' variant='outline'>Cancel</Button>
                     </AlertDialogCancel>
                     <AlertDialogAction asChild>
-                        <Button className='bg-red-600 hover:bg-red-500 dark:text-primary' onClick={handleBan}>Ban</Button>
+                        <Button className='bg-red-600 hover:bg-red-500 dark:text-primary' onClick={handleBan} autoFocus>Ban</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>

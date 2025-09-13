@@ -62,7 +62,7 @@ export const KickDialog: FC<KickDialogProps> = ({ admin, user, room }) => {
                         <Button className='text-primary' variant='outline'>Cancel</Button>
                     </AlertDialogCancel>
                     <AlertDialogAction asChild>
-                        <Button onClick={handleKick}>Kick</Button>
+                        <Button onClick={handleKick} autoFocus>Kick</Button>
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
