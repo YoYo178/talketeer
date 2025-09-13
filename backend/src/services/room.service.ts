@@ -1,4 +1,4 @@
-import { Room, User } from '@src/models';
+import { Room } from '@src/models';
 import { IRoom } from '@src/types';
 import { getUser, updateUserRoom } from './user.service';
 import mongoose from 'mongoose';
