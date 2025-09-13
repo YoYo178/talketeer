@@ -15,9 +15,10 @@ import { EditRoomDialog } from './rooms/dialogs/EditRoomDialog';
 interface ChatHeaderProps {
     selectedRoom: IRoom;
     onSelectRoomId: (roomId: string | null) => void;
+    onToggleMemberList: (state: boolean) => void;
 }
 
-export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }) => {
+export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId, onToggleMemberList }) => {
     const queryClient = useQueryClient();
 
     const [isLeaving, setIsLeaving] = useState(false);
@@ -105,7 +106,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
                 <div className='flex gap-2 ml-auto'>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <ChatButton>
+                            <ChatButton onClick={() => onToggleMemberList(true)}>
                                 <Users className='size-5' />
                             </ChatButton>
                         </TooltipTrigger>
@@ -124,7 +125,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
             <div className='flex gap-2 ml-auto'>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                        <ChatButton>
+                        <ChatButton onClick={() => onToggleMemberList(true)}>
                             <Users className='size-5' />
                         </ChatButton>
                     </TooltipTrigger>
