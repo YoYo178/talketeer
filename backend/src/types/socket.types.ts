@@ -7,7 +7,7 @@ export interface ServerToClientEvents {
     /** For users NOT in a room */
     roomCreated: (room: IRoom) => void;
     roomUpdated: (roomId: string) => void;
-    roomDeleted: (roomId: string) => void;
+    roomDeleted: (roomId: string, ownerId: string) => void;
 
     notification: () => void;
 

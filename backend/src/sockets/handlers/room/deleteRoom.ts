@@ -53,7 +53,7 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             await Promise.all(room.members.map(mem => leaveRoom(mem.user.toString(), roomId)));
 
             // Emit event before kicking clients
-            io.emit('roomDeleted', roomId);
+            io.emit('roomDeleted', roomId, user._id.toString());
 
             // Kick all clients
             io.in(roomId).socketsLeave(roomId);

@@ -7,7 +7,7 @@ export interface ServerToClientEvents {
     /** For users NOT in a room */
     roomCreated: (room: IRoom) => void;
     roomUpdated: (roomId: string) => void;
-    roomDeleted: (roomId: string) => void;
+    roomDeleted: (roomId: string, ownerId: string) => void;
 
     notification: () => void;
 
@@ -36,7 +36,7 @@ export interface ClientToServerEvents {
     sendMessage: (roomId: string, message: string, ack: AckFunc) => void;
     editMessage: (roomId: string, messageId: string, newContent: string, ack: AckFunc) => void;
     deleteMessage: (roomId: string, messageId: string, ack: AckFunc) => void;
-    
+
     kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string, ack: AckFunc) => void;
     banFromRoom: (roomId: string, userId: string, bannedBy: string, reason: string, ack: AckFunc) => void;
 }
