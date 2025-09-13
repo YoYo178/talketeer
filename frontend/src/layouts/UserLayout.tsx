@@ -1,5 +1,8 @@
 import { ChatSidebar } from '@/components/chat/ChatSidebar'
 import { ChatWindow } from '@/components/chat/ChatWindow'
+import { BannedDialog } from '@/components/chat/rooms/dialogs/info/BannedDialog'
+import { KickedDialog } from '@/components/chat/rooms/dialogs/info/KickedDialog'
+import { RoomDeletedDialog } from '@/components/chat/rooms/dialogs/info/RoomDeletedDialog'
 import { NavBar } from '@/components/NavBar'
 import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
 import { useSocketConnection } from '@/hooks/socket/useSocketConnection'
@@ -10,7 +13,7 @@ export const UserLayout = () => {
     const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
     const userRoomId = data?.data?.user.room ?? null;
     const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
-    
+
     // Initialize socket connection
     useSocketConnection();
 
@@ -46,6 +49,10 @@ export const UserLayout = () => {
                     selectedRoomId={selectedRoomId}
                 />
             </div>
+
+            <KickedDialog />
+            <BannedDialog />
+            <RoomDeletedDialog />
         </div>
     )
 }
