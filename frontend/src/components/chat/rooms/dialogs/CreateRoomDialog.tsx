@@ -31,6 +31,12 @@ export const CreateRoomDialog = () => {
 
         socket.emit('createRoom', name, visibility, memberLimit[0], ({ success, data }) => {
             if (success) {
+
+                // If we were in a room, the backend will leave it first
+                if (user?.room)
+                    // Invalidate the old room's queries so we can get the latest data
+                    queryClient.invalidateQueries({ queryKey: ['rooms', user.room] });
+
                 if (data) {
                     const oldRoomsData: APIResponse<{ rooms: IRoom[] }> | undefined = queryClient.getQueryData(['rooms']);
                     const newRoomsData: APIResponse<{ rooms: IRoom[] }> = {
