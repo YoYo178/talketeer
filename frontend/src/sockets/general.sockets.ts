@@ -22,19 +22,15 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     })
 
-    socket.on('roomDeleted', (roomId: string) => {
+    socket.on('roomDeleted', (roomId: string, ownerId: string) => {
         // Update rooms data
-        const oldRoomsData: { success: boolean, data: { rooms: IRoom[] } } | undefined = queryClient?.getQueryData(['rooms']);
-        const newRoomsData: { success: boolean, data: { rooms: IRoom[] } } = {
-            success: true,
-            data: {
-                rooms: [...(oldRoomsData?.data.rooms || []).filter(room => room._id !== roomId)]
-            }
-        }
-        queryClient?.setQueryData(['rooms'], newRoomsData)
+        queryClient?.setQueryData(['rooms'], (old: APIResponse<{ rooms: IRoom[] }>) =>
+            old ? { success: true, data: { rooms: old.data?.rooms.filter(r => r._id !== roomId) } } : old
+        );
 
-        const oldMeData: { success: boolean, data: { user: IUser } } | undefined = queryClient?.getQueryData(['users', 'me']);
-        if (oldMeData?.data.user.room === roomId)
+        // Get our own user object, and invalidate queries if we were in the room
+        const me = queryClient?.getQueryData<APIResponse<{ user: IUser }>>(['users', 'me'])?.data?.user;
+        if (me?.room === roomId)
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     })
 
