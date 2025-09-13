@@ -60,7 +60,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId, 
     if (isRoomOwner)
         return (
             <div className='flex p-4'>
-                <div className='flex gap-2 items-center'>
+                <div className='flex gap-2 items-center flex-wrap'>
                     <p className='text-xl'>{selectedRoom.name}</p>
                     <div className='flex '>
                         <EditRoomDialog selectedRoom={selectedRoom} />
