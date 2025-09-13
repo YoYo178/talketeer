@@ -5,6 +5,7 @@ import { getLeaveRoomEventCallback } from './leaveRoom';
 import { getCreateRoomEventCallback } from './createRoom';
 import { getDeleteRoomEventCallback } from './deleteRoom';
 import { getUpdateRoomEventCallback } from './updateRoom';
+import { getKickFromRoomEventCallback } from './kickFromRoom';
 
 export function registerRoomHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
     socket.on('joinRoom', getJoinRoomEventCallback(io, socket));
@@ -12,4 +13,6 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
     socket.on('createRoom', getCreateRoomEventCallback(io, socket));
     socket.on('deleteRoom', getDeleteRoomEventCallback(io, socket));
     socket.on('updateRoom', getUpdateRoomEventCallback(io, socket));
+
+    socket.on('kickFromRoom', getKickFromRoomEventCallback(io, socket));
 }
