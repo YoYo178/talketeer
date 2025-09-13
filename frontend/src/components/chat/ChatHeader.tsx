@@ -80,11 +80,13 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId }
                                 <AlertDialogContent>
                                     <AlertDialogHeader>
                                         <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                        <AlertDialogDescription>
-                                            <p>You are about to permanently delete this room.</p>
-                                            <p>All members will be kicked and the messages will be deleted.</p>
-                                            <br />
-                                            <p>This action cannot be undone.</p>
+                                        <AlertDialogDescription asChild>
+                                            <div>
+                                                <p>You are about to permanently delete this room.</p>
+                                                <p>All members will be kicked and the messages will be deleted.</p>
+                                                <br />
+                                                <p>This action cannot be undone.</p>
+                                            </div>
                                         </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
