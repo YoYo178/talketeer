@@ -36,15 +36,15 @@ export const NavBar = () => {
             </div>
 
             {/* temporary, until i come up with a proper layout and a proper place */}
-            <div className='flex justify-center ml-40 gap-4 relative'>
+            <div className='flex flex-1 justify-center gap-4 relative'>
                 <Avatar className='outline-1 outline-muted-foreground size-12'>
                     <AvatarImage src={me?.avatarURL} />
                     <AvatarFallback>{me?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
                 </Avatar>
 
                 <div className='flex flex-col mt-[0.1rem]'>
-                    <p className='text-primary text-l font-bold relative'>{me?.displayName}</p>
-                    <p className='absolute text-muted-foreground text-sm translate-y-5'>@{me?.username}</p>
+                    <p className='text-primary text-l font-bold'>{me?.displayName}</p>
+                    <p className='text-muted-foreground text-sm -translate-y-1'>@{me?.username}</p>
                 </div>
             </div>
 
