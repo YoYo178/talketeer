@@ -25,15 +25,35 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
     })
 
     socket.on('roomDeleted', (roomId: string, ownerId: string) => {
+
+        // Get old rooms data
+        const oldRooms = queryClient?.getQueryData<APIResponse<{ rooms: IRoom[] }>>(['rooms'])?.data?.rooms;
+        if (!oldRooms) return;
+
+        const deletedRoom = oldRooms.find(r => r._id === roomId);
+
         // Update rooms data
-        queryClient?.setQueryData(['rooms'], (old: APIResponse<{ rooms: IRoom[] }>) =>
-            old ? { success: true, data: { rooms: old.data?.rooms.filter(r => r._id !== roomId) } } : old
+        queryClient.setQueryData(['rooms'], (old: APIResponse<{ rooms: IRoom[] }>) =>
+            old ? { success: true, data: { rooms: oldRooms.filter(r => r._id !== roomId) } } : old
         );
 
         // Get our own user object, and invalidate queries if we were in the room
-        const me = queryClient?.getQueryData<APIResponse<{ user: IUser }>>(['users', 'me'])?.data?.user;
-        if (me?.room === roomId)
+        const me = queryClient.getQueryData<APIResponse<{ user: IUser }>>(['users', 'me'])?.data?.user;
+        if (me?.room === roomId) {
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
+
+            // If we're not the room owner, display the room deleted info dialog
+            if (me._id !== ownerId) {
+                const owner = queryClient.getQueryData<APIResponse<{ user: IPublicUser }>>(['users', ownerId])?.data?.user;
+
+                const { setData } = useDialogStore.getState()
+                setData({
+                    type: 'roomDeletion',
+                    roomName: deletedRoom?.name || '',
+                    username: owner?.username || ''
+                })
+            }
+        }
     })
 
     socket.on('roomUpdated', (roomId: string) => {
