@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { GuestLayout } from './layouts/GuestLayout.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
@@ -15,6 +16,7 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
         <BrowserRouter basename='/talketeer/'>
           <Routes>
             <Route element={<UserRoute />}>
