@@ -2,7 +2,8 @@ import { create } from 'zustand';
 
 type DialogData =
     | { type: 'kick'; roomName: string; username: string; adminUsername: string; reason?: string }
-    | { type: 'ban'; roomName: string; username: string; adminUsername: string; duration: number; reason?: string } // TODO: 'duration' type
+    | { type: 'ban'; created: number; expiry: number | null; isPermanent: boolean } // Banned from joining room
+    | { type: 'liveBan'; roomName: string; adminUsername: string; created: number; expiry: number | null; isPermanent: boolean; reason?: string } // Banned while in the room, hence 'live'
     | { type: 'roomDeletion'; roomName: string; username: string }
 
 interface DialogState {
