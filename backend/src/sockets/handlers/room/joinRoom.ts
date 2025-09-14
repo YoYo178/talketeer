@@ -2,6 +2,7 @@ import { getRoom, getRoomByCode, joinRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import { joinRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
+import { getBan, isUserBanned } from "@src/services/ban.service";
 
 export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
     return async ({ method, data }, ack) => {
@@ -44,6 +45,31 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
             if (!room)
                 throw new Error('Room ID not found');
 
+            const isBanned = await isUserBanned(userId, roomId);
+
+            // Need a manual ack fail for this one
+            if (isBanned) {
+                const ban = await getBan(userId, roomId);
+
+                // Not possible unless something went REALLY BAD
+                if (!ban)
+                    return;
+
+                ack({
+                    success: false,
+                    data: {
+                        roomId,
+                        ban: {
+                            created: ban.createdAt.valueOf(),
+                            expiry: ban.expiresAt?.valueOf() || null,
+                            isPermanent: ban.isPermanent
+                        }
+                    },
+                    error: 'You have been' + (ban.isPermanent ? ' permanently' : '') + ' banned from joining this room.'
+                });
+                return;
+            }
+
             if (room.memberCount >= room.memberLimit)
                 throw new Error('The room you are trying to join is full!')
 
@@ -63,7 +89,7 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
 
             // Let other people (even ones not in the room) refetch the latest room details
             socket.broadcast.emit('roomUpdated', roomId);
-            ack({ success: true, data: roomId });
+            ack({ success: true, data: { roomId } });
         } catch (err) {
             logger.error("Error joining room", {
                 userId: socket.data.user.id,

@@ -32,10 +32,10 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
 
                     socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
-                        if (success) {
+                        if (success && !!data) {
                             startListeningRoomEvents(socket, queryClient);
-                            onSelectRoomId(data!);
-                            queryClient.invalidateQueries({ queryKey: ['rooms', data!] });
+                            onSelectRoomId(data.roomId);
+                            queryClient.invalidateQueries({ queryKey: ['rooms', data.roomId] });
                             queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                             setOpen(false);
                         } else {
@@ -48,9 +48,9 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
             });
         } else {
             socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
-                if (success) {
+                if (success && !!data) {
                     startListeningRoomEvents(socket, queryClient);
-                    onSelectRoomId(data!);
+                    onSelectRoomId(data.roomId);
                     queryClient.invalidateQueries({ queryKey: ['rooms', data!] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     setOpen(false);

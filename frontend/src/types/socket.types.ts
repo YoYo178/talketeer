@@ -15,7 +15,7 @@ export interface ServerToClientEvents {
     memberJoined: (roomId: string, userId: string) => void;
     memberLeft: (roomId: string, userId: string) => void;
     memberKicked: (roomId: string, userId: string, kickedBy: string, reason: string) => void;
-    memberBanned: (roomId: string, userId: string, bannedBy: string, reason: string) => void;
+    memberBanned: (roomId: string, userId: string, bannedBy: string, banDetails: { created: number, expiry: number | null, isPermanent: boolean, reason: string }) => void;
 
     newMessage: (roomId: string, userId: string, message: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
@@ -29,7 +29,7 @@ export type AckFunc<T = null> = (options: AckOptions<T>) => void;
 export interface ClientToServerEvents {
     createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc<IRoom>) => void;
     updateRoom: (roomId: string, name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc) => void;
-    joinRoom: (payload: { method: 'code' | 'id', data: string }, ack: AckFunc<string>) => void;
+    joinRoom: (payload: { method: 'code' | 'id', data: string }, ack: AckFunc<{ roomId: string, ban?: { created: number, expiry: number | null, isPermanent: boolean, reason: string } }>) => void;
     leaveRoom: (roomId: string, ack: AckFunc) => void;
     deleteRoom: (roomId: string, ack: AckFunc) => void;
 
@@ -38,7 +38,7 @@ export interface ClientToServerEvents {
     deleteMessage: (roomId: string, messageId: string, ack: AckFunc) => void;
 
     kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string, ack: AckFunc) => void;
-    banFromRoom: (roomId: string, userId: string, bannedBy: string, reason: string, ack: AckFunc) => void;
+    banFromRoom: (roomId: string, userId: string, bannedBy: string, duration: number, reason: string, ack: AckFunc) => void;
 }
 
 // TODO

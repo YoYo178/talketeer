@@ -6,6 +6,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react'
 import { useState } from 'react'
 import { Lock } from 'lucide-react'
+import { useDialogStore } from '@/hooks/state/useDialogStore';
 
 interface RoomEntryProps {
     room: IRoomPublicView;
@@ -25,6 +26,8 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
 
     const room: IRoomPublicView = data?.data?.room ?? localRoom;
 
+    const { setData: setDialogData } = useDialogStore();
+
     const handleRoomJoin = async () => {
         if (!room || room._id === selectedRoomId || isJoining)
             return;
@@ -40,16 +43,22 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
 
                     queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoomId] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
-                    
+
                     // Small delay to ensure cleanup is complete
                     setTimeout(() => {
                         // Join the new room
-                        socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success }) => {
+                        socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success, data }) => {
                             if (success) {
                                 queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
                                 queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                                 startListeningRoomEvents(socket, queryClient);
                                 onSelectRoomId(room._id);
+                            } else {
+                                if (!!data?.ban)
+                                    setDialogData({
+                                        type: 'ban',
+                                        ...data.ban
+                                    })
                             }
                             setIsJoining(false);
                         });
@@ -59,12 +68,18 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                 }
             });
         } else {
-            socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success }) => {
+            socket.emit('joinRoom', { method: 'id', data: room._id }, ({ success, data }) => {
                 if (success) {
                     queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     startListeningRoomEvents(socket, queryClient);
                     onSelectRoomId(room._id);
+                } else {
+                    if (!!data?.ban)
+                        setDialogData({
+                            type: 'ban',
+                            ...data.ban
+                        })
                 }
                 setIsJoining(false);
             });

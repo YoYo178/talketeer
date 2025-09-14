@@ -46,10 +46,29 @@ export function startListeningRoomEvents(socket: TalketeerSocket, queryClient?: 
         }
     });
 
-    socket.on('memberBanned', (roomId, userId, bannedBy, reason) => {
-        console.log(`${userId} has been banned from the room (${roomId}) by ${bannedBy} due to the following reason:`, reason)
+    socket.on('memberBanned', (roomId, userId, bannedBy, banDetails) => {
+        console.log(`${userId} has been banned from the room (${roomId}) by ${bannedBy} due to the following reason:`, banDetails.reason)
         // Invalidate room data to refresh member list
         queryClient?.invalidateQueries({ queryKey: ['rooms', roomId] });
+
+        const room = queryClient?.getQueryData<APIResponse<{ room: IRoom }>>(['rooms', roomId])?.data?.room;
+
+        const me = queryClient?.getQueryData<APIResponse<{ user: IUser }>>(['users', 'me'])?.data?.user;
+
+        // We were banned from the room
+        if (me?._id === userId) {
+            queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
+
+            const admin = queryClient?.getQueryData<APIResponse<{ user: IPublicUser }>>(['users', bannedBy])?.data?.user;
+
+            const { setData } = useDialogStore.getState();
+            setData({
+                type: 'liveBan',
+                adminUsername: admin?.username || '',
+                roomName: room?.name || '',
+                ...banDetails
+            })
+        }
     });
 
     startListeningMessageEvents(socket, queryClient);
