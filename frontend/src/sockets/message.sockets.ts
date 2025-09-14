@@ -1,11 +1,11 @@
 import type { IMessage } from "@/types/message.types";
+import type { TalketeerSocket } from "@/types/socket.types";
 import { QueryClient } from "@tanstack/react-query";
-import type { Socket } from "socket.io-client";
 
-export function startListeningMessageEvents(socket: Socket, queryClient?: QueryClient) {
+export function startListeningMessageEvents(socket: TalketeerSocket, queryClient?: QueryClient) {
     stopListeningMessageEvents(socket);
 
-    socket.on('newMessage', (roomId: string, userId: string, message: IMessage) => {
+    socket.on('newMessage', (roomId, userId, message) => {
         console.log(`Received new message from ${userId}: ${message.content}`);
 
         const oldMessagePages = queryClient?.getQueryData<{ pages: { success: true, data: { messages: IMessage[], nextCursor: string | null } }[], pageParams: string[] }>(['messages', roomId]);
@@ -18,11 +18,11 @@ export function startListeningMessageEvents(socket: Socket, queryClient?: QueryC
         queryClient?.setQueryData(['messages', roomId], newMessagePages)
     });
 
-    socket.on('messageEdited', (roomId: string, userId: string, oldMessage: string, newMessage: string) => {
+    socket.on('messageEdited', (roomId, userId, oldMessage, newMessage) => {
         console.log(`${userId} edited their message in room ${roomId} from '${oldMessage}' to '${newMessage}'`);
     });
 
-    socket.on('messageDeleted', (roomId: string, userId: string, deletedBy: string, message: string) => {
+    socket.on('messageDeleted', (roomId, userId, deletedBy, message) => {
         if (userId === deletedBy)
             return console.log(`${deletedBy} has deleted their message from room ${roomId}: ${message}`)
 
@@ -30,7 +30,7 @@ export function startListeningMessageEvents(socket: Socket, queryClient?: QueryC
     });
 }
 
-export function stopListeningMessageEvents(socket: Socket) {
+export function stopListeningMessageEvents(socket: TalketeerSocket) {
     socket.off('newMessage')
     socket.off('messageEdited')
     socket.off('messageDeleted')

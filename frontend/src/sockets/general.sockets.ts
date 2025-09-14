@@ -1,14 +1,14 @@
 import { useDialogStore } from "@/hooks/state/useDialogStore";
 import type { APIResponse } from "@/types/api.types";
 import type { IRoom } from "@/types/room.types";
+import type { TalketeerSocket } from "@/types/socket.types";
 import type { IPublicUser, IUser } from "@/types/user.types";
 import type { QueryClient } from "@tanstack/react-query";
-import type { Socket } from "socket.io-client";
 
-export function handleSocketConnection(socket: Socket, queryClient?: QueryClient) {
+export function handleSocketConnection(socket: TalketeerSocket, queryClient?: QueryClient) {
     handleSocketDisconnection(socket);
 
-    socket.on('roomCreated', (room: IRoom) => {
+    socket.on('roomCreated', (room) => {
         // Update rooms data
         const oldRoomsData: APIResponse<{ rooms: IRoom[] }> | undefined = queryClient?.getQueryData(['rooms']);
         const newRoomsData: APIResponse<{ rooms: IRoom[] }> = {
@@ -24,7 +24,7 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     })
 
-    socket.on('roomDeleted', (roomId: string, ownerId: string) => {
+    socket.on('roomDeleted', (roomId, ownerId) => {
 
         // Get old rooms data
         const oldRooms = queryClient?.getQueryData<APIResponse<{ rooms: IRoom[] }>>(['rooms'])?.data?.rooms;
@@ -56,7 +56,7 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
         }
     })
 
-    socket.on('roomUpdated', (roomId: string) => {
+    socket.on('roomUpdated', (roomId) => {
         queryClient?.invalidateQueries({ queryKey: ['rooms', roomId] });
     });
 
@@ -65,7 +65,7 @@ export function handleSocketConnection(socket: Socket, queryClient?: QueryClient
     });
 }
 
-export function handleSocketDisconnection(socket: Socket) {
+export function handleSocketDisconnection(socket: TalketeerSocket) {
     // Remove all general socket events
     socket.off('roomCreated');
     socket.off('roomDeleted');
