@@ -1,21 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Input } from '@/components/ui/input'
-import { useGetRoomsQuery } from '@/hooks/network/rooms/useGetRoomsQuery'
-import type { FC } from 'react'
+import { useRooms } from '@/hooks/network/rooms/useGetRoomsQuery'
 import { RoomList } from './rooms/RoomList'
 import { CreateRoomDialog } from './rooms/dialogs/CreateRoomDialog'
 import { JoinRoomDialog } from './rooms/dialogs/JoinRoomDialog'
 
-interface ChatSidebarProps {
-    onSelectRoomId: (roomId: string | null) => void;
-    selectedRoomId: string | null
-}
-
-export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoomId }) => {
-    const { data } = useGetRoomsQuery({ queryKey: ['rooms'] })
-    const rooms = data?.data?.rooms || [];
-
+export const ChatSidebar = () => {
     const [searchText, setSearchText] = useState('')
+
+    const rooms = useRooms();
 
     const filteredRooms = useMemo(() => {
         const term = searchText.trim().toLowerCase()
@@ -27,12 +20,12 @@ export const ChatSidebar: FC<ChatSidebarProps> = ({ onSelectRoomId, selectedRoom
         <div className='flex flex-col gap-3 w-full md:w-72 p-3 rounded-xl bg-card'>
             <div className='flex gap-2 max-w-full'>
                 <CreateRoomDialog />
-                <JoinRoomDialog onSelectRoomId={onSelectRoomId} selectedRoomId={selectedRoomId} />
+                <JoinRoomDialog />
             </div>
 
             <Input placeholder='Search rooms…' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
 
-            <RoomList rooms={filteredRooms} onSelectRoomId={onSelectRoomId} selectedRoomId={selectedRoomId} />
+            <RoomList rooms={filteredRooms} />
         </div>
     )
 }

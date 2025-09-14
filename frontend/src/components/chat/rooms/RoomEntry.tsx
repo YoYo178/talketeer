@@ -1,4 +1,4 @@
-import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
+import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { socket } from '@/socket';
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
 import type { IRoomPublicView } from '@/types/room.types'
@@ -7,41 +7,37 @@ import type { FC } from 'react'
 import { useState } from 'react'
 import { Lock } from 'lucide-react'
 import { useDialogStore } from '@/hooks/state/useDialogStore';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
 interface RoomEntryProps {
     room: IRoomPublicView;
-    onSelectRoomId: (roomId: string | null) => void;
-    selectedRoomId: string | null;
 }
 
-export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId, selectedRoomId }) => {
+export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     const queryClient = useQueryClient();
     const [isJoining, setIsJoining] = useState(false);
-    const { data } = useGetRoomByIdQuery(
-        {
-            queryKey: ['rooms', localRoom._id],
-            pathParams: { roomId: localRoom._id }
-        }
-    );
-
-    const room: IRoomPublicView = data?.data?.room ?? localRoom;
+    const room = useRoom(localRoom._id);
 
     const { setData: setDialogData } = useDialogStore();
+    const { joinedRoomId, setJoinedRoomId } = useRoomsStore();
+
+    if (!room)
+        return;
 
     const handleRoomJoin = async () => {
-        if (!room || room._id === selectedRoomId || isJoining)
+        if (room._id === joinedRoomId || isJoining)
             return;
 
         setIsJoining(true);
 
-        if (!!selectedRoomId) {
+        if (!!joinedRoomId) {
             // First leave the current room
-            socket.emit('leaveRoom', selectedRoomId, ({ success }) => {
+            socket.emit('leaveRoom', joinedRoomId, ({ success }) => {
                 if (success) {
                     // Clean up room events for the old room
                     stopListeningRoomEvents(socket);
 
-                    queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoomId] });
+                    queryClient.invalidateQueries({ queryKey: ['rooms', joinedRoomId] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
 
                     // Small delay to ensure cleanup is complete
@@ -52,7 +48,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                                 queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
                                 queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                                 startListeningRoomEvents(socket, queryClient);
-                                onSelectRoomId(room._id);
+                                setJoinedRoomId(room._id);
                             } else {
                                 if (!!data?.ban)
                                     setDialogData({
@@ -73,7 +69,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
                     queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     startListeningRoomEvents(socket, queryClient);
-                    onSelectRoomId(room._id);
+                    setJoinedRoomId(room._id);
                 } else {
                     if (!!data?.ban)
                         setDialogData({
@@ -90,7 +86,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom, onSelectRoomId,
         <button
             key={room._id}
             onClick={handleRoomJoin}
-            className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${selectedRoomId === room._id ? 'bg-accent/60' : ''}`}
+            className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${joinedRoomId === room._id ? 'bg-accent/60' : ''}`}
         >
             <div className='flex items-center gap-2'>
                 {room.visibility === 'private' && (

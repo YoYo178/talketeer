@@ -1,57 +1,64 @@
 import { Trash, Users, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { ChatButton } from './rich-text/utility/ChatButton'
-import type { IRoom } from '@/types/room.types'
 import type { FC } from 'react';
 import { useState } from 'react';
 import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useQueryClient } from '@tanstack/react-query';
-import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { AlertDialog, AlertDialogFooter, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from '../ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
 import { EditRoomDialog } from './rooms/dialogs/EditRoomDialog';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
+import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 
 interface ChatHeaderProps {
-    selectedRoom: IRoom;
-    onSelectRoomId: (roomId: string | null) => void;
     onToggleMemberList: (state: boolean) => void;
 }
 
-export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId, onToggleMemberList }) => {
+export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
     const queryClient = useQueryClient();
 
     const [isLeaving, setIsLeaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const { data: meData } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const me = meData?.data?.user;
-    const isRoomOwner = selectedRoom.owner === me?._id;
+    const roomsStore = useRoomsStore();
+    const { joinedRoomId, setJoinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string };
+
+    const room = useRoom(joinedRoomId);
+
+    const me = useMe();
+
+    if (!room || !me)
+        return;
+
+    const isRoomOwner = room.owner === me._id;
 
     const handleRoomDelete = () => {
         if (!isRoomOwner || isDeleting)
             return;
 
         setIsDeleting(true);
-        socket.emit('deleteRoom', selectedRoom._id, ({ success }) => {
+        socket.emit('deleteRoom', room._id, ({ success }) => {
             if (success) {
                 stopListeningRoomEvents(socket);
-                onSelectRoomId(null);
+                setJoinedRoomId(null);
             }
             setIsDeleting(false);
         })
     }
 
     const handleRoomLeave = () => {
-        if (!selectedRoom || isLeaving)
+        if (!room || isLeaving)
             return;
 
         setIsLeaving(true);
-        socket.emit('leaveRoom', selectedRoom._id, ({ success }) => {
+        socket.emit('leaveRoom', room._id, ({ success }) => {
             if (success) {
-                queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoom._id] });
+                queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
                 stopListeningRoomEvents(socket);
-                onSelectRoomId(null);
+                setJoinedRoomId(null);
             }
             setIsLeaving(false);
         });
@@ -61,9 +68,9 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId, 
         return (
             <div className='flex p-4'>
                 <div className='flex gap-2 items-center flex-wrap'>
-                    <p className='text-xl'>{selectedRoom.name}</p>
+                    <p className='text-xl'>{room.name}</p>
                     <div className='flex '>
-                        <EditRoomDialog selectedRoom={selectedRoom} />
+                        <EditRoomDialog room={room} />
                         {isRoomOwner && (
                             <AlertDialog>
                                 <Tooltip>
@@ -121,7 +128,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ selectedRoom, onSelectRoomId, 
 
     return (
         <div className='flex p-4'>
-            <p className='text-xl'>{selectedRoom.name}</p>
+            <p className='text-xl'>{room.name}</p>
             <div className='flex gap-2 ml-auto'>
                 <Tooltip>
                     <TooltipTrigger asChild>

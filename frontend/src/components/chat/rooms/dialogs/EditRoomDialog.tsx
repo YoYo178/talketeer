@@ -14,25 +14,25 @@ import { ChatButton } from '../../rich-text/utility/ChatButton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface EditRoomDialogProps {
-    selectedRoom: IRoom
+    room: IRoom
 }
 
-export const EditRoomDialog: FC<EditRoomDialogProps> = ({ selectedRoom }) => {
+export const EditRoomDialog: FC<EditRoomDialogProps> = ({ room }) => {
     const queryClient = useQueryClient();
 
     const [open, setOpen] = useState(false);
 
-    const [name, setName] = useState(selectedRoom.name);
-    const [visibility, setVisibility] = useState<'public' | 'private'>(selectedRoom.visibility);
-    const [memberLimit, setMemberLimit] = useState([selectedRoom.memberLimit]);
+    const [name, setName] = useState(room.name);
+    const [visibility, setVisibility] = useState<'public' | 'private'>(room.visibility);
+    const [memberLimit, setMemberLimit] = useState([room.memberLimit]);
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
-        socket.emit('updateRoom', selectedRoom._id, name, visibility, memberLimit[0], ({ success }) => {
+        socket.emit('updateRoom', room._id, name, visibility, memberLimit[0], ({ success }) => {
             if (success) {
                 // Refetch the room's latest data
-                queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoom._id] });
+                queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
 
                 // Refetch our own user object to get the latest 'room' property state
                 queryClient.invalidateQueries({ queryKey: ['users', 'me'] });

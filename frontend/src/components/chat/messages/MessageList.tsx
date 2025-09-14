@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, type FC } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { MessageBlock, MessageBlockSkeleton } from './MessageBlock'
 import type { IMessage } from '@/types/message.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React from 'react';
 import { useGetMessagesQuery } from '@/hooks/network/messages/useGetMessagesQuery';
 import { Separator } from '@/components/ui/separator';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
 const MessageListSkeleton = () => {
     const alignArr: ('start' | 'end')[] = ['start', 'end']
@@ -21,18 +22,17 @@ const MessageListSkeleton = () => {
     );
 }
 
-interface MessageListProps {
-    selectedRoomId: string;
-}
-
-export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
+export const MessageList = () => {
     const chatEndRef = useRef<HTMLDivElement>(null);
     const isAtBottom = useRef(false);
     const hasScrolled = useRef(false);
 
+    const roomsStore = useRoomsStore();
+    const { joinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string }
+
     const { data, isLoading, fetchNextPage, hasNextPage } = useGetMessagesQuery({
-        queryKey: ['messages', selectedRoomId],
-        queryParams: { roomId: selectedRoomId }
+        queryKey: ['messages', joinedRoomId],
+        queryParams: { roomId: joinedRoomId }
     })
     const messagePages = useMemo(
         () => [...(data?.pages || [])].reverse(),
@@ -90,7 +90,7 @@ export const MessageList: FC<MessageListProps> = ({ selectedRoomId }) => {
         if (chatEndRef.current)
             chatEndRef.current.scrollIntoView({ behavior: 'auto' });
     };
-    
+
     useLayoutEffect(() => {
         if (hasScrolled.current)
             return;

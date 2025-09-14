@@ -1,16 +1,21 @@
-import type { IRoom } from "@/types/room.types"
-import type { FC } from "react"
+
+import { useRoom } from "@/hooks/network/rooms/useGetRoomByIdQuery";
+import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 import { RoomMemberEntry } from "./RoomMemberEntry"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
-interface RoomMemberListProps {
-    selectedRoom: IRoom
-}
+export const RoomMemberList = () => {
+    const roomsStore = useRoomsStore();
+    const { joinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string }
 
-export const RoomMemberList: FC<RoomMemberListProps> = ({ selectedRoom }) => {
+    const room = useRoom(joinedRoomId);
+
+    if (!room)
+        return null;
+
     return (
         <ScrollArea className='flex-1 flex flex-col p-4 overflow-hidden'>
-            {selectedRoom.members?.map(mem => <RoomMemberEntry key={mem.user} selectedRoom={selectedRoom} userId={mem.user} />)}
+            {room.members?.map(mem => <RoomMemberEntry key={mem.user} userId={mem.user} />)}
         </ScrollArea>
     )
 }

@@ -1,8 +1,8 @@
-import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { memo, type FC } from 'react'
 import { MessageProfilePicture, MessageProfilePictureSkeleton } from './MessageProfilePicture';
 import { MessageText, MessageTextSkeleton } from './MessageText';
-import { useGetUserQuery } from '@/hooks/network/users/useGetUserQuery';
+import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
 import type { IMessage } from '@/types/message.types';
 
 interface MessageBlockSkeletonProps {
@@ -37,17 +37,10 @@ interface MessageBlockProps {
 }
 
 export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId }) => {
-    const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const me = data?.data?.user;
+    const me = useMe();
+    const user = useGetUser(senderId);
 
     const isSelfMessage = senderId === me?._id;
-
-    const { data: userData } = useGetUserQuery({
-        queryKey: ['users', senderId],
-        pathParams: { userId: senderId },
-        enabled: !isSelfMessage
-    })
-    const otherUser = userData?.data?.user;
 
     return (
         <div className={
@@ -68,10 +61,10 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                 </>
             ) : (
                 <>
-                    <MessageProfilePicture user={otherUser} />
+                    <MessageProfilePicture user={user} />
                     <div className='flex flex-col items-start max-w-[80%]'>
                         <p className='text-muted-foreground text-[14px]'>
-                            {otherUser?.username}
+                            {user?.username}
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>
                             {new Date(messages[0].createdAt).toLocaleString()}
                         </p>

@@ -1,38 +1,32 @@
-import { useLayoutEffect, useState, type FC } from 'react'
+import { useLayoutEffect, useState } from 'react'
 import { ChatComposer } from './rich-text/ChatComposer';
 import { MessageList } from './messages/MessageList';
-import { useGetRoomByIdQuery } from '@/hooks/network/rooms/useGetRoomByIdQuery';
+import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { ChatHeader } from './ChatHeader';
 import { Separator } from '../ui/separator';
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
 import { ArrowLeft } from 'lucide-react';
 import { RoomMemberList } from './rooms/RoomMemberList';
 import { ChatButton } from './rich-text/utility/ChatButton';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
-interface ChatWindowProps {
-    selectedRoomId: string | null;
-    onSelectRoomId: (roomId: string | null) => void;
-}
-
-export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId }) => {
-    const { data } = useGetRoomByIdQuery({
-        queryKey: ['rooms', selectedRoomId || ''],
-        pathParams: { roomId: selectedRoomId || '' },
-        enabled: !!selectedRoomId
-    });
-    const selectedRoom = data?.data?.room;
-
+export const ChatWindow = () => {
     const [isInMemberList, setIsInMemberList] = useState(false);
+
+    const roomsStore = useRoomsStore();
+    const { joinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string };
 
     useLayoutEffect(() => {
         if (isInMemberList)
             setIsInMemberList(false);
-    }, [selectedRoomId])
+    }, [joinedRoomId])
+
+    const joinedRoom = useRoom(joinedRoomId);
 
     // Detect if we're below md breakpoint (768px)
     const isMobile = useMediaQuery('(max-width: 767px)');
 
-    if (!selectedRoom) {
+    if (!joinedRoom) {
         return (
             <div className='flex-1 bg-background p-6 flex items-center justify-center'>
                 <div className='text-center'>
@@ -52,22 +46,18 @@ export const ChatWindow: FC<ChatWindowProps> = ({ selectedRoomId, onSelectRoomId
                             <ArrowLeft className='size-5' />
                         </ChatButton>
 
-                        <p className='text-xl'>Members in {selectedRoom.name}</p>
+                        <p className='text-xl'>Members in {joinedRoom.name}</p>
                     </div>
                     <Separator />
-                    <RoomMemberList selectedRoom={selectedRoom} />
+                    <RoomMemberList />
                 </>
             ) : (
                 <>
-                    <ChatHeader
-                        selectedRoom={selectedRoom}
-                        onSelectRoomId={onSelectRoomId}
-                        onToggleMemberList={setIsInMemberList}
-                    />
+                    <ChatHeader onToggleMemberList={setIsInMemberList} />
                     <Separator />
-                    <MessageList selectedRoomId={selectedRoomId!} />
+                    <MessageList />
                     <Separator />
-                    <ChatComposer roomId={selectedRoom._id} />
+                    <ChatComposer roomId={joinedRoom._id} />
                 </>
             )}
         </div>

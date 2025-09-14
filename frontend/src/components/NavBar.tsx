@@ -4,15 +4,13 @@ import { Button } from './ui/button'
 import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, MessagesSquare } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 
 export const NavBar = () => {
     const queryClient = useQueryClient();
-
-    const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const me: IUser | undefined = data?.data?.user;
+    const me: IUser | undefined = useMe();
 
     const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
 

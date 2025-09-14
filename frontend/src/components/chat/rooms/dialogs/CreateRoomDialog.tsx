@@ -5,24 +5,22 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
+import { useMe } from '@/hooks/network/users/useGetMeQuery'
 import { socket } from '@/socket'
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets'
 import type { APIResponse } from '@/types/api.types'
 import type { IRoom } from '@/types/room.types'
-import type { IUser } from '@/types/user.types'
 import { useQueryClient } from '@tanstack/react-query'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 export const CreateRoomDialog = () => {
     const queryClient = useQueryClient();
-    const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const user: IUser | undefined = data?.data?.user;
+    const me = useMe();
 
     const [open, setOpen] = useState(false);
 
-    const [name, setName] = useState(user ? `${user.username}'s room` : '');
+    const [name, setName] = useState(me ? `${me.username}'s room` : '');
     const [visibility, setVisibility] = useState<'public' | 'private'>('public');
     const [memberLimit, setMemberLimit] = useState([10]);
 
@@ -33,9 +31,9 @@ export const CreateRoomDialog = () => {
             if (success) {
 
                 // If we were in a room, the backend will leave it first
-                if (user?.room)
+                if (me?.room)
                     // Invalidate the old room's queries so we can get the latest data
-                    queryClient.invalidateQueries({ queryKey: ['rooms', user.room] });
+                    queryClient.invalidateQueries({ queryKey: ['rooms', me.room] });
 
                 if (data) {
                     const oldRoomsData: APIResponse<{ rooms: IRoom[] }> | undefined = queryClient.getQueryData(['rooms']);

@@ -4,22 +4,27 @@ import { BannedDialog } from '@/components/chat/rooms/dialogs/info/BannedDialog'
 import { KickedDialog } from '@/components/chat/rooms/dialogs/info/KickedDialog'
 import { RoomDeletedDialog } from '@/components/chat/rooms/dialogs/info/RoomDeletedDialog'
 import { NavBar } from '@/components/NavBar'
-import { useGetMeQuery } from '@/hooks/network/users/useGetMeQuery'
+import { useMe } from '@/hooks/network/users/useGetMeQuery'
 import { useSocketConnection } from '@/hooks/socket/useSocketConnection'
+import { useRoomsStore } from '@/hooks/state/useRoomsStore'
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 export const UserLayout = () => {
-    const { data } = useGetMeQuery({ queryKey: ['users', 'me'] });
-    const userRoomId = data?.data?.user.room ?? null;
-    const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+    const { selectedRoomId, joinedRoomId, setJoinedRoomId } = useRoomsStore();
+
+    // Keep our room status updated!
+    const me = useMe();
+    const roomId = me?.room ?? null;
+    useEffect(() => {
+        if (!me)
+            return;
+
+        setJoinedRoomId(roomId)
+    }, [roomId]);
 
     // Initialize socket connection
     useSocketConnection();
-
-    useEffect(() => {
-        setSelectedRoomId(userRoomId);
-    }, [userRoomId]);
 
     // Detect if we're below md breakpoint (768px)
     const isMobile = useMediaQuery('(max-width: 767px)');
@@ -29,25 +34,24 @@ export const UserLayout = () => {
             <NavBar />
 
             <div className="flex-1 flex flex-col md:flex-row gap-3 overflow-auto"> {/* this 'h-0' is very necessary, just don't ask why */}
-                {isMobile ? (
-                    <>
-                        {!selectedRoomId && (
-                            <ChatSidebar
-                                onSelectRoomId={setSelectedRoomId}
-                                selectedRoomId={selectedRoomId}
-                            />
-                        )}
-                    </>
+                {!isMobile
+                    ? (<ChatSidebar />)
+                    : (
+                        <>
+                            {(!selectedRoomId || !joinedRoomId) && <ChatSidebar />}
+                        </>
+                    )
+                }
+                {joinedRoomId ? (
+                    <ChatWindow />
                 ) : (
-                    <ChatSidebar
-                        onSelectRoomId={setSelectedRoomId}
-                        selectedRoomId={selectedRoomId}
-                    />
+                    <div className='flex-1 bg-background p-6 flex items-center justify-center'>
+                        <div className='text-center'>
+                            <div className='text-xl font-semibold mb-1'>Join a room to get started!</div>
+                            <div className='text-sm text-muted-foreground'>Select a room {isMobile ? 'from above' : 'on the left'} or create a new one.</div>
+                        </div>
+                    </div>
                 )}
-                <ChatWindow
-                    onSelectRoomId={setSelectedRoomId}
-                    selectedRoomId={selectedRoomId}
-                />
             </div>
 
             <KickedDialog />

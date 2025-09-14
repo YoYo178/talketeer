@@ -2,19 +2,17 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useRoomsStore } from '@/hooks/state/useRoomsStore'
 import { socket } from '@/socket'
 import { stopListeningRoomEvents, startListeningRoomEvents } from '@/sockets/room.sockets'
 import { useQueryClient } from '@tanstack/react-query'
 import { HousePlus } from 'lucide-react'
-import { useState, type FC } from 'react'
+import { useState } from 'react'
 
-interface JoinRoomDialogProps {
-    onSelectRoomId: (roomId: string | null) => void;
-    selectedRoomId: string | null
-}
-
-export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, selectedRoomId }) => {
+export const JoinRoomDialog = () => {
     const queryClient = useQueryClient();
+
+    const { joinedRoomId, setJoinedRoomId } = useRoomsStore();
 
     const [open, setOpen] = useState(false);
     const [code, setCode] = useState('');
@@ -23,18 +21,18 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        if (!!selectedRoomId) {
-            socket.emit('leaveRoom', selectedRoomId, ({ success, error }) => {
+        if (!!joinedRoomId) {
+            socket.emit('leaveRoom', joinedRoomId, ({ success, error }) => {
                 if (success) {
                     stopListeningRoomEvents(socket);
 
-                    queryClient.invalidateQueries({ queryKey: ['rooms', selectedRoomId] });
+                    queryClient.invalidateQueries({ queryKey: ['rooms', joinedRoomId] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
 
                     socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
                         if (success && !!data) {
                             startListeningRoomEvents(socket, queryClient);
-                            onSelectRoomId(data.roomId);
+                            setJoinedRoomId(data.roomId);
                             queryClient.invalidateQueries({ queryKey: ['rooms', data.roomId] });
                             queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                             setOpen(false);
@@ -50,7 +48,7 @@ export const JoinRoomDialog: FC<JoinRoomDialogProps> = ({ onSelectRoomId, select
             socket.emit('joinRoom', { method: 'code', data: code }, ({ success, data, error }) => {
                 if (success && !!data) {
                     startListeningRoomEvents(socket, queryClient);
-                    onSelectRoomId(data.roomId);
+                    setJoinedRoomId(data.roomId);
                     queryClient.invalidateQueries({ queryKey: ['rooms', data!] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     setOpen(false);
