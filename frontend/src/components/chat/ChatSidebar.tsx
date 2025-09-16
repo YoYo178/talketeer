@@ -17,7 +17,7 @@ export const ChatSidebar = () => {
     }, [rooms, searchText])
 
     return (
-        <div className='flex flex-col gap-3 w-full md:w-72 p-3 rounded-xl bg-card'>
+        <div className='flex flex-col gap-3 w-full md:w-72 p-3 rounded-xl bg-accent dark:bg-primary-foreground'>
             <div className='flex gap-2 max-w-full'>
                 <CreateRoomDialog />
                 <JoinRoomDialog />

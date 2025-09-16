@@ -127,7 +127,7 @@ export const MessageList = () => {
             {messageElements.length > 0 && !hasNextPage && (
                 <div className="flex items-center my-2">
                     <Separator className='flex-1' />
-                    <span className="mx-2 bg-card px-2 text-muted-foreground">
+                    <span className="mx-2 bg-transparent px-2 dark:text-muted-foreground">
                         You've reached the end of this chatroom!
                     </span>
                     <Separator className='flex-1' />

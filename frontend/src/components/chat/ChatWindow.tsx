@@ -102,7 +102,7 @@ export const ChatWindow = () => {
     }
 
     return (
-        <div className='flex-1 flex flex-col bg-card rounded-xl overflow-auto'>
+        <div className='flex-1 flex flex-col bg-accent dark:bg-primary-foreground rounded-xl overflow-auto'>
 
             {selectedRoomId ? (
                 <>
