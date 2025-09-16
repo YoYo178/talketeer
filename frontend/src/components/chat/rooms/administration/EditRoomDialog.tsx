@@ -6,27 +6,30 @@ import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { socket } from '@/socket'
-import type { IRoom } from '@/types/room.types'
 import { useQueryClient } from '@tanstack/react-query'
 import { Pencil } from 'lucide-react'
-import { useState, type FC } from 'react'
+import { useState } from 'react'
 import { ChatButton } from '../../rich-text/utility/ChatButton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import { useRoomsStore } from '@/hooks/state/useRoomsStore'
+import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery'
 
-interface EditRoomDialogProps {
-    room: IRoom
-}
-
-export const EditRoomDialog: FC<EditRoomDialogProps> = ({ room }) => {
+export const EditRoomDialog = () => {
     const queryClient = useQueryClient();
+
+    const { joinedRoomId } = useRoomsStore();
+    const room = useRoom(joinedRoomId);
 
     const [open, setOpen] = useState(false);
 
-    const [name, setName] = useState(room.name);
-    const [visibility, setVisibility] = useState<'public' | 'private'>(room.visibility);
-    const [memberLimit, setMemberLimit] = useState([room.memberLimit]);
+    const [name, setName] = useState(room?.name || '');
+    const [visibility, setVisibility] = useState<'public' | 'private'>(room?.visibility || 'public');
+    const [memberLimit, setMemberLimit] = useState([room?.memberLimit || 10]);
 
     const handleSubmit = (e: React.FormEvent) => {
+        if (!room)
+            return;
+
         e.preventDefault();
 
         socket.emit('updateRoom', room._id, name, visibility, memberLimit[0], ({ success }) => {

@@ -9,7 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { AlertDialog, AlertDialogFooter, AlertDialogContent, AlertDialogDescription, AlertDialogHeader, AlertDialogTitle, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from '../ui/alert-dialog';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
-import { EditRoomDialog } from './rooms/dialogs/EditRoomDialog';
+import { EditRoomDialog } from './rooms/administration/EditRoomDialog';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 
