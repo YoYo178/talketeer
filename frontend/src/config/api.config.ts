@@ -3,7 +3,9 @@ import type { Endpoints } from "../types/api.types";
 
 const isProduction = import.meta.env.PROD;
 
-export const SERVER_URL = isProduction ? 'https://sp-az.duckdns.org' : 'http://localhost:3000';
+export const SERVER_URL = isProduction
+    ? (import.meta.env.VITE_SERVER_URL || 'https://sp-az.duckdns.org')
+    : (import.meta.env.VITE_DEV_SERVER_URL || 'https://localhost:3000');
 const API_URL = isProduction ? SERVER_URL + '/talketeer/api' : SERVER_URL + '/api';
 
 export const SOCKET_SERVER_URL = SERVER_URL;
