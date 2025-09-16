@@ -5,13 +5,16 @@ import { socket } from '@/socket';
 import { Textarea } from '@/components/ui/textarea';
 
 interface ChatComposerProps {
-    roomId: string;
+    roomId: string | undefined;
 }
 
 export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
     const [message, setMessage] = useState('');
 
     const sendMessage = () => {
+        if (!roomId)
+            return;
+
         socket.emit('sendMessage', roomId, message, ({ success }) => {
             if (success)
                 setMessage('');
