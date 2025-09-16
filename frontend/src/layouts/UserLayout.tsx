@@ -38,11 +38,11 @@ export const UserLayout = () => {
                     ? (<ChatSidebar />)
                     : (
                         <>
-                            {(!selectedRoomId || !joinedRoomId) && <ChatSidebar />}
+                            {(!selectedRoomId && !joinedRoomId) && <ChatSidebar />}
                         </>
                     )
                 }
-                {joinedRoomId ? (
+                {(joinedRoomId || selectedRoomId) ? (
                     <ChatWindow />
                 ) : (
                     <div className='flex-1 bg-background p-6 flex items-center justify-center'>
