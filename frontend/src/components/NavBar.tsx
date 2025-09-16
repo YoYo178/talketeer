@@ -8,15 +8,19 @@ import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
+import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 
 export const NavBar = () => {
+    const { membersOnline } = useGlobalStore();
+
     const queryClient = useQueryClient();
     const me: IUser | undefined = useMe();
 
     const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
 
-    const hideTitle = useMediaQuery('(max-width: 590px)')
-    const hideLogoutText = useMediaQuery('(max-width: 465px)')
+    const hideTitle = useMediaQuery('(max-width: 590px)');
+    const hideLogoutText = useMediaQuery('(max-width: 465px)');
+    const hideName = useMediaQuery('(max-width: 395px)');
 
     const handleLogout = async () => {
         try {
@@ -32,9 +36,14 @@ export const NavBar = () => {
     return (
         <div className='flex items-center bg-(--color-primary-foreground) p-5 rounded-xl overflow-hidden'> {/* temp!! */}
 
-            <div className='flex gap-2 items-center'>
+            <div className='flex gap-2'>
                 <MessagesSquare className='size-8' />
-                {!hideTitle && <h1 className='text-2xl font-bold'>Talketeer</h1>}
+                {(!hideTitle || hideTitle && hideName) && (
+                    <div className="flex flex-col">
+                        <h1 className='text-2xl font-bold'>Talketeer</h1>
+                        <p className='text-sm text-muted-foreground font-bold'>Users online: {membersOnline}</p>
+                    </div>
+                )}
             </div>
 
             {/* temporary, until i come up with a proper layout and a proper place */}
@@ -43,10 +52,12 @@ export const NavBar = () => {
                     <AvatarImage src={me?.avatarURL} />
                     <AvatarFallback>{me?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
                 </Avatar>
-                <div className='flex flex-col mt-[0.1rem]'>
-                    <p className='text-primary text-l font-bold'>{me?.displayName}</p>
-                    <p className='text-muted-foreground text-sm -translate-y-1'>@{me?.username}</p>
-                </div>
+                {!hideName && (
+                    <div className='flex flex-col mt-[0.1rem]'>
+                        <p className='text-primary text-l font-bold'>{me?.displayName}</p>
+                        <p className='text-muted-foreground text-sm -translate-y-1'>@{me?.username}</p>
+                    </div>
+                )}
             </div>
 
             <div className='ml-auto flex gap-3'>

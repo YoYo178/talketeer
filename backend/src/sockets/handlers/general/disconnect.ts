@@ -2,6 +2,7 @@ import { leaveRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
 import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
 import logger from "@src/utils/logger.utils";
+import { onlineMembers } from "@src/utils/socket.utils";
 
 export const getDisconnectEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {
     return async (reason: string, description: string) => {
@@ -19,11 +20,16 @@ export const getDisconnectEventCallback = (io: TalketeerSocketServer, socket: Ta
         const userId = socket.data.user.id;
 
         const user = await getUser(userId);
-        if (!user?.room) return;
+        if (user?.room) {
 
-        await leaveRoom(userId, user.room.toString());
+            await leaveRoom(userId, user.room.toString());
 
-        // Broadcast room update to all other users
-        socket.broadcast.emit('roomUpdated', user.room.toString());
+            // Broadcast room update to all other users
+            socket.broadcast.emit('roomUpdated', user.room.toString());
+        }
+
+        onlineMembers.delete(userId);
+
+        io.emit('memberOffline', onlineMembers.size, userId);
     }
 }

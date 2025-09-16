@@ -1,4 +1,5 @@
 import { useDialogStore } from "@/hooks/state/useDialogStore";
+import { useGlobalStore } from "@/hooks/state/useGlobalStore";
 import type { APIResponse } from "@/types/api.types";
 import type { IRoom } from "@/types/room.types";
 import type { TalketeerSocket } from "@/types/socket.types";
@@ -63,6 +64,14 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
     socket.on('notification', () => {
         console.log('You have received a new notification')
     });
+
+    socket.on('memberOnline', (membersCount, userId) => {
+        useGlobalStore.getState().setMembersOnline(membersCount);
+    })
+
+    socket.on('memberOffline', (membersCount, userId) => {
+        useGlobalStore.getState().setMembersOnline(membersCount);
+    })
 }
 
 export function handleSocketDisconnection(socket: TalketeerSocket) {
@@ -71,6 +80,8 @@ export function handleSocketDisconnection(socket: TalketeerSocket) {
     socket.off('roomDeleted');
     socket.off('roomUpdated');
     socket.off('notification');
+    socket.off('memberOnline');
+    socket.off('memberOffline');
 
     // Also remove any room-specific events that might still be active
     socket.off('memberJoined');

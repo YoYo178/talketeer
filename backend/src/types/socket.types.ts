@@ -20,6 +20,9 @@ export interface ServerToClientEvents {
     newMessage: (roomId: string, userId: string, message: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
+
+    memberOnline: (membersCount: number, userId: string) => void;
+    memberOffline: (membersCount: number, userId: string) => void;
 }
 
 // This generic represents the data type that is to be sent with the ack, null by default

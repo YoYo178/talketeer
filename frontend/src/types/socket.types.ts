@@ -20,6 +20,9 @@ export interface ServerToClientEvents {
     newMessage: (roomId: string, userId: string, message: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
+
+    memberOnline: (membersCount: number, userId: string) => void;
+    memberOffline: (membersCount: number, userId: string) => void;
 }
 
 export type AckOptions<T> = { success: boolean, data?: T, error?: string };
