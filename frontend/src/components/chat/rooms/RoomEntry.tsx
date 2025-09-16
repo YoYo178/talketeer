@@ -38,7 +38,10 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     }
 
     const handleRoomJoin = async () => {
-        if (room._id === joinedRoomId || isJoining)
+        if (!selectedRoom || selectedRoomId === joinedRoomId || isJoining || !me)
+            return;
+
+        if (selectedRoom.visibility === 'private' && selectedRoom.owner !== me._id)
             return;
 
         setIsJoining(true);
@@ -62,6 +65,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
                                 queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                                 startListeningRoomEvents(socket, queryClient);
                                 setJoinedRoomId(room._id);
+                                setSelectedRoomId(null);
                             } else {
                                 if (!!data?.ban)
                                     setDialogData({
@@ -83,6 +87,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     startListeningRoomEvents(socket, queryClient);
                     setJoinedRoomId(room._id);
+                    setSelectedRoomId(null);
                 } else {
                     if (!!data?.ban)
                         setDialogData({
@@ -99,6 +104,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
         <button
             key={room._id}
             onClick={handleRoomSelect}
+            onDoubleClick={handleRoomJoin}
             className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${joinedRoomId === room._id ? 'bg-accent/60' : ''} ${selectedRoomId === room._id ? 'bg-accent text-accent-foreground' : ''}`}
         >
             <div className='flex items-center gap-2'>
