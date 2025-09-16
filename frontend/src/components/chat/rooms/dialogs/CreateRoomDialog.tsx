@@ -6,6 +6,7 @@ import { Separator } from '@/components/ui/separator'
 import { Slider } from '@/components/ui/slider'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { useMe } from '@/hooks/network/users/useGetMeQuery'
+import { useRoomsStore } from '@/hooks/state/useRoomsStore'
 import { socket } from '@/socket'
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets'
 import type { APIResponse } from '@/types/api.types'
@@ -15,6 +16,7 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 export const CreateRoomDialog = () => {
+    const { setJoinedRoomId, setSelectedRoomId } = useRoomsStore();
     const queryClient = useQueryClient();
     const me = useMe();
 
@@ -47,6 +49,9 @@ export const CreateRoomDialog = () => {
 
                     // Refetch our own user object to get the latest 'room' property state
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+
+                    setJoinedRoomId(data._id);
+                    setSelectedRoomId(null);
                 }
 
                 setOpen(false);
