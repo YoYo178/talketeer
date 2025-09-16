@@ -46,7 +46,6 @@ export function sanitizeRoomObj(room: IRoom, userID: string): IRoom | IRoomPubli
         return {
             ...room,
             code: undefined,
-            owner: undefined,
             members: undefined,
             messages: undefined,
         };

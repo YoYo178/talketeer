@@ -43,4 +43,4 @@ export interface IRoom {
     updatedAt: number;
 }
 
-export type IRoomPublicView = Omit<IRoom, 'code' | 'owner' | 'members' | 'messages'>;
+export type IRoomPublicView = Omit<IRoom, 'code' | 'members' | 'messages'>;
