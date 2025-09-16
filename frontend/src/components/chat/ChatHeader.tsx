@@ -65,47 +65,6 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
         }
     };
 
-    if (isRoomOwner)
-        return (
-            <div className='flex p-4'>
-                <div className='flex gap-2 items-center flex-wrap'>
-                    <p className='text-xl'>{room.name}</p>
-                    <div className='flex '>
-
-                        {/* Copy room code button */}
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <ChatButton onClick={handleCopyRoomCode}>
-                                    <Copy />
-                                </ChatButton>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Copy room code</p>
-                            </TooltipContent>
-                        </Tooltip>
-
-                        <EditRoomDialog />
-                        <DeleteRoomDialog />
-                    </div>
-                </div>
-                <div className='flex gap-2 ml-auto'>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <ChatButton onClick={() => onToggleMemberList(true)}>
-                                <Users className='size-5' />
-                            </ChatButton>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Member list</p>
-                        </TooltipContent>
-                    </Tooltip>
-                    <Button onClick={handleRoomLeave}><X />Leave room</Button>
-                </div>
-
-                <Toaster id='room-code-copied-toast' />
-            </div >
-        )
-
     return (
         <div className='flex p-4'>
             <div className='flex gap-2 items-center flex-wrap'>
@@ -122,6 +81,13 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
                             <p>Copy room code</p>
                         </TooltipContent>
                     </Tooltip>
+
+                    {isRoomOwner && (
+                        <>
+                            <EditRoomDialog />
+                            <DeleteRoomDialog />
+                        </>
+                    )}
                 </div>
             </div>
             <div className='flex gap-2 ml-auto'>
