@@ -12,7 +12,7 @@ import { useState } from 'react'
 export const JoinRoomDialog = () => {
     const queryClient = useQueryClient();
 
-    const { joinedRoomId, setJoinedRoomId } = useRoomsStore();
+    const { joinedRoomId, setJoinedRoomId, setSelectedRoomId } = useRoomsStore();
 
     const [open, setOpen] = useState(false);
     const [code, setCode] = useState('');
@@ -33,6 +33,7 @@ export const JoinRoomDialog = () => {
                         if (success && !!data) {
                             startListeningRoomEvents(socket, queryClient);
                             setJoinedRoomId(data.roomId);
+                            setSelectedRoomId(null);
                             queryClient.invalidateQueries({ queryKey: ['rooms', data.roomId] });
                             queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                             setOpen(false);
@@ -49,6 +50,7 @@ export const JoinRoomDialog = () => {
                 if (success && !!data) {
                     startListeningRoomEvents(socket, queryClient);
                     setJoinedRoomId(data.roomId);
+                    setSelectedRoomId(null);
                     queryClient.invalidateQueries({ queryKey: ['rooms', data!] });
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
                     setOpen(false);
