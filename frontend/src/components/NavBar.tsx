@@ -1,14 +1,12 @@
 import { useLogoutMutation } from '@/hooks/network/auth/useLogoutMutation'
-import { ToggleThemeButton } from './scheme/theme-button'
 import { Button } from './ui/button'
 import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, MessagesSquare } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
 import { useGlobalStore } from '@/hooks/state/useGlobalStore';
+import { ExpandableProfileCard } from './ExpandableProfileCard';
 
 export const NavBar = () => {
     const { membersOnline } = useGlobalStore();
@@ -34,9 +32,9 @@ export const NavBar = () => {
     }
 
     return (
-        <div className='flex items-center bg-accent dark:bg-primary-foreground p-5 rounded-xl overflow-hidden'> {/* temp!! */}
+        <div className='flex items-center bg-accent dark:bg-primary-foreground rounded-xl overflow-hidden'> {/* temp!! */}
 
-            <div className='flex gap-2'>
+            <div className='flex gap-2 p-5'>
                 <MessagesSquare className='size-8' />
                 {(!hideTitle || hideTitle && hideName) && (
                     <div className="flex flex-col">
@@ -46,31 +44,10 @@ export const NavBar = () => {
                 )}
             </div>
 
-            {/* temporary, until i come up with a proper layout and a proper place */}
-            <div className='flex flex-1 mx-4 justify-center gap-4 relative'>
-                <Avatar className='outline-1 outline-muted-foreground size-12'>
-                    <AvatarImage src={me?.avatarURL} />
-                    <AvatarFallback>{me?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
-                </Avatar>
-                {!hideName && (
-                    <div className='flex flex-col mt-[0.1rem]'>
-                        <p className='text-primary text-l font-bold'>{me?.displayName}</p>
-                        <p className='text-muted-foreground text-sm -translate-y-1'>@{me?.username}</p>
-                    </div>
-                )}
-            </div>
+            <div className='flex-1 flex items-center justify-end gap-3 px-5'>
 
-            <div className='ml-auto flex gap-3'>
-
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <ToggleThemeButton />
-                    </TooltipTrigger>
-                    <TooltipContent side='bottom'>
-                        <p>Toggle theme</p>
-                    </TooltipContent>
-                </Tooltip>
-                <Button className='ml-auto' onClick={handleLogout}>
+                <ExpandableProfileCard user={me} />
+                <Button className='' onClick={handleLogout}>
                     <LogOut />
                     {!hideLogoutText && <>Log out</>}
                 </Button>
