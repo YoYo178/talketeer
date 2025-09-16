@@ -70,6 +70,9 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
                 return;
             }
 
+            if (room.visibility === 'private' && method === 'id' && userId !== room.owner?.toString())
+                throw new Error('The room you are trying to join is private.')
+
             if (room.memberCount >= room.memberLimit)
                 throw new Error('The room you are trying to join is full!')
 
