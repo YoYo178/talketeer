@@ -71,16 +71,19 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
                 <p className='text-xl'>{room.name}</p>
                 <div className='flex'>
                     {/* Copy room code button */}
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <ChatButton onClick={handleCopyRoomCode}>
-                                <Copy />
-                            </ChatButton>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Copy room code</p>
-                        </TooltipContent>
-                    </Tooltip>
+                    {(room.visibility === 'public' || isRoomOwner) && (
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <ChatButton onClick={handleCopyRoomCode}>
+                                    <Copy />
+                                </ChatButton>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Copy room code</p>
+                            </TooltipContent>
+                        </Tooltip>
+
+                    )}
 
                     {isRoomOwner && (
                         <>
