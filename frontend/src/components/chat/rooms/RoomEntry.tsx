@@ -1,13 +1,13 @@
 import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
-import { socket } from '@/socket';
-import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
 import type { IRoomPublicView } from '@/types/room.types'
-import { useQueryClient } from '@tanstack/react-query';
-import type { FC } from 'react'
-import { useState } from 'react'
+import { useState, type FC } from 'react'
 import { Lock } from 'lucide-react'
-import { useDialogStore } from '@/hooks/state/useDialogStore';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
+import { socket } from '@/socket';
+import { stopListeningRoomEvents, startListeningRoomEvents } from '@/sockets/room.sockets';
+import { useQueryClient } from '@tanstack/react-query';
+import { useDialogStore } from '@/hooks/state/useDialogStore';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
 
 interface RoomEntryProps {
     room: IRoomPublicView;
@@ -15,14 +15,27 @@ interface RoomEntryProps {
 
 export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     const queryClient = useQueryClient();
-    const [isJoining, setIsJoining] = useState(false);
-    const room = useRoom(localRoom._id);
-
     const { setData: setDialogData } = useDialogStore();
-    const { joinedRoomId, setJoinedRoomId } = useRoomsStore();
+    const { joinedRoomId, selectedRoomId, setSelectedRoomId, setJoinedRoomId } = useRoomsStore();
+
+    const [isJoining, setIsJoining] = useState(false);
+
+    const room = useRoom(localRoom._id);
+    const selectedRoom = useRoom(selectedRoomId);
+
+    const me = useMe();
 
     if (!room)
         return;
+
+    const handleRoomSelect = () => {
+        if (joinedRoomId && room._id === joinedRoomId) {
+            setSelectedRoomId(null);
+            return;
+        }
+
+        setSelectedRoomId(room._id);
+    }
 
     const handleRoomJoin = async () => {
         if (room._id === joinedRoomId || isJoining)
@@ -85,8 +98,8 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     return (
         <button
             key={room._id}
-            onClick={handleRoomJoin}
-            className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${joinedRoomId === room._id ? 'bg-accent/60' : ''}`}
+            onClick={handleRoomSelect}
+            className={`w-full text-left p-3 hover:bg-accent/40 cursor-pointer ${joinedRoomId === room._id ? 'bg-accent/60' : ''} ${selectedRoomId === room._id ? 'bg-accent text-accent-foreground' : ''}`}
         >
             <div className='flex items-center gap-2'>
                 {room.visibility === 'private' && (
