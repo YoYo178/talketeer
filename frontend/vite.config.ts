@@ -1,25 +1,40 @@
 import path from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import fs from 'fs'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [react(), tailwindcss()],
-  base: '/talketeer/',
+export default defineConfig(({ mode }) => {
 
-  server: {
-    https: {
-      key: fs.readFileSync(path.resolve(path.join(__dirname, '..', 'certs', "localhost+1-key.pem"))),
-      cert: fs.readFileSync(path.resolve(path.join(__dirname, '..', 'certs', "localhost+1.pem")))
+  // Load env files
+  process.env = { ...process.env, ...loadEnv(mode, process.cwd()) };
+
+  // HTTPS config for dev environment
+  const sslKeyPath = process.env.VITE_SSL_KEY_PATH;
+  const sslCertPath = process.env.VITE_SSL_CERT_PATH;
+  const shouldUseHttps = mode === 'development' && (sslKeyPath && sslCertPath);
+
+  const HttpsConfig = shouldUseHttps ? {
+    server: {
+      https: {
+        key: fs.readFileSync(path.resolve(sslKeyPath)),
+        cert: fs.readFileSync(path.resolve(sslCertPath))
+      }
     }
-  },
+  } : {}
 
-  /* Module aliasing (required for shadcn) */
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src")
+  return {
+    plugins: [react(), tailwindcss()],
+    base: '/talketeer/',
+
+    ...HttpsConfig,
+
+    /* Module aliasing (required for shadcn) */
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src")
+      }
     }
   }
 })

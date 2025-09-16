@@ -1,4 +1,5 @@
 import https from 'https';
+import http from 'http';
 import logger from 'jet-logger';
 import fs from 'fs'
 import { Server as SocketIOServer } from 'socket.io';
@@ -27,12 +28,21 @@ const SERVER_START_MSG = (
 
 connectDB()
 
-const options = {
-  key: fs.readFileSync(path.resolve(path.join(__dirname, '..', '..', 'certs', "localhost+1-key.pem"))),
-  cert: fs.readFileSync(path.resolve(path.join(__dirname, '..', '..', 'certs', "localhost+1.pem")))
-};
+// HTTPS config
+const SSL_KEY_PATH = process.env.SSL_KEY_PATH;
+const SSL_CERT_PATH = process.env.SSL_CERT_PATH;
 
-const server = https.createServer(options, app);
+const shouldUseHttps = ENV.NodeEnv === 'development' && (SSL_KEY_PATH && SSL_CERT_PATH)
+
+const httpsOptions = shouldUseHttps
+  ? {
+    key: fs.readFileSync(path.resolve(SSL_KEY_PATH)),
+    cert: fs.readFileSync(path.resolve(SSL_CERT_PATH))
+  }
+  : {}
+
+// Server initialization, use HTTPS if development environment
+const server = shouldUseHttps ? https.createServer(httpsOptions, app) : http.createServer(app);
 
 // Setup Socket.IO on the same server
 const io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
