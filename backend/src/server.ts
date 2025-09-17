@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 
 import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
-import { morganStream } from '@src/utils/logger.utils';
+import { morganStream } from '@src/utils';
 
 
 import { CORSConfig } from './config';

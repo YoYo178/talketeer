@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { mongooseObjectId } from '../utils/schema.utils';
+import { mongooseObjectId } from '../utils';
 
 // Send friend request
 export const sendFriendRequestSchema = z.object({

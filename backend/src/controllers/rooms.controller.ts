@@ -2,7 +2,7 @@ import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { Room } from "@src/models";
 import { TRoomIdParams } from "@src/schemas";
 import { IRoomPublicView, IRoom } from "@src/types";
-import { sanitizeRoomObj } from "@src/utils/room.utils";
+import { sanitizeRoomObj } from "@src/utils";
 import type { Request, Response, NextFunction } from "express";
 
 export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {

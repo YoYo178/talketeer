@@ -3,7 +3,7 @@ import { registerGeneralHandlers } from "./handlers/general";
 import { registerRoomHandlers } from "./handlers/room";
 import { registerMessageHandlers } from "./handlers/message";
 import logger from "@src/utils/logger.utils";
-import { onlineMembers } from "@src/utils/socket.utils";
+import { onlineMembers } from "@src/utils";
 
 export function handleSocketConnection(io: TalketeerSocketServer, socket: TalketeerSocket) {
     if (!socket.data?.user) {
