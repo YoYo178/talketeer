@@ -21,7 +21,7 @@ export const populateRoomData = async () => {
             ...DEFAULT_SYSTEM_ROOM_CONFIG,
             name: `${DEFAULT_SYSTEM_ROOM_CONFIG.name} ${String(i + 1)}`,
             code: roomCode,
-            owner: null, // TODO: owner is not nullable
+            owner: null
         })
 
         logger.info(`Created room "${roomCode}" successfully.`)
