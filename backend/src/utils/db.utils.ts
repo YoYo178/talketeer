@@ -1,6 +1,41 @@
-import { Document, model, Model, Schema } from 'mongoose';
+import ENV from "@src/common/ENV"
+import { Room, User } from "@src/models";
+import mongoose, { Document, model, Model, Schema } from "mongoose"
+import logger from "@src/utils/logger.utils";
 
 /** Returns a mongoose model typed to the provided generic type */
 export function MongooseModel<T>(docName: string, docSchema: Schema): Model<T & Document> {
     return model<T & Document>(docName, docSchema);
+}
+
+async function clearStaleData() {
+    try {
+        logger.info('Attempting to clear stale data from the database...');
+
+        // Clear all members in all rooms
+        await Room.updateMany({}, { $set: { members: [], memberCount: 0 } });
+
+        // Clear users' room references
+        await User.updateMany({}, { $unset: { room: '' } });
+
+        logger.info('Cleared stale data from the database.');
+    } catch (e) {
+        logger.error('Error occurred while attempting to clear stale data', {
+            error: e instanceof Error ? e.message : 'Unknown error',
+            stack: e instanceof Error ? e.stack : undefined
+        });
+    }
+}
+
+export const connectDB = async () => {
+    try {
+        await mongoose.connect(ENV.MongodbUri);
+        logger.info("Connected to MongoDB successfully.");
+        clearStaleData();
+    } catch (error) {
+        logger.error("Couldn't connect to MongoDB", {
+            error: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : undefined
+        });
+    }
 }
