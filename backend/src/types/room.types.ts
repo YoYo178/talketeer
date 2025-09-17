@@ -1,4 +1,4 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { IUser } from "./user.types";
 import { IMessage } from "./message.types";
 import { DBRef } from "./db.types";
@@ -10,7 +10,7 @@ export interface IRoomMember {
 }
 
 export interface IRoom {
-    _id: ObjectId;
+    _id: mongoose.Types.ObjectId;
 
     /** Room name */
     name: string;

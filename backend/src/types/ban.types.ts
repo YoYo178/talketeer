@@ -1,10 +1,10 @@
-import { Types } from "mongoose";
+import mongoose from "mongoose";
 import { DBRef } from "./db.types";
 import { IUser } from "./user.types";
 import { IRoom } from "./room.types";
 
 export interface IBan {
-    _id: Types.ObjectId;
+    _id: mongoose.Types.ObjectId;
 
     /** The user that was banned */
     userId: DBRef<IUser>;

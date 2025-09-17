@@ -1,10 +1,10 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { IUser } from "./user.types";
 import { DBRef } from "./db.types";
 import { IRoom } from "./room.types";
 
 export interface IMessage {
-    _id: ObjectId;
+    _id: mongoose.Types.ObjectId;
 
     /** The user who sent the message */
     sender: DBRef<IUser>;

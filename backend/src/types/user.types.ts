@@ -1,15 +1,15 @@
-import { ObjectId } from "mongoose";
+import mongoose from "mongoose";
 import { IRoom } from "./room.types";
 import { DBRef } from "./db.types";
 
 export interface IUserFriend {
-    userId: ObjectId;
+    userId: mongoose.Types.ObjectId;
     status: 'confirmed' | 'pending';
     direction: 'incoming' | 'outgoing' | null;
 }
 
 export interface IUser {
-    _id: ObjectId;
+    _id: mongoose.Types.ObjectId;
 
     /** User's full name */
     name: string;
