@@ -2,7 +2,6 @@ import { Socket } from "socket.io-client";
 import type { IMessage } from "./message.types";
 import type { IRoom } from "./room.types";
 
-// TODO
 export interface ServerToClientEvents {
     /** For users NOT in a room */
     roomCreated: (room: IRoom) => void;
@@ -28,7 +27,6 @@ export interface ServerToClientEvents {
 export type AckOptions<T> = { success: boolean, data?: T, error?: string };
 export type AckFunc<T = null> = (options: AckOptions<T>) => void;
 
-// TODO
 export interface ClientToServerEvents {
     createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc<IRoom>) => void;
     updateRoom: (roomId: string, name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc) => void;
@@ -44,7 +42,6 @@ export interface ClientToServerEvents {
     banFromRoom: (roomId: string, userId: string, bannedBy: string, duration: number, reason: string, ack: AckFunc) => void;
 }
 
-// TODO
 export interface InterServerEvents {
     ping: () => void;
 }
