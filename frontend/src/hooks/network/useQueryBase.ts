@@ -13,13 +13,13 @@ interface QueryBaseParams {
     enabled?: boolean
 }
 
-export const useQueryBase = <ResponseType = undefined>(
+export const useQueryBase = <ResponseType = unknown>(
     endpoint: Endpoint,
     sendCookies: boolean = false,
     shouldRetry: boolean | ((failureCount: number, error: any) => boolean) = false,
     staleTime: number | undefined = undefined
 ) => {
-    return ({ queryKey, pathParams, queryParams, enabled = true }: QueryBaseParams) => {
+    return <ResponseTypeOverride = ResponseType>({ queryKey, pathParams, queryParams, enabled = true }: QueryBaseParams) => {
         let URL = endpoint.URL;
 
         if (!!pathParams)
@@ -31,7 +31,7 @@ export const useQueryBase = <ResponseType = undefined>(
         return useQuery({
             queryKey: queryKey || [],
             queryFn: async () => {
-                const response = await API.get<APIResponse<ResponseType>>(URL, { withCredentials: sendCookies });
+                const response = await API.get<APIResponse<ResponseTypeOverride>>(URL, { withCredentials: sendCookies });
                 return response?.data;
             },
             retry: (failureCount: number, error: AxiosError) => {
