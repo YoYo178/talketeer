@@ -1,32 +1,49 @@
-import https from 'https';
-import http from 'http';
-import logger from 'jet-logger';
+/** Node packages */
 import fs from 'fs'
-import { Server as SocketIOServer } from 'socket.io';
-
-import ENV from '@src/common/ENV';
-import app from './server';
-
-import { connectDB, CORSConfig } from './config';
-import { setupSocket } from './sockets/socket';
-import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData } from './types';
-import { populateRoomData } from './utils/room.utils';
 import path from 'path';
 
-/******************************************************************************
-                                Constants
-******************************************************************************/
+/** Server packages */
+import http from 'http';
+import https from 'https';
+import express, { Request, Response, NextFunction } from 'express';
+import { Server as SocketIOServer } from 'socket.io';
 
-const SERVER_START_MSG = (
-  'Express server started on port: ' + ENV.Port.toString()
-);
+/** Middleware libraries */
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
+import helmet from 'helmet';
 
+/** Constants and Environment variables */
+import ENV from '@src/common/ENV';
+import { NodeEnvs } from '@src/common/constants';
 
-/******************************************************************************
-                                  Run
-******************************************************************************/
+/** Configuration objects */
+import { CORSConfig } from '@src/config';
 
+/** Middlewares */
+import { errorHandler } from '@src/middlewares';
+
+/** Routes */
+import APIRouter from '@src/routes';
+
+/** Socket handlers */
+import { setupSocket } from '@src/sockets/socket';
+
+/** Types */
+import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData, TalketeerSocketServer } from '@src/types';
+
+/** Utilities */
+import { connectDB, populateRoomData, morganStream } from '@src/utils'
+import logger from '@src/utils/logger.utils';
+
+// ==========================================================================================================
+
+// Connect to MongoDB
 connectDB()
+
+// Create express app
+const app = express();
 
 // HTTPS config
 const SSL_KEY_PATH = process.env.SSL_KEY_PATH;
@@ -41,20 +58,52 @@ const httpsOptions = shouldUseHttps
   }
   : {}
 
-// Server initialization, use HTTPS if development environment
+// Create server, use HTTPS if the environment is development
 const server = shouldUseHttps ? https.createServer(httpsOptions, app) : http.createServer(app);
 
-// Setup Socket.IO on the same server
-const io = new SocketIOServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
+// Setup Socket.IO on the same server object
+const io: TalketeerSocketServer = new SocketIOServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
   cors: CORSConfig,
   serveClient: false
 });
 
+// Add socket event listeners
 setupSocket(io);
+
+// Attach middlewares
+app.use(cors(CORSConfig)) // CORS
+app.use(express.json()); // JSON body parser
+app.use(express.urlencoded({ extended: true })); // URL-encoded body parser
+app.use(cookieParser()) // Cookie parser
+
+// Attach logger middleware
+if (ENV.NodeEnv === NodeEnvs.Dev) {
+  app.use(morgan('dev'));
+} else {
+  app.use(morgan('combined', { stream: morganStream }));
+}
+
+// Attach security middleware, only in production!
+if (ENV.NodeEnv === NodeEnvs.Production) {
+  // eslint-disable-next-line n/no-process-env
+  if (!process.env.DISABLE_HELMET) {
+    app.use(helmet());
+  }
+}
+
+// Attach IO instance via express middleware
+app.use((req: Request, _res: Response, next: NextFunction) => { req.io = io; next(); });
+
+// Attach main API router
+app.use('/api', APIRouter);
+
+// Attach error handler middleware
+app.use(errorHandler);
 
 // Start the server
 server.listen(ENV.Port, () => {
-  logger.info(SERVER_START_MSG);
+  logger.info('Express server started on port: ' + ENV.Port.toString());
 
+  // Generate system rooms, if any of them are missing
   populateRoomData();
 });
