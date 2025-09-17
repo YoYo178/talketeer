@@ -7,6 +7,7 @@ import { User } from "@src/models";
 import { TCheckEmailBody, TLoginBody, TSignUpBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
+import { APIError } from '@src/utils/api.utils';
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
     // Enforce types
@@ -16,10 +17,8 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
     const user = await User.findOne({ email }).select('-password').lean().exec();
 
     // If the user does not exist, respond with a 404 Not Found
-    if (!user) {
-        res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'No user exists with the specified email.' });
-        return;
-    }
+    if (!user)
+        throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND)
 
     // If the user does exist, respond with a 200 OK
     res.status(HttpStatusCodes.OK).json({
@@ -36,17 +35,13 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
     const user = await User.findOne({ email });
 
-    if (!user) {
-        res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'No user exists with the specified email.' });
-        return;
-    }
+    if (!user)
+        throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
 
     const passwordMatches = !!await bcrypt.compare(password, user.passwordHash);
 
-    if (!passwordMatches) {
-        res.status(HttpStatusCodes.BAD_REQUEST).json({ success: false, message: 'Invalid password!' });
-        return;
-    }
+    if (!passwordMatches)
+        throw new APIError('Invalid password', HttpStatusCodes.BAD_REQUEST);
 
     const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
     const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
@@ -87,17 +82,13 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
     const emailExists = !!await User.findOne({ email }).select('-passwordHash').lean();
 
-    if (emailExists) {
-        res.status(HttpStatusCodes.CONFLICT).json({ success: false, message: 'An account already exists with this email!' });
-        return;
-    }
+    if (emailExists)
+        throw new APIError('An account already exists with this email!', HttpStatusCodes.CONFLICT);
 
     const usernameExists = !!await User.findOne({ username }).select('-passwordHash').lean();
 
-    if (usernameExists) {
-        res.status(HttpStatusCodes.CONFLICT).json({ success: false, message: 'This username is already taken, try another.' });
-        return;
-    }
+    if (usernameExists)
+        throw new APIError('This username is already taken, try another.', HttpStatusCodes.CONFLICT);
 
     const user = await User.create({ username, name, displayName, email, passwordHash: hashedPassword });
     const { passwordHash, ...rest } = user.toObject();

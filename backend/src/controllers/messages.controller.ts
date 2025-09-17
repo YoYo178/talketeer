@@ -1,6 +1,7 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { Message } from "@src/models";
 import { TMessagesQuery, TMessageIdParams } from "@src/schemas"
+import { APIError } from "@src/utils/api.utils";
 import type { Request, Response, NextFunction } from "express"
 
 const MESSAGES_PER_PAGE = 20;
@@ -39,10 +40,9 @@ export const getMessageById = async (req: Request, res: Response, next: NextFunc
     const { messageId } = req.params as TMessageIdParams;
 
     const message = await Message.findById(messageId);
-    if (!message) {
-        res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'Message not found' });
-        return;
-    }
+    
+    if (!message)
+        throw new APIError('Message not found', HttpStatusCodes.NOT_FOUND);
 
     res.status(HttpStatusCodes.OK).json({ success: true, data: { message } })
 }

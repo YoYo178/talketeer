@@ -3,6 +3,7 @@ import { Room } from "@src/models";
 import { TRoomIdParams } from "@src/schemas";
 import { IRoomPublicView, IRoom } from "@src/types";
 import { sanitizeRoomObj } from "@src/utils";
+import { APIError } from "@src/utils/api.utils";
 import type { Request, Response, NextFunction } from "express";
 
 export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
@@ -18,10 +19,8 @@ export const getRoomById = async (req: Request, res: Response, next: NextFunctio
 
     const room = await Room.findById(roomId).lean().exec();
 
-    if (!room) {
-        res.status(HttpStatusCodes.NOT_FOUND).json({ success: false, message: 'Room not found' })
-        return;
-    }
+    if (!room)
+        throw new APIError('Room not found', HttpStatusCodes.NOT_FOUND);
 
     res.status(HttpStatusCodes.OK).json({ success: true, data: { room: sanitizeRoomObj(room, req.user.id) } })
 }

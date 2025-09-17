@@ -8,6 +8,7 @@ import { cookieConfig, tokenConfig } from "@src/config";
 import { User } from "@src/models";
 import { TalketeerSocket, TVerifyAuthReturn } from "@src/types";
 import { generateAccessToken, verifyAccessToken, verifyRefreshToken } from "@src/utils";
+import { APIError } from "@src/utils/api.utils";
 
 const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<TVerifyAuthReturn> => {
     const returnObj: TVerifyAuthReturn = { success: false, isMaliciousUser: false, data: { user: null } };
@@ -94,11 +95,9 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
         return;
     }
 
-    if (authDetails.isMaliciousUser) {
-        // TODO: Blacklist by IP
-        res.status(HttpStatusCodes.FORBIDDEN).json({ success: false, message: 'Malicious activity detected, you have been added to the blacklist.' });
-        return;
-    }
+    // TODO: Blacklist by IP
+    if (authDetails.isMaliciousUser)
+        throw new APIError('Malicious activity detected, you have been added to the blacklist.', HttpStatusCodes.FORBIDDEN);
 
     // Handle silent access token refresh
     if (authDetails.data.accessToken)
@@ -117,10 +116,7 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
         return;
     }
 
-    res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({ 
-        success: false, 
-        error: 'Authentication failed' 
-    });
+    throw new APIError('Authentication failed', HttpStatusCodes.INTERNAL_SERVER_ERROR);
 }
 
 export const requireSocketAuth = async (socket: TalketeerSocket, next: (err?: ExtendedError) => void) => {
