@@ -14,6 +14,7 @@ import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { DeleteRoomDialog } from './rooms/administration/DeleteRoomDialog';
 import { Toaster } from '../ui/sonner';
 import { toast } from 'sonner';
+import type { IRoom } from '@/types/room.types';
 
 interface ChatHeaderProps {
     onToggleMemberList: (state: boolean) => void;
@@ -29,7 +30,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
     const { joinedRoomId, setJoinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string };
 
     const me = useMe();
-    const room = useRoom(joinedRoomId);
+    const room = useRoom<{ room: IRoom }>(joinedRoomId);
 
     if (!room || !me)
         return;

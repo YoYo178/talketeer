@@ -20,8 +20,8 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
 
     const [isJoining, setIsJoining] = useState(false);
 
-    const room = useRoom(localRoom._id);
-    const selectedRoom = useRoom(selectedRoomId);
+    const room = useRoom<{ room: IRoomPublicView }>(localRoom._id);
+    const selectedRoom = useRoom<{ room: IRoomPublicView }>(selectedRoomId);
 
     const me = useMe();
 

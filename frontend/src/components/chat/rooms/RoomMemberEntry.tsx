@@ -6,6 +6,7 @@ import { BanDialog } from "./administration/BanDialog";
 import { KickDialog } from "./administration/KickDialog";
 import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 import { useRoom } from "@/hooks/network/rooms/useGetRoomByIdQuery";
+import type { IRoom } from "@/types/room.types";
 
 interface RoomMemberEntryProps {
     userId: string;
@@ -15,7 +16,7 @@ export const RoomMemberEntry: FC<RoomMemberEntryProps> = ({ userId }) => {
     const roomsStore = useRoomsStore();
     const { joinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string }
 
-    const room = useRoom(joinedRoomId);
+    const room = useRoom<{ room: IRoom }>(joinedRoomId);
 
     const me = useMe();
     const user = useGetUser(userId);

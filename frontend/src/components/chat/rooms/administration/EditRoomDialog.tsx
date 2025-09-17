@@ -13,12 +13,13 @@ import { ChatButton } from '../../rich-text/utility/ChatButton'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useRoomsStore } from '@/hooks/state/useRoomsStore'
 import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery'
+import type { IRoom } from '@/types/room.types'
 
 export const EditRoomDialog = () => {
     const queryClient = useQueryClient();
 
     const { joinedRoomId } = useRoomsStore();
-    const room = useRoom(joinedRoomId);
+    const room = useRoom<{ room: IRoom }>(joinedRoomId);
 
     const [open, setOpen] = useState(false);
 

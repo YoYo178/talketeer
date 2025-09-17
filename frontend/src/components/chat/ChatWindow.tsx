@@ -14,6 +14,7 @@ import { useDialogStore } from '@/hooks/state/useDialogStore';
 import { socket } from '@/socket';
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
+import type { IRoom, IRoomPublicView } from '@/types/room.types';
 
 export const ChatWindow = () => {
     const queryClient = useQueryClient();
@@ -31,8 +32,8 @@ export const ChatWindow = () => {
             setIsInMemberList(false);
     }, [joinedRoomId])
 
-    const selectedRoom = useRoom(selectedRoomId);
-    const joinedRoom = useRoom(joinedRoomId);
+    const selectedRoom = useRoom<{ room: IRoomPublicView }>(selectedRoomId);
+    const joinedRoom = useRoom<{ room: IRoom }>(joinedRoomId);
 
     const handleClearSelection = () => {
         if (!selectedRoomId)

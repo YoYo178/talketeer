@@ -9,12 +9,13 @@ import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery'
 import { useMe } from '@/hooks/network/users/useGetMeQuery'
 import { useRoomsStore } from '@/hooks/state/useRoomsStore'
 import { useState } from 'react'
+import type { IRoom } from '@/types/room.types'
 
 export const DeleteRoomDialog = () => {
     const [isDeleting, setIsDeleting] = useState(false);
     const { joinedRoomId, setJoinedRoomId } = useRoomsStore();
 
-    const room = useRoom(joinedRoomId);
+    const room = useRoom<{ room: IRoom }>(joinedRoomId);
     const me = useMe();
 
     if (!room || !me)
