@@ -1,8 +1,8 @@
 import type { IUser } from '@/types/user.types';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar'
 import { type FC, useState } from 'react';
 import { Settings } from 'lucide-react';
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from './ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '../../ui/dropdown-menu';
 import { useSettingsStore } from '@/hooks/state/useSettingsStore';
 
 interface ExpandableProfileCardProps {
