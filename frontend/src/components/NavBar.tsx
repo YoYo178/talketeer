@@ -6,7 +6,7 @@ import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IUser } from '@/types/user.types';
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
 import { useGlobalStore } from '@/hooks/state/useGlobalStore';
-import { ExpandableProfileCard } from './ExpandableProfileCard';
+import { ExpandableProfileCard } from './chat/profile/ExpandableProfileCard';
 
 export const NavBar = () => {
     const { membersOnline } = useGlobalStore();
