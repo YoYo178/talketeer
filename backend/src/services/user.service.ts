@@ -1,5 +1,6 @@
 import { User } from "@src/models";
-import { IUser } from "@src/types";
+import { IUser, IUserFriend } from "@src/types";
+import mongoose from "mongoose";
 
 export async function getAllUsers(filter = {}): Promise<IUser[]> {
     return User.find(filter).select("-passwordHash").lean().exec();
@@ -36,4 +37,48 @@ export async function updateUserRoom(userId: string, roomId: string | null) {
         { $set: { room: roomId } },
         { new: true, lean: true, select: "-passwordHash" }
     ).exec();
+}
+
+export async function sendUserFriendRequest(senderId: string, receiverId: string) {
+    const senderFriendObj: IUserFriend = {
+        direction: 'outgoing',
+        status: 'pending',
+        userId: new mongoose.Types.ObjectId(receiverId)
+    };
+
+    const receiverFriendObj: IUserFriend = {
+        direction: 'incoming',
+        status: 'pending',
+        userId: new mongoose.Types.ObjectId(senderId)
+    };
+
+    await User.findOneAndUpdate(
+        { _id: senderId },
+        {
+            $addToSet: {
+                friends: senderFriendObj
+            }
+        }
+    )
+
+    await User.findOneAndUpdate(
+        { _id: receiverId },
+        {
+            $addToSet: {
+                friends: receiverFriendObj
+            }
+        }
+    )
+}
+
+export async function acceptUserFriendRequest(senderId: string, receiverId: string) {
+    await User.findOneAndUpdate(
+        { _id: senderId, 'friends.userId': receiverId },
+        { $set: { 'friends.$.status': 'confirmed' } }
+    )
+
+    await User.findOneAndUpdate(
+        { _id: receiverId, 'friends.userId': senderId },
+        { $set: { 'friends.$.status': 'confirmed' } }
+    )
 }
