@@ -38,8 +38,8 @@ export const acceptFriendRequest = async (req: Request, res: Response, next: Nex
     const { userId: senderId } = req.params as TAcceptFriendRequestParams;
     const receiverId = req.user.id;
 
-    const receiver = await getUser(receiverId);
-    const existingFriendObj = receiver?.friends.find(friendObj => friendObj.userId.toString() === senderId);
+    const receiver = (await getUser(receiverId))!;
+    const existingFriendObj = receiver.friends.find(friendObj => friendObj.userId.toString() === senderId);
 
     if (!existingFriendObj)
         throw new APIError('No such friend request found', HttpStatusCodes.NOT_FOUND);
