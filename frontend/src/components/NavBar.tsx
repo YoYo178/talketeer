@@ -32,7 +32,7 @@ export const NavBar = () => {
     }
 
     return (
-        <div className='flex items-center bg-accent dark:bg-primary-foreground rounded-xl overflow-hidden'> {/* temp!! */}
+        <div className='flex items-center bg-accent dark:bg-primary-foreground rounded-xl'>
 
             <div className='flex gap-2 p-5'>
                 <MessagesSquare className='size-8' />
