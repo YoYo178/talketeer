@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema<IUser>({
     avatarURL: { type: String, required: false, default: '' },
 
     friends: { type: [userFriendSchema], required: false, default: [] },
+    notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification', required: true }],
 
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', default: null },
 }, { timestamps: true })

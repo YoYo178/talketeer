@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { IRoom } from "./room.types";
 import { DBRef } from "./db.types";
+import { IRoom } from "./room.types";
+import { INotification } from "./notification.types";
 
 export interface IUserFriend {
     userId: mongoose.Types.ObjectId;
@@ -35,6 +36,9 @@ export interface IUser {
     /** User's avatar URL */
     avatarURL: string;
 
+    /** User's notifications */
+    notifications: DBRef<INotification>[];
+
     /** User's friends */
     friends: IUserFriend[];
 
@@ -47,10 +51,11 @@ export interface IUser {
 
 export type IPublicUser = Omit<
     IUser,
-    'name' |
     'email' |
-    'passwordHash' |
     'friends' |
+    'name' |
+    'notifications' |
+    'passwordHash' |
     'room' |
     'updatedAt'
 >

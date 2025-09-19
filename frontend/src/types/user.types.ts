@@ -34,6 +34,9 @@ export interface IUser {
     /** User's friends */
     friends: IUserFriend[];
 
+    /** User's notifications */
+    notifications: string[];
+
     /** The room the user is currently in */
     room: string | null;
 
@@ -43,10 +46,11 @@ export interface IUser {
 
 export type IPublicUser = Omit<
     IUser,
-    'name' |
     'email' |
-    'passwordHash' |
     'friends' |
+    'name' |
+    'notifications' |
+    'passwordHash' |
     'room' |
     'updatedAt'
 >

@@ -21,7 +21,9 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     if (!user)
         throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
 
-    const { name, email, passwordHash, friends, room, updatedAt, ...rest } = user.toObject();
+    const { name, email, passwordHash, friends, notifications, room, updatedAt, ...rest } = user.toObject();
 
-    res.status(HttpStatusCodes.OK).json({ success: true, data: { user: rest as IPublicUser } })
+    const publicUserObj: IPublicUser = { ...rest };
+
+    res.status(HttpStatusCodes.OK).json({ success: true, data: { user: publicUserObj } })
 }
