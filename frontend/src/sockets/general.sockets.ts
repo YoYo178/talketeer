@@ -61,8 +61,8 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
         queryClient?.invalidateQueries({ queryKey: ['rooms', roomId] });
     });
 
-    socket.on('notification', () => {
-        console.log('You have received a new notification')
+    socket.on('notification', (notification) => {
+        console.log('Received new notification: ', notification);
     });
 
     socket.on('memberOnline', (membersCount, userId) => {
