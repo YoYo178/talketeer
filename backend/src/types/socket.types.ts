@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { IMessage } from "./message.types";
 import { IRoom } from "./room.types";
+import { INotification } from "./notification.types";
 
 export interface ServerToClientEvents {
     /** For users NOT in a room */
@@ -8,7 +9,7 @@ export interface ServerToClientEvents {
     roomUpdated: (roomId: string) => void;
     roomDeleted: (roomId: string, ownerId: string) => void;
 
-    notification: () => void;
+    notification: (notification: INotification) => void;
 
     /** For users IN a room */
     memberJoined: (roomId: string, userId: string) => void;
