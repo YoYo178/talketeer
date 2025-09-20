@@ -6,6 +6,6 @@ export interface INotification {
     content: string;
     type: INotificationType;
 
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt: string;
+    updatedAt: string;
 }

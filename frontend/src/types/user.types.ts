@@ -40,8 +40,8 @@ export interface IUser {
     /** The room the user is currently in */
     room: string | null;
 
-    createdAt: number;
-    updatedAt: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type IPublicUser = Omit<

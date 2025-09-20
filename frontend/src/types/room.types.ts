@@ -36,8 +36,8 @@ export interface IRoom {
     /** Room's visibility */
     visibility: 'public' | 'private';
 
-    createdAt: number;
-    updatedAt: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export type IRoomPublicView = Omit<IRoom, 'code' | 'members' | 'messages'>;
