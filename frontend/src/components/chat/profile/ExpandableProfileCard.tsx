@@ -29,7 +29,7 @@ export const ExpandableProfileCard: FC<ExpandableProfileCardProps> = ({ user }) 
     return (
         <div
             className={
-                'flex gap-2 overflow-hidden items-center rounded-full outline-1 outline-muted-foreground transition-all duration-800 ease-out origin-left max-h-14 ' +
+                'flex gap-2 overflow-hidden items-center rounded-full outline-2 outline-primary transition-all duration-800 ease-out origin-left max-h-14 ' +
                 `${isCardOpen ? 'w-72' : 'w-14'}`
             }
         >
