@@ -55,6 +55,16 @@ export const APIEndpoints: Endpoints = {
     },
 
     // Message routes
+    GET_NOTIFICATIONS: {
+        METHOD: 'GET',
+        URL: '/notifications'
+    },
+    GET_NOTIFICATION_BY_ID: {
+        METHOD: 'GET',
+        URL: '/notifications/:notificationId'
+    },
+
+    // Message routes
     GET_MESSAGES: {
         METHOD: 'GET',
         URL: '/messages'
