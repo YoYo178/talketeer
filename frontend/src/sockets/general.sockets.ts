@@ -70,6 +70,8 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
             (old: APIResponse<{ notifications: INotification[] }>) =>
                 old ? { success: true, data: { notifications: [...(old.data?.notifications || []), notification] } } : old
         )
+
+        useGlobalStore.getState().setHasNewNotifications(true);
     });
 
     socket.on('memberOnline', (membersCount, userId) => {

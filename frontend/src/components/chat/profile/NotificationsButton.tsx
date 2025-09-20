@@ -3,6 +3,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Bell } from 'lucide-react'
 import type { FC } from 'react'
 import { NotificationList } from './NotificationList';
+import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 
 interface NotificationsButtonProps {
     isOpen: boolean;
@@ -10,14 +11,18 @@ interface NotificationsButtonProps {
 }
 
 export const NotificationsButton: FC<NotificationsButtonProps> = ({ isOpen, onOpenChange }) => {
+    const { hasNewNotifications } = useGlobalStore();
+
     return (
         <Popover open={isOpen} onOpenChange={onOpenChange}>
             <PopoverTrigger asChild>
-                <Bell
-                    className='cursor-pointer min-w-6 size-6 transition-all duration-800 ease-out relative'
-                    onClick={() => onOpenChange(!isOpen)}
-                >
-                </Bell>
+                <div className='relative'>
+                    <Bell
+                        className='cursor-pointer min-w-6 size-6 transition-all duration-800 ease-out'
+                        onClick={() => onOpenChange(!isOpen)}
+                    />
+                    {hasNewNotifications && (<div className='absolute top-0 right-0 rounded-full size-2 bg-red-600 outline-2 outline-primary' />)}
+                </div>
             </PopoverTrigger>
             <PopoverContent
                 align='end'

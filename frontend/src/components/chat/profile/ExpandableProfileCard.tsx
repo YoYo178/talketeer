@@ -1,19 +1,24 @@
 import type { IUser } from '@/types/user.types';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar'
-import { type FC, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { SettingsButton } from './SettingsButton';
 import { NotificationsButton } from './NotificationsButton';
+import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 
 interface ExpandableProfileCardProps {
     user: IUser | undefined;
 }
 
 export const ExpandableProfileCard: FC<ExpandableProfileCardProps> = ({ user }) => {
+    const { setHasNewNotifications } = useGlobalStore();
+
     const [isCardOpen, setIsCardOpen] = useState(true);
     const [hasCardTransitionFinished, setHasCardTransitionFinished] = useState(false);
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
+    useEffect(() => setHasNewNotifications(false), [isNotificationsOpen]);
 
     const handleAvatarClick = () => {
         setIsCardOpen(!isCardOpen);
