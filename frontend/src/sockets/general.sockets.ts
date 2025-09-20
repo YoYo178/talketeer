@@ -1,6 +1,7 @@
 import { useDialogStore } from "@/hooks/state/useDialogStore";
 import { useGlobalStore } from "@/hooks/state/useGlobalStore";
 import type { APIResponse } from "@/types/api.types";
+import type { INotification } from "@/types/notification.types";
 import type { IRoom } from "@/types/room.types";
 import type { TalketeerSocket } from "@/types/socket.types";
 import type { IPublicUser, IUser } from "@/types/user.types";
@@ -63,6 +64,12 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
 
     socket.on('notification', (notification) => {
         console.log('Received new notification: ', notification);
+
+        queryClient?.setQueryData(
+            ['notifications'],
+            (old: APIResponse<{ notifications: INotification[] }>) =>
+                old ? { success: true, data: { notifications: [...(old.data?.notifications || []), notification] } } : old
+        )
     });
 
     socket.on('memberOnline', (membersCount, userId) => {
