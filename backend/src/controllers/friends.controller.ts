@@ -1,5 +1,6 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { TAcceptFriendRequestParams, TSendFriendRequestBody } from "@src/schemas";
+import { pushNotification, saveNotification } from "@src/services/notification.service";
 import { acceptUserFriendRequest, getUser, sendUserFriendRequest } from "@src/services/user.service";
 import { APIError } from "@src/utils/api.utils";
 import type { Request, Response, NextFunction } from "express";
@@ -29,7 +30,9 @@ export const sendFriendRequest = async (req: Request, res: Response, next: NextF
 
     await sendUserFriendRequest(senderId, receiverId);
 
-    req.io.to(receiverId).emit('notification');
+    // Save and push notification
+    const notificationObj = await saveNotification(receiverId, { content: `${sender.username} has sent you a friend request.`, type: 'friend-request' });
+    pushNotification(req.io, receiverId, notificationObj);
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'Sent friend request successfully' });
 }
@@ -52,7 +55,9 @@ export const acceptFriendRequest = async (req: Request, res: Response, next: Nex
     // thus inverted params
     await acceptUserFriendRequest(senderId, receiverId);
 
-    req.io.to(senderId).emit('notification');
+    // Save and push notification
+    const notificationObj = await saveNotification(senderId, { content: `${receiver.username} has accepted your friend request.`, type: 'friend-new' });
+    pushNotification(req.io, senderId, notificationObj);
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'Accepted friend request successfully' })
 }
