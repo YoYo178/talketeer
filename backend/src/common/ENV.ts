@@ -15,6 +15,11 @@ const ENV = jetEnv({
   /** MongoDB */
   MongodbUri: str,
 
+  /** Tenor API */
+  TenorApiBaseUrl: str,
+  TenorApiKey: str,
+  TenorApiClientKey: str,
+
   AccessTokenSecret: str,
   RefreshTokenSecret: str,
 });
