@@ -3,6 +3,7 @@ import { SendButton } from './SendButton';
 import { AttachFileButton } from './AttachFileButton';
 import { socket } from '@/socket';
 import { Textarea } from '@/components/ui/textarea';
+import { GIFButton } from './GIFButton';
 
 interface ChatComposerProps {
     roomId: string | undefined;
@@ -46,7 +47,10 @@ export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
                 onKeyDown={handleKeyDown}
                 className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary min-h-0 resize-none max-h-24 overflow-y-auto whitespace-pre-wrap wrap-anywhere'
             />
-            <SendButton />
+            <div className='flex'>
+                <GIFButton />
+                <SendButton />
+            </div>
         </form>
     )
 }
