@@ -1,7 +1,6 @@
-import { Copy, Users, X } from 'lucide-react'
+import { Copy, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { ChatButton } from './rich-text/utility/ChatButton'
-import type { FC } from 'react';
 import { useState } from 'react';
 import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
@@ -16,11 +15,7 @@ import { Toaster } from '../ui/sonner';
 import { toast } from 'sonner';
 import type { IRoom } from '@/types/room.types';
 
-interface ChatHeaderProps {
-    onToggleMemberList: (state: boolean) => void;
-}
-
-export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
+export const ChatHeader = () => {
     const queryClient = useQueryClient();
 
     const [isLeaving, setIsLeaving] = useState(false);
@@ -94,19 +89,8 @@ export const ChatHeader: FC<ChatHeaderProps> = ({ onToggleMemberList }) => {
                     )}
                 </div>
             </div>
-            <div className='flex gap-2 ml-auto'>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <ChatButton onClick={() => onToggleMemberList(true)}>
-                            <Users className='size-5' />
-                        </ChatButton>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Member list</p>
-                    </TooltipContent>
-                </Tooltip>
-                <Button onClick={handleRoomLeave}><X />Leave room</Button>
-            </div>
+
+            <Button className='ml-auto' onClick={handleRoomLeave}><X />Leave room</Button>
 
             <Toaster id='room-code-copied-toast' />
         </div>
