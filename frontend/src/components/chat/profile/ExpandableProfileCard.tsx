@@ -1,34 +1,19 @@
 import type { IUser } from '@/types/user.types';
 import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar'
-import { type FC, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SettingsButton } from './SettingsButton';
 import { NotificationsButton } from './NotificationsButton';
-import { useGlobalStore } from '@/hooks/state/useGlobalStore';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
 
-interface ExpandableProfileCardProps {
-    user: IUser | undefined;
-}
-
-export const ExpandableProfileCard: FC<ExpandableProfileCardProps> = ({ user }) => {
-    const { setHasNewNotifications } = useGlobalStore();
-
+export const ExpandableProfileCard = () => {
     const [isCardOpen, setIsCardOpen] = useState(true);
     const [hasCardTransitionFinished, setHasCardTransitionFinished] = useState(false);
 
-    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-
-    useEffect(() => setHasNewNotifications(false), [isNotificationsOpen]);
+    const me: IUser | undefined = useMe();
 
     const handleAvatarClick = () => {
         setIsCardOpen(!isCardOpen);
         setHasCardTransitionFinished(false);
-
-        if (isSettingsOpen)
-            setIsSettingsOpen(false);
-
-        if (isNotificationsOpen)
-            setIsNotificationsOpen(false);
     }
 
     return (
@@ -46,8 +31,8 @@ export const ExpandableProfileCard: FC<ExpandableProfileCardProps> = ({ user }) 
                 onClick={handleAvatarClick}
                 onTransitionEnd={() => setHasCardTransitionFinished(true)}
             >
-                <AvatarImage src={user?.avatarURL} />
-                <AvatarFallback>{user?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
+                <AvatarImage src={me?.avatarURL} />
+                <AvatarFallback>{me?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
             </Avatar>
 
             <div className={
@@ -56,27 +41,17 @@ export const ExpandableProfileCard: FC<ExpandableProfileCardProps> = ({ user }) 
             }>
                 <div className="flex flex-col">
                     <h2 className={`text-sm font-semibold leading-tight ${isCardOpen && hasCardTransitionFinished ? '' : 'text-nowrap'}`}>
-                        {user?.displayName}
+                        {me?.displayName}
                     </h2>
                     <p className={`text-xs text-muted-foreground leading-tight ${isCardOpen && hasCardTransitionFinished ? '' : 'text-nowrap'}`}>
-                        @{user?.username}
+                        @{me?.username}
                     </p>
 
                 </div>
 
                 <div className="flex items-center ml-auto mr-4 gap-2">
-                    <NotificationsButton isOpen={isNotificationsOpen} onOpenChange={(state) => {
-                        if (isSettingsOpen)
-                            setIsSettingsOpen(false);
-
-                        setIsNotificationsOpen(state);
-                    }} />
-                    <SettingsButton isOpen={isSettingsOpen} onOpenChange={(state) => {
-                        if (isNotificationsOpen)
-                            setIsNotificationsOpen(false);
-
-                        setIsSettingsOpen(state);
-                    }} />
+                    <NotificationsButton />
+                    <SettingsButton />
                 </div>
             </div>
 

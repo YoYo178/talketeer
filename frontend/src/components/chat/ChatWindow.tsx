@@ -11,7 +11,7 @@ import { useDialogStore } from '@/hooks/state/useDialogStore';
 import { socket } from '@/socket';
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
-import type { IRoom, IRoomPublicView } from '@/types/room.types';
+import type { IRoomPublicView } from '@/types/room.types';
 import { ChatMemberList } from './ChatMemberList';
 
 // TODO: Fix MemberList for smaller screens!
@@ -33,7 +33,6 @@ export const ChatWindow = () => {
     }, [joinedRoomId])
 
     const selectedRoom = useRoom<{ room: IRoomPublicView }>(selectedRoomId);
-    const joinedRoom = useRoom<{ room: IRoom }>(joinedRoomId);
 
     const handleClearSelection = () => {
         if (!selectedRoomId)
@@ -135,11 +134,11 @@ export const ChatWindow = () => {
             ) : (
                 <div className="flex gap-3 h-full">
                     <div className="flex-1 flex flex-col bg-accent dark:bg-primary-foreground rounded-xl">
-                        <ChatHeader onToggleMemberList={setIsInMemberList} />
+                        <ChatHeader />
                         <Separator />
                         <MessageList />
                         <Separator />
-                        <ChatComposer roomId={joinedRoom?._id} />
+                        <ChatComposer />
 
                     </div>
                     <ChatMemberList />

@@ -2,8 +2,6 @@ import { useLogoutMutation } from '@/hooks/network/auth/useLogoutMutation'
 import { Button } from './ui/button'
 import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, MessagesSquare } from 'lucide-react';
-import { useMe } from '@/hooks/network/users/useGetMeQuery';
-import type { IUser } from '@/types/user.types';
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
 import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 import { ExpandableProfileCard } from './chat/profile/ExpandableProfileCard';
@@ -12,7 +10,6 @@ export const NavBar = () => {
     const { membersOnline } = useGlobalStore();
 
     const queryClient = useQueryClient();
-    const me: IUser | undefined = useMe();
 
     const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
 
@@ -46,7 +43,7 @@ export const NavBar = () => {
 
             <div className='flex-1 flex items-center justify-end gap-3 px-5'>
 
-                <ExpandableProfileCard user={me} />
+                <ExpandableProfileCard />
                 <Button className='' onClick={handleLogout}>
                     <LogOut />
                     {!hideLogoutText && <>Log out</>}

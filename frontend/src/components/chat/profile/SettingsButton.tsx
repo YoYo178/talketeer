@@ -1,14 +1,10 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useSettingsStore } from '@/hooks/state/useSettingsStore';
 import { Settings } from 'lucide-react'
-import type { FC } from 'react';
+import { useState } from 'react';
 
-interface SettingsButtonProps {
-    isOpen: boolean;
-    onOpenChange: (state: boolean) => void;
-}
-
-export const SettingsButton: FC<SettingsButtonProps> = ({ isOpen, onOpenChange }) => {
+export const SettingsButton = () => {
+    const [isOpen, setIsOpen] = useState(false);
     const { isDark, setIsDark } = useSettingsStore();
 
     const handleToggleTheme = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -18,14 +14,14 @@ export const SettingsButton: FC<SettingsButtonProps> = ({ isOpen, onOpenChange }
     }
 
     return (
-        <DropdownMenu open={isOpen} onOpenChange={onOpenChange}>
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger className='focus:outline-none'>
                 <Settings
                     className={
                         'cursor-pointer min-w-6 size-6 transition-all duration-800 ease-out ' +
                         `${isOpen ? 'rotate-180' : 'rotate-0'}`
                     }
-                    onClick={() => onOpenChange(!isOpen)}
+                    onClick={() => setIsOpen(!isOpen)}
                 >
                 </Settings>
             </DropdownMenuTrigger>

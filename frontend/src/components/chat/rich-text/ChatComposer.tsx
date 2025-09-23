@@ -1,22 +1,20 @@
-import { useState, type FC } from 'react';
+import { useState } from 'react';
 import { SendButton } from './SendButton';
 import { AttachFileButton } from './AttachFileButton';
 import { socket } from '@/socket';
 import { Textarea } from '@/components/ui/textarea';
 import { GIFButton } from './GIFButton';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
-interface ChatComposerProps {
-    roomId: string | undefined;
-}
-
-export const ChatComposer: FC<ChatComposerProps> = ({ roomId }) => {
+export const ChatComposer = () => {
+    const { joinedRoomId } = useRoomsStore();
     const [message, setMessage] = useState('');
 
     const sendMessage = () => {
-        if (!roomId)
+        if (!joinedRoomId)
             return;
 
-        socket.emit('sendMessage', roomId, message, ({ success }) => {
+        socket.emit('sendMessage', joinedRoomId, message, ({ success }) => {
             if (success)
                 setMessage('');
         })

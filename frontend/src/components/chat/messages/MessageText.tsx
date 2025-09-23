@@ -17,11 +17,10 @@ export const MessageTextSkeleton: FC<MessageTextSkeletonProps> = React.memo(({ h
 
 interface MessageTextProps {
     content: string;
-    className?: string;
 }
 
-export const MessageText: FC<MessageTextProps> = ({ content, className }) => {
+export const MessageText: FC<MessageTextProps> = ({ content }) => {
     return (
-        <div className={'whitespace-pre-wrap wrap-anywhere ' + (className ? className : '')}>{content}</div>
+        <div className='whitespace-pre-wrap wrap-anywhere'>{content}</div>
     )
 }
