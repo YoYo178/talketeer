@@ -42,7 +42,7 @@ export const ChatSidebar = () => {
         <div className={`flex flex-col p-3 pr-0 rounded-xl bg-accent dark:bg-primary-foreground transition-all duration-300 ${isCollapsed ? 'px-1' : ''}`}>
             <div className="flex h-full">
                 <div className={`flex flex-col gap-3 overflow-hidden transition-all duration-300 ${isCollapsed ? 'opacity-0 max-w-0' : 'opacity-100 max-w-72'}`}>
-                    <div className='flex gap-2'>
+                    <div className='w-72 flex gap-2'>
                         <CreateRoomDialog />
                         <JoinRoomDialog />
                     </div>
