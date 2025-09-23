@@ -1,5 +1,6 @@
 import { useDialogStore } from "@/hooks/state/useDialogStore";
 import { useGlobalStore } from "@/hooks/state/useGlobalStore";
+import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 import type { APIResponse } from "@/types/api.types";
 import type { INotification } from "@/types/notification.types";
 import type { IRoom } from "@/types/room.types";
@@ -56,6 +57,10 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
                 })
             }
         }
+
+        // If we had this room selected, clear it
+        if (useRoomsStore.getState().selectedRoomId)
+            useRoomsStore.getState().setSelectedRoomId(null);
     })
 
     socket.on('roomUpdated', (roomId) => {
