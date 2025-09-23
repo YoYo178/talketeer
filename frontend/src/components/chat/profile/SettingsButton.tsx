@@ -18,7 +18,7 @@ export const SettingsButton = () => {
             <DropdownMenuTrigger className='focus:outline-none'>
                 <Settings
                     className={
-                        'cursor-pointer min-w-6 size-6 transition-all duration-800 ease-out ' +
+                        'cursor-pointer min-w-6 size-6 transition-[rotate] duration-800 ease-out ' +
                         `${isOpen ? 'rotate-180' : 'rotate-0'}`
                     }
                     onClick={() => setIsOpen(!isOpen)}

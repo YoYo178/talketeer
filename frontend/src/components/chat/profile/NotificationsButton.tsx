@@ -16,7 +16,7 @@ export const NotificationsButton = () => {
             <PopoverTrigger asChild>
                 <div className='relative'>
                     <Bell
-                        className='cursor-pointer min-w-6 size-6 transition-all duration-800 ease-out'
+                        className='cursor-pointer min-w-6 size-6'
                         onClick={() => setIsOpen(!isOpen)}
                     />
                     {hasNewNotifications && (<div className='absolute top-0 right-0 rounded-full size-2 bg-red-600 outline-2 outline-primary' />)}

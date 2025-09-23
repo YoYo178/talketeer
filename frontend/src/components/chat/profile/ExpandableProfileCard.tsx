@@ -19,13 +19,13 @@ export const ExpandableProfileCard = () => {
     return (
         <div
             className={
-                'flex gap-2 overflow-hidden items-center rounded-full outline-2 outline-primary transition-all duration-800 ease-out origin-left max-h-14 ' +
+                'flex gap-2 overflow-hidden items-center rounded-full outline-2 outline-primary transition-[width] duration-800 ease-out origin-left max-h-14 ' +
                 `${isCardOpen ? 'w-72' : 'w-14'}`
             }
         >
             <Avatar
                 className={
-                    'cursor-pointer size-14 shrink-0 transition-all duration-800 ease-out ' +
+                    'cursor-pointer size-14 shrink-0 transition-[rotate] duration-800 ease-out ' +
                     `${isCardOpen ? 'rotate-[360deg]' : 'rotate-0'}`
                 }
                 onClick={handleAvatarClick}
@@ -36,7 +36,7 @@ export const ExpandableProfileCard = () => {
             </Avatar>
 
             <div className={
-                'flex-1 flex transition-all duration-500 ' +
+                'flex-1 flex transition-[opacity,visibility] duration-500 ' +
                 (isCardOpen ? 'opacity-100 visible' : 'opacity-0 invisible')
             }>
                 <div className="flex flex-col">
