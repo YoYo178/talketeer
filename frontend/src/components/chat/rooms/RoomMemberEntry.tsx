@@ -27,7 +27,7 @@ export const RoomMemberEntry: FC<RoomMemberEntryProps> = ({ userId }) => {
     const isRoomOwner = me._id === room.owner;
 
     return (
-        <div className='w-full flex my-2 justify-between'>
+        <div className='w-full flex my-2 gap-4'>
             <div className='flex gap-2'>
                 <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
                     <AvatarImage src={user.avatarURL} />

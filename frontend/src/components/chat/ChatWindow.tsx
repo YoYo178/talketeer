@@ -4,9 +4,6 @@ import { MessageList } from './messages/MessageList';
 import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { ChatHeader } from './ChatHeader';
 import { Separator } from '../ui/separator';
-import { ArrowLeft } from 'lucide-react';
-import { RoomMemberList } from './rooms/RoomMemberList';
-import { ChatButton } from './rich-text/utility/ChatButton';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 import { Button } from '../ui/button';
 import { useQueryClient } from '@tanstack/react-query';
@@ -15,6 +12,9 @@ import { socket } from '@/socket';
 import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/room.sockets';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IRoom, IRoomPublicView } from '@/types/room.types';
+import { ChatMemberList } from './ChatMemberList';
+
+// TODO: Fix MemberList for smaller screens!
 
 export const ChatWindow = () => {
     const queryClient = useQueryClient();
@@ -103,63 +103,48 @@ export const ChatWindow = () => {
     }
 
     return (
-        <div className='flex-1 flex flex-col bg-accent dark:bg-primary-foreground rounded-xl overflow-auto'>
+        <div className='flex-1 flex flex-col overflow-auto'>
 
             {selectedRoomId ? (
-                <>
-                    <div className='flex flex-col w-full h-full items-center justify-center p-4 gap-2'>
-                        <p className='text-3xl font-bold'>{selectedRoom?.name}</p>
-                        <p className='text-m text-muted-foreground'>Members online: {selectedRoom?.memberCount}/{selectedRoom?.memberLimit}</p>
+                <div className='flex flex-col w-full h-full items-center justify-center p-4 gap-2'>
+                    <p className='text-3xl font-bold'>{selectedRoom?.name}</p>
+                    <p className='text-m text-muted-foreground'>Members online: {selectedRoom?.memberCount}/{selectedRoom?.memberLimit}</p>
 
 
-                        {selectedRoom?.visibility === 'private' && !selectedRoom?.isSystemGenerated ? (
-                            <>
-                                {selectedRoom?.owner === me?._id ? (
-                                    <div className="flex gap-4">
-                                        <Button onClick={handleClearSelection}>Cancel</Button>
-                                        <Button onClick={handleRoomJoin}>Join</Button>
-                                    </div>
-                                ) : (
-                                    <div className="flex flex-col items-center gap-4">
-                                        <p className='text-l text-center'>This is a private room, you cannot join unless you are invited by the owner or you have the code for the room.</p>
-                                        <Button className='w-fit' onClick={handleClearSelection}>Go back</Button>
-                                    </div>
-                                )}
-                            </>
-                        ) : (
-                            <div className="flex gap-4">
-                                <Button onClick={handleClearSelection}>Cancel</Button>
-                                <Button onClick={handleRoomJoin}>Join</Button>
-                            </div>
-                        )}
-                    </div>
-                </>
-            ) : (
-                <>
-                    {isInMemberList ? (
+                    {selectedRoom?.visibility === 'private' && !selectedRoom?.isSystemGenerated ? (
                         <>
-                            <div className='flex flex-row w-full items-center p-4 gap-2'>
-                                <ChatButton onClick={() => setIsInMemberList(false)}>
-                                    <ArrowLeft className='size-5' />
-                                </ChatButton>
-
-                                <p className='text-xl'>Members in {joinedRoom?.name}</p>
-                            </div>
-                            <Separator />
-                            <RoomMemberList />
+                            {selectedRoom?.owner === me?._id ? (
+                                <div className="flex gap-4">
+                                    <Button onClick={handleClearSelection}>Cancel</Button>
+                                    <Button onClick={handleRoomJoin}>Join</Button>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center gap-4">
+                                    <p className='text-l text-center'>This is a private room, you cannot join unless you are invited by the owner or you have the code for the room.</p>
+                                    <Button className='w-fit' onClick={handleClearSelection}>Go back</Button>
+                                </div>
+                            )}
                         </>
                     ) : (
-                        <>
-                            <ChatHeader onToggleMemberList={setIsInMemberList} />
-                            <Separator />
-                            <MessageList />
-                            <Separator />
-                            <ChatComposer roomId={joinedRoom?._id} />
-                        </>
-                    )
-                    }
-                </>
+                        <div className="flex gap-4">
+                            <Button onClick={handleClearSelection}>Cancel</Button>
+                            <Button onClick={handleRoomJoin}>Join</Button>
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div className="flex gap-3 h-full">
+                    <div className="flex-1 flex flex-col bg-accent dark:bg-primary-foreground rounded-xl">
+                        <ChatHeader onToggleMemberList={setIsInMemberList} />
+                        <Separator />
+                        <MessageList />
+                        <Separator />
+                        <ChatComposer roomId={joinedRoom?._id} />
+
+                    </div>
+                    <ChatMemberList />
+                </div>
             )}
-        </div >
+        </div>
     )
 }
