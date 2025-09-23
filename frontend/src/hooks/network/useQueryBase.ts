@@ -30,8 +30,8 @@ export const useQueryBase = <ResponseType = unknown>(
 
         return useQuery({
             queryKey: queryKey || [],
-            queryFn: async () => {
-                const response = await API.get<APIResponse<ResponseTypeOverride>>(URL, { withCredentials: sendCookies });
+            queryFn: async ({ signal }) => {
+                const response = await API.get<APIResponse<ResponseTypeOverride>>(URL, { withCredentials: sendCookies, signal });
                 return response?.data;
             },
             retry: (failureCount: number, error: AxiosError) => {
