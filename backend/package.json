@@ -31,7 +31,7 @@
     "jsonfile": "^6.2.0",
     "jsonwebtoken": "^9.0.2",
     "module-alias": "^2.2.3",
-    "mongoose": "^8.18.1",
+    "mongoose": "^8.18.2",
     "morgan": "^1.10.1",
     "socket.io": "^4.8.1",
     "winston": "^3.17.0",
@@ -58,14 +58,14 @@
     "eslint-plugin-n": "^17.23.1",
     "find": "^0.3.0",
     "fs-extra": "^11.3.2",
-    "jiti": "^2.5.1",
+    "jiti": "^2.6.0",
     "nodemon": "^3.1.10",
     "supertest": "^7.1.4",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.44.0",
+    "typescript-eslint": "^8.44.1",
     "vitest": "^3.2.4"
   },
-  "packageManager": "pnpm@10.17.0+sha512.fce8a3dd29a4ed2ec566fb53efbb04d8c44a0f05bc6f24a73046910fb9c3ce7afa35a0980500668fa3573345bd644644fa98338fa168235c80f4aa17aa17fbef"
+  "packageManager": "pnpm@10.17.1+sha512.17c560fca4867ae9473a3899ad84a88334914f379be46d455cbf92e5cf4b39d34985d452d2583baf19967fa76cb5c17bc9e245529d0b98745721aa7200ecaf7a"
 }
