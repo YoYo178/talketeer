@@ -34,24 +34,19 @@ export const UserLayout = () => {
             <NavBar />
 
             <div className="flex-1 flex flex-col md:flex-row gap-3 overflow-auto"> {/* this 'h-0' is very necessary, just don't ask why */}
-                {!isMobile
-                    ? (<ChatSidebar />)
-                    : (
-                        <>
-                            {(!selectedRoomId && !joinedRoomId) && <ChatSidebar />}
-                        </>
-                    )
+                {
+                    (!isMobile || !selectedRoomId && !joinedRoomId) && (<ChatSidebar />)
                 }
-                {(joinedRoomId || selectedRoomId) ? (
-                    <ChatWindow />
-                ) : (
-                    <div className='flex-1 bg-background p-6 flex items-center justify-center'>
-                        <div className='text-center'>
-                            <div className='text-xl font-semibold mb-1'>Join a room to get started!</div>
-                            <div className='text-sm text-muted-foreground'>Select a room {isMobile ? 'from above' : 'on the left'} or create a new one.</div>
+                {joinedRoomId || selectedRoomId
+                    ? (<ChatWindow />)
+                    : (
+                        <div className='flex-1 bg-background p-6 flex items-center justify-center'>
+                            <div className='text-center'>
+                                <div className='text-xl font-semibold mb-1'>Join a room to get started!</div>
+                                <div className='text-sm text-muted-foreground'>Select a room {isMobile ? 'from above' : 'on the left'} or create a new one.</div>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
             </div>
 
             <KickedDialog />
