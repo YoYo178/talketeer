@@ -44,6 +44,11 @@ export const APIEndpoints: Endpoints = {
         URL: '/friends/:userId'
     },
 
+    SEARCH_GIFS: {
+        METHOD: 'GET',
+        URL: '/gifs'
+    },
+
     // Room Routes
     GET_ALL_ROOMS: {
         METHOD: 'GET',
