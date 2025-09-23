@@ -19,7 +19,12 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ],
   },
   "include": ["vite.config.ts"]
 }

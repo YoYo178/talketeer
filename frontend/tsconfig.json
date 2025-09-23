@@ -5,6 +5,12 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ],
+    
     /* Module aliasing (required for shadcn) */
     "baseUrl": ".",
     "paths": {

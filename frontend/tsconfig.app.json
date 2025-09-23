@@ -22,6 +22,11 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    
+    "typeRoots": [
+      "./@types",
+      "./node_modules/@types"
+    ],
 
     /* Module aliasing (required for shadcn) */
     "baseUrl": ".",
