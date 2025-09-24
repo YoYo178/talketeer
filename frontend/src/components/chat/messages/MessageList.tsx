@@ -124,17 +124,19 @@ export const MessageList = () => {
 
     return (
         <ScrollArea className='flex flex-col flex-1 p-4 pt-0 pb-0 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
-            {messageElements.length > 0 && !hasNextPage && (
-                <div className="flex items-center my-2">
-                    <Separator className='flex-1' />
-                    <span className="mx-2 bg-transparent px-2 dark:text-muted-foreground">
-                        You've reached the end of this chatroom!
-                    </span>
-                    <Separator className='flex-1' />
-                </div>
-            )}
-            {messageElements}
-            <div ref={chatEndRef} />
+            <div className="flex flex-col">
+                {messageElements.length > 0 && !hasNextPage && (
+                    <div className="flex items-center my-2">
+                        <Separator className='flex-1' />
+                        <span className="mx-2 bg-transparent px-2 dark:text-muted-foreground">
+                            You've reached the end of this chatroom!
+                        </span>
+                        <Separator className='flex-1' />
+                    </div>
+                )}
+                {messageElements}
+                <div ref={chatEndRef} />
+            </div>
         </ScrollArea>
     );
 }

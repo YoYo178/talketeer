@@ -13,10 +13,10 @@ export const MessageBlockSkeleton: FC<MessageBlockSkeletonProps> = ({ align }) =
     const generateArbitraryLines = (minLines: number, maxLines: number, minLength: number, maxLength: number) => {
         const lines = Math.max(minLines, Math.floor(Math.random() * maxLines));
 
-        return Array.from({ length: lines }).map(() => {
+        return Array.from({ length: lines }).map((_, i) => {
             const lineLength = Math.max(minLength, Math.floor(Math.random() * maxLength));
             return (
-                <MessageTextSkeleton height={1} width={lineLength} />
+                <MessageTextSkeleton key={i} height={1} width={lineLength} />
             )
         })
     }

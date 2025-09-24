@@ -16,7 +16,9 @@ export const RoomMemberList = () => {
 
     return (
         <ScrollArea className='flex-1 flex flex-col p-4 overflow-hidden rounded-xl border border-border/40 divide-y divide-border/40'>
-            {room.members?.map(mem => <RoomMemberEntry key={mem.user} userId={mem.user} />)}
+            <div className="flex flex-col">
+                {room.members?.map(mem => <RoomMemberEntry key={mem.user} userId={mem.user} />)}
+            </div>
         </ScrollArea>
     )
 }

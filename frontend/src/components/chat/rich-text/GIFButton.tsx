@@ -84,6 +84,7 @@ export const GIFButton = () => {
                                 <div className="h-full grid grid-cols-2 gap-2">
                                     {GIFs.map(obj => (
                                         <img
+                                            key={obj.id}
                                             className='hover:cursor-pointer break-inside-avoid'
                                             src={obj.media_formats?.tinygif?.url}
                                         />

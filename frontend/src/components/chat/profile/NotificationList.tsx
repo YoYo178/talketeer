@@ -18,8 +18,12 @@ export const NotificationList = () => {
                     <p className='text-lg text-muted-foreground text-center m-auto'>You're all caught up!</p>
                 </div>
             ) : (
-                <ScrollArea className='flex-1 flex flex-col overflow-x-hidden overflow-y-auto w-full'>
-                    {sortedNotifications.map(notObj => (<NotificationEntry notification={notObj} />))}
+                <ScrollArea className='flex-1 overflow-x-hidden overflow-y-auto w-full'>
+                    <div className="flex flex-col">
+                        {sortedNotifications.map(notObj => (
+                            <NotificationEntry key={notObj._id} notification={notObj} />
+                        ))}
+                    </div>
                 </ScrollArea>
             )}
         </>
