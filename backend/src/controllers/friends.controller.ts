@@ -23,7 +23,10 @@ export const sendFriendRequest = async (req: Request, res: Response, next: NextF
     const existingFriendObj = receiver.friends.find(friendObj => friendObj.userId.toString() === senderId);
 
     if (existingFriendObj?.status === 'confirmed')
-        throw new APIError('The user is already in your friend list', HttpStatusCodes.CONFLICT)
+        throw new APIError('The user is already in your friend list', HttpStatusCodes.CONFLICT);
+
+    if (existingFriendObj?.direction === 'incoming')
+        throw new APIError('The user\'s friend request is already pending', HttpStatusCodes.CONFLICT);
 
     if (existingFriendObj)
         throw new APIError('Your friend request is already pending', HttpStatusCodes.CONFLICT);
