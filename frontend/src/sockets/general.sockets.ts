@@ -77,6 +77,9 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
         )
 
         useGlobalStore.getState().setHasNewNotifications(true);
+
+        if (notification.type === 'friend-request')
+            queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     });
 
     socket.on('memberOnline', (membersCount, userId) => {
