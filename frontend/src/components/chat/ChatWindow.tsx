@@ -102,13 +102,11 @@ export const ChatWindow = () => {
     }
 
     return (
-        <div className='flex-1 flex flex-col overflow-auto'>
-
+        <div className='flex-1 flex flex-col overflow-hidden'>
             {selectedRoomId ? (
                 <div className='flex flex-col w-full h-full items-center justify-center p-4 gap-2'>
                     <p className='text-3xl font-bold'>{selectedRoom?.name}</p>
                     <p className='text-m text-muted-foreground'>Members online: {selectedRoom?.memberCount}/{selectedRoom?.memberLimit}</p>
-
 
                     {selectedRoom?.visibility === 'private' && !selectedRoom?.isSystemGenerated ? (
                         <>
@@ -139,8 +137,8 @@ export const ChatWindow = () => {
                         <MessageList />
                         <Separator />
                         <ChatComposer />
-
                     </div>
+
                     <ChatMemberList />
                 </div>
             )}
