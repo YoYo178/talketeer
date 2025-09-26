@@ -40,7 +40,7 @@
   "devDependencies": {
     "@eslint/js": "^9.36.0",
     "@stylistic/eslint-plugin": "^5.4.0",
-    "@swc/core": "^1.13.5",
+    "@swc/core": "^1.13.19",
     "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.9",
     "@types/cors": "^2.8.19",
