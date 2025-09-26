@@ -39,9 +39,9 @@ export const ChatSidebar = () => {
     }
 
     return (
-        <div className={`flex flex-col p-3 pr-0 rounded-xl bg-accent dark:bg-primary-foreground transition-[padding-inline] duration-300 ${isCollapsed ? 'px-1' : ''}`}>
+        <div className={`flex flex-col rounded-xl bg-accent dark:bg-primary-foreground transition-[padding-inline] duration-300 ${isCollapsed ? '' : 'pl-3'}`}>
             <div className="flex h-full">
-                <div className={`flex flex-col gap-3 overflow-hidden transition-[opacity,max-width] duration-300 ${isCollapsed ? 'opacity-0 max-w-0' : 'opacity-100 max-w-72'}`}>
+                <div className={`flex flex-col gap-3 overflow-hidden transition-[opacity,max-width,visibility] duration-300 ${isCollapsed ? 'opacity-0 max-w-0 invisible' : 'opacity-100 max-w-72 visible'}`}>
                     <div className='w-72 flex gap-2'>
                         <CreateRoomDialog />
                         <JoinRoomDialog />
@@ -57,7 +57,7 @@ export const ChatSidebar = () => {
                 </div>
 
                 <button
-                    className={`h-full w-3 px-1.5 cursor-pointer flex flex-col items-center justify-center transition-[padding-inline] ${isHoveringOnArrow ? 'px-3' : ''}`}
+                    className={`h-full w-0 px-1.5 cursor-pointer flex flex-col items-center justify-center transition-[padding-inline] ${isHoveringOnArrow ? 'px-3' : ''}`}
                     onMouseOver={() => setIsHoveringOnArrow(true)}
                     onMouseOut={() => setIsHoveringOnArrow(false)}
                     onClick={() => setIsCollapsed(!isCollapsed)}
