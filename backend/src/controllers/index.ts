@@ -1,5 +1,4 @@
 export * from './auth.controller';
-export * from './friends.controller'
 export * from './gif.controller'
 export * from './messages.controller'
 export * from './notifications.controller'

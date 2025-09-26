@@ -4,6 +4,7 @@ import { registerRoomHandlers } from "./handlers/room";
 import { registerMessageHandlers } from "./handlers/message";
 import logger from "@src/utils/logger.utils";
 import { onlineMembers } from "@src/utils";
+import { registerFriendHandlers } from "./handlers/friends";
 
 export function handleSocketConnection(io: TalketeerSocketServer, socket: TalketeerSocket) {
     if (!socket.data?.user) {
@@ -21,6 +22,7 @@ export function handleSocketConnection(io: TalketeerSocketServer, socket: Talket
 
     onlineMembers.add(socket.data.user.id);
 
+    registerFriendHandlers(io, socket);
     registerGeneralHandlers(io, socket);
     registerRoomHandlers(io, socket);
     registerMessageHandlers(io, socket);

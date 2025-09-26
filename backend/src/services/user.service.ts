@@ -82,3 +82,15 @@ export async function acceptUserFriendRequest(senderId: string, receiverId: stri
         { $set: { 'friends.$.status': 'confirmed' } }
     )
 }
+
+export async function removeFriendObject(userOneId: string, userTwoId: string) {
+    await User.findOneAndUpdate(
+        { _id: userOneId },
+        { $pull: { friends: { userId: userTwoId } } }
+    )
+
+    await User.findOneAndUpdate(
+        { _id: userTwoId },
+        { $pull: { friends: { userId: userOneId } } }
+    )
+}

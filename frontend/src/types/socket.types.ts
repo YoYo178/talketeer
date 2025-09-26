@@ -41,6 +41,12 @@ export interface ClientToServerEvents {
 
     kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string, ack: AckFunc) => void;
     banFromRoom: (roomId: string, userId: string, bannedBy: string, duration: number, reason: string, ack: AckFunc) => void;
+
+    sendFriendRequest: (userId: string, ack: AckFunc) => void;
+    revokeFriendRequest: (userId: string, ack: AckFunc) => void;
+    acceptFriendRequest: (userId: string, ack: AckFunc) => void;
+    declineFriendRequest: (userId: string, ack: AckFunc) => void;
+    removeFriend: (userId: string, ack: AckFunc) => void;
 }
 
 export interface InterServerEvents {

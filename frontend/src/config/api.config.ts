@@ -34,16 +34,7 @@ export const APIEndpoints: Endpoints = {
         URL: '/auth/check-email'
     },
 
-    // Friend routes
-    SEND_FRIEND_REQUEST: {
-        METHOD: 'POST',
-        URL: '/friends'
-    },
-    ACCEPT_FRIEND_REQUEST: {
-        METHOD: 'PATCH',
-        URL: '/friends/:userId'
-    },
-
+    // GIF routes
     SEARCH_GIFS: {
         METHOD: 'GET',
         URL: '/gifs'

@@ -78,7 +78,7 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
 
         useGlobalStore.getState().setHasNewNotifications(true);
 
-        if (notification.type === 'friend-request')
+        if (['friend-request', 'friend-new', 'friend-delete'].includes(notification.type))
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
     });
 
@@ -96,7 +96,9 @@ export function handleSocketDisconnection(socket: TalketeerSocket) {
     socket.off('roomCreated');
     socket.off('roomDeleted');
     socket.off('roomUpdated');
+
     socket.off('notification');
+    
     socket.off('memberOnline');
     socket.off('memberOffline');
 

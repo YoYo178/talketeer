@@ -1,7 +1,6 @@
 import { Router } from "express";
 
 import AuthRouter from "./auth.routes";
-import FriendsRouter from "./friends.routes";
 import GIFRouter from "./gif.router";
 import MessagesRouter from "./messages.routes";
 import NotificationsRouter from "./notifications.routes";
@@ -16,7 +15,6 @@ const APIRouter = Router();
 APIRouter.use('/auth', AuthRouter);
 
 // All other routes of the application, requiring valid authentication
-APIRouter.use('/friends', requireAuth, FriendsRouter);
 APIRouter.use('/gifs', requireAuth, GIFRouter);
 APIRouter.use('/messages', requireAuth, MessagesRouter);
 APIRouter.use('/notifications', requireAuth, NotificationsRouter);
