@@ -6,9 +6,13 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useGetGIFsQuery } from '@/hooks/network/gifs/useGetGIFsQuery';
 import { useQueryClient } from '@tanstack/react-query';
+import { socket } from '@/socket';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
 export const GIFButton = () => {
     const queryClient = useQueryClient();
+
+    const { joinedRoomId } = useRoomsStore();
 
     const [isOpen, setIsOpen] = useState(false);
     const [GIFs, setGIFs] = useState<TenorGIFResponseObject[]>([]);
@@ -54,6 +58,17 @@ export const GIFButton = () => {
         }
     }, [isOpen])
 
+    if (!joinedRoomId)
+        return;
+
+    const handleSendGIF = (link: string) => socket.emit('sendMessage', joinedRoomId, link, ({ success }) => {
+        if (success) {
+            setIsOpen(false);
+            setQuery('');
+            setGIFs([]);
+        }
+    })
+
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <Tooltip>
@@ -87,6 +102,7 @@ export const GIFButton = () => {
                                             key={obj.id}
                                             className='hover:cursor-pointer break-inside-avoid'
                                             src={obj.media_formats?.tinygif?.url}
+                                            onClick={() => handleSendGIF(obj.media_formats.gif.url)}
                                         />
                                     ))}
                                 </div>
