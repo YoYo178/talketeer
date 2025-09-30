@@ -1,12 +1,12 @@
 import { Skeleton } from '@/components/ui/skeleton';
-import React, { useState, type FC, type ReactNode } from 'react'
+import { type FC, memo } from 'react'
 
 interface MessageTextSkeletonProps {
     height: number;
     width: number;
 }
 
-export const MessageTextSkeleton: FC<MessageTextSkeletonProps> = React.memo(({ height, width }) => {
+export const MessageTextSkeleton: FC<MessageTextSkeletonProps> = memo(({ height, width }) => {
     return (
         <Skeleton style={{
             height: `${height}rem`,
