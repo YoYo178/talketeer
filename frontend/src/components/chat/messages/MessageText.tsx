@@ -37,7 +37,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
         const parts = line.split(' ');
 
         return (
-            <div className={`w-full flex gap-1 flex-wrap ${isSelfMessage ? 'justify-end text-end' : 'justify-start text-start'}`}>
+            <div className={`w-full flex gap-1 flex-wrap whitespace-pre-wrap wrap-anywhere ${isSelfMessage ? 'justify-end text-end' : 'justify-start text-start'}`}>
                 {parts.map(part => {
                     const protocolObj = supportedProtocols.find(p => part.startsWith(`${p.protocol}://`));
 
@@ -75,7 +75,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
             return (protocolObj.isEmbeddable && isTenorLink) ? (
                 <img
                     key={part}
-                    className='max-w-[300px]'
+                    className='max-w-[250px] md:max-w-[350px]'
                     src={part}
                     alt={tenorAltString}
                 />
@@ -90,7 +90,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
             </div>
 
             {embeddableElements.length > 0 && (
-                <div className={`w-full flex flex-col ${isSelfMessage ? 'items-end text-end' : 'items-start text-start'}`}>
+                <div className={`w-full flex flex-col gap-2 ${isSelfMessage ? 'items-end text-end' : 'items-start text-start'}`}>
                     {embeddableElements}
                 </div>
             )}
