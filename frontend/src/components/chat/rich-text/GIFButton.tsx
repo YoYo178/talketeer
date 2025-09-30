@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ChatButton } from './utility/ChatButton'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -11,21 +11,20 @@ import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
 export const GIFButton = () => {
     const queryClient = useQueryClient();
-
     const { joinedRoomId } = useRoomsStore();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [GIFs, setGIFs] = useState<TenorGIFResponseObject[]>([]);
-    const [isLoading, setIsLoading] = useState(false)
-
     const [query, setQuery] = useState('');
     const [lastQuery, setLastQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(false)
 
     const { data, refetch } = useGetGIFsQuery({
         queryKey: ['gif-search', query],
         queryParams: { query },
         enabled: false
     });
+
+    const GIFs = useMemo(() => data?.data?.results ?? [], [data])
 
     useEffect(() => {
         if (!query) return;
@@ -40,34 +39,18 @@ export const GIFButton = () => {
                 refetch();
         }, 300);
 
-        return () => {
-            clearTimeout(timeout);
-            setGIFs([])
-        }
+        return () => clearTimeout(timeout);
     }, [query]);
 
     useEffect(() => {
-        if (data?.data?.results.length)
-            setGIFs(data.data.results)
-    }, [data])
-
-    useEffect(() => {
-        if (!isOpen) {
+        if (!isOpen)
             setQuery('');
-            setGIFs([]);
-        }
     }, [isOpen])
 
     if (!joinedRoomId)
         return;
 
-    const handleSendGIF = (link: string) => socket.emit('sendMessage', joinedRoomId, link, ({ success }) => {
-        if (success) {
-            setIsOpen(false);
-            setQuery('');
-            setGIFs([]);
-        }
-    })
+    const handleSendGIF = (link: string) => socket.emit('sendMessage', joinedRoomId, link, ({ success }) => setIsOpen(!success))
 
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -96,15 +79,43 @@ export const GIFButton = () => {
                         />
                         {GIFs.length > 0 || isLoading ? (
                             <ScrollArea className='h-[314px] w-full'>
-                                <div className="h-full grid grid-cols-2 gap-2">
-                                    {GIFs.map(obj => (
-                                        <img
-                                            key={obj.id}
-                                            className='hover:cursor-pointer break-inside-avoid'
-                                            src={obj.media_formats?.tinygif?.url}
-                                            onClick={() => handleSendGIF(obj.media_formats.gif.url)}
-                                        />
-                                    ))}
+
+                                {/* This grid contains 2 nested grids to ensure a masonry grid layout */}
+                                <div className='h-full grid grid-cols-2 gap-2'>
+
+                                    {/* Left column */}
+                                    <div className='grid h-fit gap-2'>
+                                        {GIFs.map((obj, i) => {
+                                            if (i % 2 !== 0)
+                                                return null;
+
+                                            return (
+                                                <img
+                                                    key={obj.id}
+                                                    className='hover:cursor-pointer break-inside-avoid'
+                                                    src={obj.media_formats?.tinygif?.url}
+                                                    onClick={() => handleSendGIF(obj.media_formats.gif.url)}
+                                                />
+                                            )
+                                        })}
+                                    </div>
+
+                                    {/* Right column */}
+                                    <div className='grid h-fit gap-2'>
+                                        {GIFs.map((obj, i) => {
+                                            if (i % 2 === 0)
+                                                return null;
+
+                                            return (
+                                                <img
+                                                    key={obj.id}
+                                                    className='hover:cursor-pointer break-inside-avoid'
+                                                    src={obj.media_formats?.tinygif?.url}
+                                                    onClick={() => handleSendGIF(obj.media_formats.gif.url)}
+                                                />
+                                            )
+                                        })}
+                                    </div>
                                 </div>
                             </ScrollArea>
                         ) : (
