@@ -6,7 +6,7 @@ import { NotificationsButton } from './NotificationsButton';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 
 export const ExpandableProfileCard = () => {
-    const [isCardOpen, setIsCardOpen] = useState(true);
+    const [isCardOpen, setIsCardOpen] = useState(false);
     const [hasCardTransitionFinished, setHasCardTransitionFinished] = useState(false);
 
     const me: IUser | undefined = useMe();
