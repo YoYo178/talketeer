@@ -55,7 +55,7 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>
                             You
                         </p>
-                        {messages.map(message => <MessageText key={message._id} content={message.content} />)}
+                        {messages.map(message => <MessageText key={message._id} content={message.content} isSelfMessage />)}
                     </div>
                     <MessageProfilePicture user={me} popoverSide='left' />
                 </>
