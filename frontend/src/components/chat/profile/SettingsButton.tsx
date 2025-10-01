@@ -1,9 +1,13 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { useLogoutMutation } from '@/hooks/network/auth/useLogoutMutation';
 import { useSettingsStore } from '@/hooks/state/useSettingsStore';
-import { Settings } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query';
+import { LogOut, Moon, Settings, Sun } from 'lucide-react'
 import { useState } from 'react';
 
 export const SettingsButton = () => {
+    const queryClient = useQueryClient();
+
     const [isOpen, setIsOpen] = useState(false);
     const { isDark, setIsDark } = useSettingsStore();
 
@@ -11,6 +15,18 @@ export const SettingsButton = () => {
         e.preventDefault();
 
         setIsDark(!isDark);
+    }
+
+    const logoutMutation = useLogoutMutation({ queryKey: ['auth'] });
+    const handleLogout = async () => {
+        try {
+            await logoutMutation.mutateAsync({});
+
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+        } catch (e: any) {
+            console.error('An error occured while logging out!')
+            console.error(e?.message || e);
+        }
     }
 
     return (
@@ -32,7 +48,16 @@ export const SettingsButton = () => {
                 alignOffset={20}
                 className='[&>*]:cursor-pointer'
             >
-                <DropdownMenuItem onClick={handleToggleTheme}>Toggle theme</DropdownMenuItem>
+                <DropdownMenuItem onClick={handleToggleTheme}>
+                    {isDark ? <Sun /> : <Moon />}
+                    Toggle theme
+                </DropdownMenuItem>
+
+                <DropdownMenuItem onClick={handleLogout}>
+                    <LogOut />
+                    Log out
+                </DropdownMenuItem>
+
             </DropdownMenuContent>
         </DropdownMenu>
     )
