@@ -19,7 +19,7 @@ export const ExpandableProfileCard = () => {
     return (
         <div
             className={
-                'flex gap-2 overflow-hidden items-center rounded-full outline-2 outline-primary transition-[width] duration-800 ease-out origin-left max-h-14 ' +
+                'ml-auto mr-5 flex gap-2 overflow-hidden items-center rounded-full outline-2 outline-primary transition-[width] duration-800 ease-out origin-left max-h-14 ' +
                 `${isCardOpen ? 'w-72' : 'w-14'}`
             }
         >
