@@ -27,6 +27,8 @@ export const updateMe = async (req: Request, res: Response, next: NextFunction) 
 
     await user.save()
 
+    req.io.emit('userUpdated', req.user.id);
+
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'Updated user successfully', data: { user } })
 }
 

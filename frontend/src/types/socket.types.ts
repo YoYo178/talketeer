@@ -13,6 +13,8 @@ export interface ServerToClientEvents {
 
     userOnline: (usersCount: number, userId: string) => void;
     userOffline: (usersCount: number, userId: string) => void;
+    userUpdated: (userId: string) => void;
+
     /** For users IN a room */
     memberJoined: (roomId: string, userId: string) => void;
     memberLeft: (roomId: string, userId: string) => void;

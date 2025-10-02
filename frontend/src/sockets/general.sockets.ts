@@ -89,6 +89,10 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
     socket.on('userOffline', (usersCount, userId) => {
         useGlobalStore.getState().setUsersOnline(usersCount);
     })
+
+    socket.on('userUpdated', (userId) => {
+        queryClient?.invalidateQueries({ queryKey: ['users', userId] })
+    })
 }
 
 export function handleSocketDisconnection(socket: TalketeerSocket) {
@@ -101,6 +105,7 @@ export function handleSocketDisconnection(socket: TalketeerSocket) {
 
     socket.off('userOnline');
     socket.off('userOffline');
+    socket.off('userUpdated')
 
     // Also remove any room-specific events that might still be active
     socket.off('memberJoined');
