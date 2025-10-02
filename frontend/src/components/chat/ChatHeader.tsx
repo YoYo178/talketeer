@@ -62,7 +62,7 @@ export const ChatHeader = () => {
     };
 
     return (
-        <div className='flex p-4'>
+        <div className='flex p-4 justify-between'>
             <div className='flex gap-2 items-center flex-wrap'>
                 <p className='text-xl'>{room.name}</p>
                 <div className='flex'>
@@ -90,9 +90,7 @@ export const ChatHeader = () => {
                 </div>
             </div>
 
-            <Button className='ml-auto' onClick={handleRoomLeave}><X />Leave room</Button>
-
-            <Toaster id='room-code-copied-toast' />
+            <Button onClick={handleRoomLeave}><X />Leave room</Button>
         </div>
     )
 }
