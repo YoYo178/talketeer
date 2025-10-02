@@ -30,7 +30,7 @@ export const NotificationsButton = () => {
                 asChild
             >
                 <div className='flex flex-col items-center min-h-[400px] min-w-[350px] max-h-[400px] max-w-[350px]'>
-                    <Label className='text-md mb-4'>Notifications</Label>
+                    <Label className='mb-4'>Notifications</Label>
                     <NotificationList />
                 </div>
             </PopoverContent>
