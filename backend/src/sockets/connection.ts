@@ -27,5 +27,5 @@ export function handleSocketConnection(io: TalketeerSocketServer, socket: Talket
     registerRoomHandlers(io, socket);
     registerMessageHandlers(io, socket);
 
-    io.emit('memberOnline', onlineMembers.size, socket.data.user.id);
+    io.emit('userOnline', onlineMembers.size, socket.data.user.id);
 }

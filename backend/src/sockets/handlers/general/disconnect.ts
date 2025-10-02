@@ -30,6 +30,6 @@ export const getDisconnectEventCallback = (io: TalketeerSocketServer, socket: Ta
 
         onlineMembers.delete(userId);
 
-        io.emit('memberOffline', onlineMembers.size, userId);
+        io.emit('userOffline', onlineMembers.size, userId);
     }
 }
