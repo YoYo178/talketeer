@@ -104,7 +104,7 @@ export const ChatWindow = () => {
     return (
         <div className='flex-1 flex flex-col overflow-hidden'>
             {selectedRoomId ? (
-                <div className='flex flex-col w-full h-full items-center justify-center p-4 gap-2'>
+                <div className='flex flex-col w-full h-full items-center justify-center p-4 gap-2 text-center'>
                     <p className='text-3xl font-bold'>{selectedRoom?.name}</p>
                     <p className='text-m text-muted-foreground'>Members online: {selectedRoom?.memberCount}/{selectedRoom?.memberLimit}</p>
 
@@ -116,8 +116,8 @@ export const ChatWindow = () => {
                                     <Button onClick={handleRoomJoin}>Join</Button>
                                 </div>
                             ) : (
-                                <div className="flex flex-col items-center gap-4">
-                                    <p className='text-l text-center'>This is a private room, you cannot join unless you are invited by the owner or you have the code for the room.</p>
+                                <div className="flex flex-col items-center gap-4 text-center">
+                                    <p className='text-l'>This is a private room, you cannot join unless you are invited by the owner or you have the code for the room.</p>
                                     <Button className='w-fit' onClick={handleClearSelection}>Go back</Button>
                                 </div>
                             )}
