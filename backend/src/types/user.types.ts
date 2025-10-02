@@ -16,7 +16,7 @@ export interface IUser {
     name: string;
 
     /** User's display name on the app */
-    displayName: string;
+    displayName?: string;
 
     /** User's username (handle) */
     username: string;

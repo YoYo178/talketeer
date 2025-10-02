@@ -26,9 +26,12 @@ export const MessageProfilePicture: FC<MessageProfilePictureProps> = ({ user, po
     const queryClient = useQueryClient();
     const me = useMe();
 
-    const isSelf = me?._id === user?._id;
+    if (!user || !me)
+        return;
 
-    const friendObj = me?.friends.find(f => f.userId === user?._id);
+    const isSelf = me._id === user?._id;
+
+    const friendObj = me.friends.find(f => f.userId === user?._id);
 
     const isFriend = !!friendObj && friendObj.status === 'confirmed';
     const isPending = !!friendObj && friendObj.status === 'pending';
@@ -36,10 +39,7 @@ export const MessageProfilePicture: FC<MessageProfilePictureProps> = ({ user, po
 
     const refreshMeData = () => queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
 
-    if (!user || !me)
-        return;
-
-    const handleSendFriendRequest = () => socket.emit('sendFriendRequest', user?._id, ({ success }) => success && refreshMeData());
+    const handleSendFriendRequest = () => socket.emit('sendFriendRequest', user._id, ({ success }) => success && refreshMeData());
     const handleRevokeFriendRequest = () => socket.emit('revokeFriendRequest', user._id, ({ success }) => success && refreshMeData());
 
     const handleAcceptFriendRequest = () => socket.emit('acceptFriendRequest', user._id, ({ success }) => success && refreshMeData());
@@ -50,9 +50,9 @@ export const MessageProfilePicture: FC<MessageProfilePictureProps> = ({ user, po
             <PopoverTrigger asChild>
                 <Button className='flex items-center justify-center size-10 min-w-10 max-w-10 aspect-square rounded-full bg-[#d8d8d8] dark:bg-[#242429] self-start'>
                     <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                        <AvatarImage src={user?.avatarURL} />
+                        <AvatarImage src={user.avatarURL} />
                         <AvatarFallback className='text-primary'>
-                            {user?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}
+                            {(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}
                         </AvatarFallback>
                     </Avatar>
                 </Button>
@@ -62,16 +62,16 @@ export const MessageProfilePicture: FC<MessageProfilePictureProps> = ({ user, po
 
                     <div className='flex gap-2'>
                         <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                            <AvatarImage src={user?.avatarURL} />
+                            <AvatarImage src={user.avatarURL} />
                             <AvatarFallback>
-                                {user?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}
+                                {(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}
                             </AvatarFallback>
                         </Avatar>
                         <div className='flex flex-col'>
-                            <p className='font-semibold'>{user?.displayName}</p>
-                            <p className='text-sm text-muted-foreground -translate-y-0.5'>@{user?.username}</p>
+                            {user.displayName && (<p className='font-semibold'>{user.displayName}</p>)}
+                            <p className='text-sm text-muted-foreground -translate-y-0.5'>@{user.username}</p>
                             <p className='text-sm'>
-                                Joined {new Date(user?.createdAt || '').toLocaleDateString(undefined, { dateStyle: 'long' })}
+                                Joined {new Date(user.createdAt || '').toLocaleDateString(undefined, { dateStyle: 'long' })}
                             </p>
                         </div>
                     </div>

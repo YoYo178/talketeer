@@ -17,7 +17,7 @@ import z from 'zod';
 const profileFormSchema = z.object({
     firstName: z.string().nonempty('First name is required'),
     lastName: z.string().nonempty('Last name is required'),
-    displayName: z.string().nonempty('Display name is required'),
+    displayName: z.string(),
     bio: z.string()
 })
 

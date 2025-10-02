@@ -31,12 +31,17 @@ export const RoomMemberEntry: FC<RoomMemberEntryProps> = ({ userId }) => {
             <div className='flex gap-2'>
                 <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
                     <AvatarImage src={user.avatarURL} />
-                    <AvatarFallback>{user.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
+                    <AvatarFallback>{(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
                 </Avatar>
-                <div className='flex flex-col'>
-                    <p>{user.displayName}</p>
-                    <p className='text-sm text-muted-foreground -translate-y-1'>@{user.username}</p>
-                </div>
+
+                {!user.displayName ? (
+                    <p className='text-muted-foreground self-center font-semibold'>@{user.username}</p>
+                ) : (
+                    <div className="flex flex-col">
+                        <p className='font-semibold'>{user.displayName}</p>
+                        <p className='text-sm text-muted-foreground -translate-y-1'>@{user.username}</p>
+                    </div>
+                )}
             </div>
 
             {isRoomOwner && me._id !== user._id && (

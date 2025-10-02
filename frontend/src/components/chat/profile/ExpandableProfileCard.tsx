@@ -11,6 +11,9 @@ export const ExpandableProfileCard = () => {
 
     const me: IUser | undefined = useMe();
 
+    if (!me)
+        return;
+
     const handleAvatarClick = () => {
         setIsCardOpen(!isCardOpen);
         setHasCardTransitionFinished(false);
@@ -31,23 +34,27 @@ export const ExpandableProfileCard = () => {
                 onClick={handleAvatarClick}
                 onTransitionEnd={() => setHasCardTransitionFinished(true)}
             >
-                <AvatarImage src={me?.avatarURL} />
-                <AvatarFallback>{me?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
+                <AvatarImage src={me.avatarURL} />
+                <AvatarFallback>{(me.displayName || me.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
             </Avatar>
 
             <div className={
                 'flex-1 flex transition-[opacity,visibility] duration-500 ' +
                 (isCardOpen ? 'opacity-100 visible' : 'opacity-0 invisible')
             }>
-                <div className="flex flex-col">
-                    <h2 className={`text-sm font-semibold leading-tight ${isCardOpen && hasCardTransitionFinished ? '' : 'text-nowrap'}`}>
-                        {me?.displayName}
-                    </h2>
-                    <p className={`text-xs text-muted-foreground leading-tight ${isCardOpen && hasCardTransitionFinished ? '' : 'text-nowrap'}`}>
-                        @{me?.username}
-                    </p>
 
-                </div>
+                {!me.displayName ? (
+                    <p className='text-muted-foreground self-center font-semibold'>@{me.username}</p>
+                ) : (
+                    <div className="flex flex-col">
+                        <p className={`text-sm font-semibold leading-tight ${isCardOpen && hasCardTransitionFinished ? '' : 'text-nowrap'}`}>
+                            {me.displayName}
+                        </p>
+                        <p className={`text-xs text-muted-foreground leading-tight ${isCardOpen && hasCardTransitionFinished ? '' : 'text-nowrap'}`}>
+                            @{me.username}
+                        </p>
+                    </div>
+                )}
 
                 <div className="flex items-center ml-auto mr-4 gap-2">
                     <NotificationsButton />

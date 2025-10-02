@@ -10,7 +10,7 @@ const userFriendSchema = new mongoose.Schema<IUserFriend>({
 
 const userSchema = new mongoose.Schema<IUser>({
     name: { type: String, required: true },
-    displayName: { type: String, required: true },
+    displayName: { type: String, required: false },
     username: { type: String, required: true },
 
     email: { type: String, required: true },

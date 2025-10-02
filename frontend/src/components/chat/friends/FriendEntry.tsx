@@ -17,16 +17,16 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
     const me = useMe();
     const user = useGetUser(friendObject.userId);
 
-    const friendObj = me?.friends.find(f => f.userId === user?._id);
+    if (!user || !me)
+        return;
+
+    const friendObj = me.friends.find(f => f.userId === user._id);
 
     const isFriend = !!friendObj && friendObj.status === 'confirmed';
     const isPending = !!friendObj && friendObj.status === 'pending';
     const isIncoming = isPending && friendObj.direction === 'incoming';
 
     const refreshMeData = () => queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
-
-    if (!user || !me)
-        return;
 
     const handleAcceptFriendRequest = () => socket.emit('acceptFriendRequest', user._id, ({ success }) => success && refreshMeData());
     const handleDeclineFriendRequest = () => socket.emit('declineFriendRequest', user._id, ({ success }) => success && refreshMeData());
@@ -41,14 +41,18 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
             <div className='flex gap-2'>
 
                 <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                    <AvatarImage src={user?.avatarURL} />
-                    <AvatarFallback>{user?.displayName.split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
+                    <AvatarImage src={user.avatarURL} />
+                    <AvatarFallback>{(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
                 </Avatar>
 
-                <div className="flex flex-col">
-                    <p>{user?.displayName}</p>
-                    <p className='text-sm text-muted-foreground -translate-y-1.5'>@{user?.username}</p>
-                </div>
+                {!user.displayName ? (
+                    <p className='text-muted-foreground self-center font-semibold'>@{user.username}</p>
+                ) : (
+                    <div className="flex flex-col">
+                        <p className='font-semibold'>{user.displayName}</p>
+                        <p className='text-sm text-muted-foreground -translate-y-1'>@{user.username}</p>
+                    </div>
+                )}
             </div>
 
             <div className='w-full flex gap-2 flex-wrap [&>*]:flex-1'>
