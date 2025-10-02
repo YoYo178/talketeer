@@ -3,7 +3,7 @@ import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 import { ExpandableProfileCard } from './chat/profile/ExpandableProfileCard';
 
 export const NavBar = () => {
-    const { membersOnline } = useGlobalStore();
+    const { usersOnline } = useGlobalStore();
 
     return (
         <div className='flex items-center bg-accent dark:bg-primary-foreground rounded-xl'>
@@ -12,7 +12,7 @@ export const NavBar = () => {
                 <MessagesSquare className='size-8' />
                 <div className="flex flex-col">
                     <h1 className='text-2xl font-bold'>Talketeer</h1>
-                    <p className='text-sm text-muted-foreground font-bold'>Users online: {membersOnline}</p>
+                    <p className='text-sm text-muted-foreground font-bold'>Users online: {usersOnline}</p>
                 </div>
             </div>
             <ExpandableProfileCard />
