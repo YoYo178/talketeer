@@ -1,7 +1,6 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { User } from "@src/models";
 import { TUpdateMeBody, TUserIdParams } from "@src/schemas";
-import { IPublicUser } from "@src/types";
 import { APIError } from "@src/utils/api.utils";
 import type { Request, Response, NextFunction } from "express";
 
