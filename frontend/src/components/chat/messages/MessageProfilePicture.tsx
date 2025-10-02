@@ -68,8 +68,8 @@ export const MessageProfilePicture: FC<MessageProfilePictureProps> = ({ user, po
                             </AvatarFallback>
                         </Avatar>
                         <div className='flex flex-col'>
-                            <p className='text-md'>{user?.displayName}</p>
-                            <p className='text-sm text-muted-foreground -translate-y-1'>@{user?.username}</p>
+                            <p className='text-md font-semibold'>{user?.displayName}</p>
+                            <p className='text-sm text-muted-foreground -translate-y-0.5'>@{user?.username}</p>
                             <p className='text-sm'>
                                 Joined {new Date(user?.createdAt || '').toLocaleDateString(undefined, { dateStyle: 'long' })}
                             </p>

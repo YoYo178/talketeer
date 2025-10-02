@@ -51,9 +51,9 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                 <>
                     <div className='flex flex-col items-end w-full'>
                         <p className='text-muted-foreground text-[14px]'>
-                            {new Date(messages[0].createdAt).toLocaleString()}
+                            <span>{new Date(messages[0].createdAt).toLocaleString()}</span>
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>
-                            You
+                            <span className='font-semibold'>You</span>
                         </p>
                         {messages.map(message => <MessageText key={message._id} content={message.content} isSelfMessage />)}
                     </div>
@@ -64,9 +64,9 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                     <MessageProfilePicture user={user} popoverSide='right' />
                     <div className='flex flex-col items-start w-full'>
                         <p className='text-muted-foreground text-[14px]'>
-                            {user?.username}
+                            <span className='font-semibold'>{user?.displayName || user?.username}</span>
                             <span className='text-[#383838] dark:text-[#696969] text-[14px] ml-2 mr-2'>——</span>
-                            {new Date(messages[0].createdAt).toLocaleString()}
+                            <span>{new Date(messages[0].createdAt).toLocaleString()}</span>
                         </p>
                         {messages.map(message => <MessageText key={message._id} content={message.content} />)}
                     </div>
