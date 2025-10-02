@@ -164,6 +164,7 @@ export const ProfileDialog = () => {
                                     {...register('bio')}
                                     autoComplete='off'
                                 />
+                                {errors.bio && (<p className='text-sm text-red-500'>{errors.bio}</p>)}
                             </div>
                         </div>
                     </ScrollArea>
