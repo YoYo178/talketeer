@@ -4,6 +4,7 @@ import { useSettingsStore } from '@/hooks/state/useSettingsStore';
 import { useQueryClient } from '@tanstack/react-query';
 import { LogOut, Moon, Settings, Sun } from 'lucide-react'
 import { useState } from 'react';
+import { ProfileDialog } from './ProfileDialog';
 
 export const SettingsButton = () => {
     const queryClient = useQueryClient();
@@ -48,6 +49,9 @@ export const SettingsButton = () => {
                 alignOffset={20}
                 className='[&>*]:cursor-pointer'
             >
+                {/* Exports a DropdownMenuItem at the 'surface level' */}
+                <ProfileDialog />
+
                 <DropdownMenuItem onClick={handleToggleTheme}>
                     {isDark ? <Sun /> : <Moon />}
                     Toggle theme
