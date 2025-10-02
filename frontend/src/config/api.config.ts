@@ -75,6 +75,10 @@ export const APIEndpoints: Endpoints = {
         METHOD: 'GET',
         URL: '/users/me'
     },
+    UPDATE_ME: {
+        METHOD: 'PATCH',
+        URL: '/users/me'
+    },
     GET_USER: {
         METHOD: 'GET',
         URL: '/users/:userId'

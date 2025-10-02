@@ -7,3 +7,12 @@ export const userIdParamsSchema = z.object({
 })
 
 export type TUserIdParams = z.infer<typeof userIdParamsSchema>
+
+export const updateMeBodySchema = z.object({
+    name: z.string().nonempty(),
+    displayName: z.string().nonempty(),
+    
+    bio: z.string(),
+})
+
+export type TUpdateMeBody = z.infer<typeof updateMeBodySchema>;
