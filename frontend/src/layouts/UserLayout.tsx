@@ -4,6 +4,7 @@ import { BannedDialog } from '@/components/chat/rooms/dialogs/info/BannedDialog'
 import { KickedDialog } from '@/components/chat/rooms/dialogs/info/KickedDialog'
 import { RoomDeletedDialog } from '@/components/chat/rooms/dialogs/info/RoomDeletedDialog'
 import { NavBar } from '@/components/NavBar'
+import { Toaster } from '@/components/ui/sonner'
 import { useMe } from '@/hooks/network/users/useGetMeQuery'
 import { useSocketConnection } from '@/hooks/socket/useSocketConnection'
 import { useRoomsStore } from '@/hooks/state/useRoomsStore'
@@ -54,6 +55,8 @@ export const UserLayout = () => {
             <KickedDialog />
             <BannedDialog />
             <RoomDeletedDialog />
+
+            <Toaster id='room-code-copied-toast' />
         </div>
     )
 }

@@ -6,7 +6,6 @@ import React from 'react';
 import { useGetMessagesQuery } from '@/hooks/network/messages/useGetMessagesQuery';
 import { Separator } from '@/components/ui/separator';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
-import { Toaster } from '@/components/ui/sonner';
 
 const MessageListSkeleton = () => {
     const alignArr: ('start' | 'end')[] = ['start', 'end']
@@ -119,7 +118,7 @@ export const MessageList = () => {
                         <p className='text-m text-muted-foreground'>Send a message to get started!</p>
                     </div>
                 )}
-            </div >
+            </div>
         )
     }
 
@@ -138,8 +137,6 @@ export const MessageList = () => {
                 {messageElements}
                 <div ref={chatEndRef} />
             </div>
-
-            <Toaster id='room-code-copied-toast' />
         </ScrollArea>
     );
 }

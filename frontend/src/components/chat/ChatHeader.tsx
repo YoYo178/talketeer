@@ -11,7 +11,6 @@ import { EditRoomDialog } from './rooms/administration/EditRoomDialog';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { DeleteRoomDialog } from './rooms/administration/DeleteRoomDialog';
-import { Toaster } from '../ui/sonner';
 import { toast } from 'sonner';
 import type { IRoom } from '@/types/room.types';
 
