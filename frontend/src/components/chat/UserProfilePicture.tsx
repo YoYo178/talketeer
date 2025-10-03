@@ -9,7 +9,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react';
 import React from 'react';
 
-export const MessageProfilePictureSkeleton = React.memo(() => {
+export const UserProfilePictureSkeleton = React.memo(() => {
     return (
         <Skeleton
             className='flex items-center justify-center size-10 min-w-10 max-w-10 aspect-square rounded-full bg-[#d8d8d8] dark:bg-[#242429] self-start'
@@ -17,12 +17,12 @@ export const MessageProfilePictureSkeleton = React.memo(() => {
     )
 })
 
-interface MessageProfilePictureProps {
+interface UserProfilePictureProps {
     user?: IUser | IPublicUser
     popoverSide: 'left' | 'right' | 'top';
 }
 
-export const MessageProfilePicture: FC<MessageProfilePictureProps> = ({ user, popoverSide }) => {
+export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverSide }) => {
     const queryClient = useQueryClient();
     const me = useMe();
 

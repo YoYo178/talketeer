@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
@@ -6,7 +5,7 @@ import { socket } from '@/socket';
 import type { IUserFriend } from '@/types/user.types'
 import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react'
-import { MessageProfilePicture } from '../messages/MessageProfilePicture';
+import { UserProfilePicture } from '../UserProfilePicture';
 
 interface FriendEntryProps {
     friendObject: IUserFriend;
@@ -41,8 +40,7 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
         <div className="p-2 flex flex-col gap-2 rounded-xl hover:bg-[#dad8d8] dark:hover:bg-accent">
             <div className='flex gap-2'>
 
-                {/* HACK: re-used a component that's actually meant to be used for messages */}
-                <MessageProfilePicture user={user} popoverSide='right' />
+                <UserProfilePicture user={user} popoverSide='right' />
 
                 {!user.displayName ? (
                     <p className='text-muted-foreground self-center font-semibold'>@{user.username}</p>

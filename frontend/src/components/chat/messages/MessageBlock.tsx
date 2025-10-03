@@ -1,6 +1,6 @@
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { memo, type FC } from 'react'
-import { MessageProfilePicture, MessageProfilePictureSkeleton } from './MessageProfilePicture';
+import { UserProfilePicture, UserProfilePictureSkeleton } from '../UserProfilePicture';
 import { MessageText, MessageTextSkeleton } from './MessageText';
 import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
 import type { IMessage } from '@/types/message.types';
@@ -23,7 +23,7 @@ export const MessageBlockSkeleton: FC<MessageBlockSkeletonProps> = ({ align }) =
 
     return (
         <div className={`flex self-${align} gap-2 p-2 pb-1 mb-2 overflow-hidden` + (align === 'end' ? ' flex-row-reverse' : '')}>
-            <MessageProfilePictureSkeleton />
+            <UserProfilePictureSkeleton />
             <div className={`flex flex-col gap-2 items-${align}`}>
                 {...generateArbitraryLines(2, 5, 6, 10)}
             </div>
@@ -57,11 +57,11 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                         </p>
                         {messages.map(message => <MessageText key={message._id} content={message.content} isSelfMessage />)}
                     </div>
-                    <MessageProfilePicture user={me} popoverSide='left' />
+                    <UserProfilePicture user={me} popoverSide='left' />
                 </>
             ) : (
                 <>
-                    <MessageProfilePicture user={user} popoverSide='right' />
+                    <UserProfilePicture user={user} popoverSide='right' />
                     <div className='flex flex-col items-start w-full'>
                         <p className='text-muted-foreground text-[14px]'>
                             <span className='font-semibold'>{user?.displayName || user?.username}</span>

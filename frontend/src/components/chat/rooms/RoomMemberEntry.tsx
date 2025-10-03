@@ -1,5 +1,4 @@
 import { useGetUser } from "@/hooks/network/users/useGetUserQuery";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { FC } from "react"
 import { useMe } from "@/hooks/network/users/useGetMeQuery";
 import { BanDialog } from "./administration/BanDialog";
@@ -7,7 +6,7 @@ import { KickDialog } from "./administration/KickDialog";
 import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 import { useRoom } from "@/hooks/network/rooms/useGetRoomByIdQuery";
 import type { IRoom } from "@/types/room.types";
-import { MessageProfilePicture } from "../messages/MessageProfilePicture";
+import { UserProfilePicture } from "../UserProfilePicture";
 
 interface RoomMemberEntryProps {
     userId: string;
@@ -31,8 +30,7 @@ export const RoomMemberEntry: FC<RoomMemberEntryProps> = ({ userId }) => {
         <div className='w-full flex my-2 gap-4'>
             <div className='flex gap-2'>
 
-                {/* HACK: re-used a component that's actually meant to be used for messages */}
-                <MessageProfilePicture user={user} popoverSide='left' />
+                <UserProfilePicture user={user} popoverSide='left' />
 
                 {!user.displayName ? (
                     <p className='text-muted-foreground self-center font-semibold'>@{user.username}</p>
