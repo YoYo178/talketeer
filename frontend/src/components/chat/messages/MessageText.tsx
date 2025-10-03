@@ -80,7 +80,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
                     alt={tenorAltString}
                 />
             ) : null;
-        })
+        }).filter(Boolean)
     });
 
     return (
