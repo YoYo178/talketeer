@@ -65,7 +65,7 @@ export const BanDialog: FC<BanDialogProps> = ({ admin, user, room }) => {
                                         autoComplete='off'
                                         autoFocus
                                     />
-                                    
+
                                     <Label htmlFor='ban-duration'>Duration</Label>
                                     <Select value={duration} onValueChange={setDuration}>
                                         <SelectTrigger className="w-fit">

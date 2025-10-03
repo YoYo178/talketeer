@@ -74,6 +74,7 @@ export const GIFButton = () => {
                         <Input
                             type='text'
                             placeholder='Cat vibing'
+                            autoComplete='off'
                             value={query}
                             onChange={e => setQuery(e.target.value)}
                         />

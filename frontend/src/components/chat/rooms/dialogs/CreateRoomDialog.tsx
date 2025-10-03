@@ -86,6 +86,7 @@ export const CreateRoomDialog = () => {
                         id='room-name-1'
                         name='room-name'
                         placeholder='My awesome room'
+                        autoComplete='off'
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required

@@ -94,6 +94,7 @@ export const JoinRoomDialog = () => {
                             value={code}
                             onChange={handleInput}
                             placeholder='Room code'
+                            autoComplete='room code'
                             className={error ? "border-red-500" : ""}
                             required
                         />

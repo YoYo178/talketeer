@@ -241,6 +241,7 @@ export function AuthForm({
             id="email"
             type="email"
             placeholder="m@example.com"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={errors.email ? "border-red-500" : ""}
@@ -280,6 +281,7 @@ export function AuthForm({
             id="login-password"
             type="password"
             placeholder="Enter your password"
+            autoComplete="off"
             value={formData.password}
             onChange={(e) => handleInputChange("password", e.target.value)}
             className={errors.password ? "border-red-500" : ""}
@@ -325,6 +327,7 @@ export function AuthForm({
               id="firstName"
               type="text"
               placeholder="John"
+              autoComplete="name first"
               value={formData.firstName}
               onChange={(e) => handleInputChange("firstName", e.target.value)}
               className={errors.firstName ? "border-red-500" : ""}
@@ -340,6 +343,7 @@ export function AuthForm({
               id="lastName"
               type="text"
               placeholder="Doe"
+              autoComplete="name last"
               value={formData.lastName}
               onChange={(e) => handleInputChange("lastName", e.target.value)}
               className={errors.lastName ? "border-red-500" : ""}
@@ -357,6 +361,7 @@ export function AuthForm({
             id="displayName"
             type="text"
             placeholder="John Doe"
+            autoComplete="nickname"
             value={formData.displayName}
             onChange={(e) => handleInputChange("displayName", e.target.value)}
             className={errors.displayName ? "border-red-500" : ""}
@@ -373,6 +378,7 @@ export function AuthForm({
             id="username"
             type="text"
             placeholder="johndoe"
+            autoComplete="username"
             value={formData.username}
             onChange={(e) => handleInputChange("username", e.target.value)}
             className={errors.username ? "border-red-500" : ""}
@@ -389,6 +395,7 @@ export function AuthForm({
             id="signup-password"
             type="password"
             placeholder="Create a password"
+            autoComplete="new-password"
             value={formData.password}
             onChange={(e) => handleInputChange("password", e.target.value)}
             className={errors.password ? "border-red-500" : ""}

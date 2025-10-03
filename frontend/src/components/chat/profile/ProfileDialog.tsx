@@ -131,12 +131,12 @@ export const ProfileDialog = () => {
 
                                         <div className='flex flex-col gap-2'>
                                             <Label>First Name</Label>
-                                            <Input defaultValue={initialFormState.firstName} {...register('firstName')} autoComplete='off' />
+                                            <Input defaultValue={initialFormState.firstName} {...register('firstName')} autoComplete='name first' />
                                             {errors.firstName && (<p className='text-sm text-red-500'>{errors.firstName}</p>)}
                                         </div>
                                         <div className='flex flex-col gap-2'>
                                             <Label>Last Name</Label>
-                                            <Input defaultValue={initialFormState.lastName} {...register('lastName')} autoComplete='off' />
+                                            <Input defaultValue={initialFormState.lastName} {...register('lastName')} autoComplete='name last' />
                                             {errors.lastName && (<p className='text-sm text-red-500'>{errors.lastName}</p>)}
                                         </div>
                                     </div>
@@ -150,7 +150,7 @@ export const ProfileDialog = () => {
                                     </div>
                                     <div className='flex flex-col gap-2'>
                                         <Label>Display Name</Label>
-                                        <Input defaultValue={initialFormState.displayName} {...register('displayName')} autoComplete='off' />
+                                        <Input defaultValue={initialFormState.displayName} {...register('displayName')} autoComplete='nickname' />
                                         {errors.displayName && (<p className='text-sm text-red-500'>{errors.displayName}</p>)}
                                     </div>
                                 </div>

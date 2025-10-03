@@ -36,7 +36,12 @@ export const ChatSidebar = () => {
                     <CreateRoomDialog />
                     <JoinRoomDialog />
                 </div>
-                <Input placeholder='Search rooms…' value={searchText} onChange={(e) => setSearchText(e.target.value)} />
+                <Input
+                    placeholder='Search rooms…'
+                    autoComplete='off'
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                />
                 <RoomList rooms={filteredRooms} />
             </div>
         )
@@ -59,6 +64,7 @@ export const ChatSidebar = () => {
 
                     <Input
                         placeholder='Search rooms…'
+                        autoComplete='off'
                         value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
                     />
