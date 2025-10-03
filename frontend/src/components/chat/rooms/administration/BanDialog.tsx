@@ -72,7 +72,7 @@ export const BanDialog: FC<BanDialogProps> = ({ admin, user, room }) => {
                                             <SelectValue id='ban-duration' placeholder="Select duration" />
                                         </SelectTrigger>
                                         <SelectContent side='right'>
-                                            {banDurations.map(durationObj => <SelectItem value={getDurationValue(durationObj.minutes)}>{durationObj.label}</SelectItem>)}
+                                            {banDurations.map(durationObj => <SelectItem key={`ban-duration-${durationObj.label}`} value={getDurationValue(durationObj.minutes)}>{durationObj.label}</SelectItem>)}
                                         </SelectContent>
                                     </Select>
                                 </div>
