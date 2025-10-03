@@ -14,7 +14,7 @@ import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IRoomPublicView } from '@/types/room.types';
 import { ChatMemberList } from './ChatMemberList';
 
-// TODO: Fix MemberList for smaller screens!
+// TODO: Fix ChatMemberList for smaller screens!
 
 export const ChatWindow = () => {
     const queryClient = useQueryClient();

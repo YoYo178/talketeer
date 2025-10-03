@@ -10,6 +10,8 @@ import { useRoomsStore } from '@/hooks/state/useRoomsStore'
 import { useMediaQuery } from '@/hooks/ui/useMediaQuery'
 import { useEffect } from 'react'
 
+// TODO: Fix ChatSidebar for smaller screens!
+
 export const UserLayout = () => {
     const { selectedRoomId, joinedRoomId, setJoinedRoomId } = useRoomsStore();
 
