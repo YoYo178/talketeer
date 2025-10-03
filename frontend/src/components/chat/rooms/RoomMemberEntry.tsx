@@ -7,6 +7,7 @@ import { KickDialog } from "./administration/KickDialog";
 import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 import { useRoom } from "@/hooks/network/rooms/useGetRoomByIdQuery";
 import type { IRoom } from "@/types/room.types";
+import { MessageProfilePicture } from "../messages/MessageProfilePicture";
 
 interface RoomMemberEntryProps {
     userId: string;
@@ -29,10 +30,9 @@ export const RoomMemberEntry: FC<RoomMemberEntryProps> = ({ userId }) => {
     return (
         <div className='w-full flex my-2 gap-4'>
             <div className='flex gap-2'>
-                <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                    <AvatarImage src={user.avatarURL} />
-                    <AvatarFallback>{(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
-                </Avatar>
+
+                {/* HACK: re-used a component that's actually meant to be used for messages */}
+                <MessageProfilePicture user={user} popoverSide='left' />
 
                 {!user.displayName ? (
                     <p className='text-muted-foreground self-center font-semibold'>@{user.username}</p>

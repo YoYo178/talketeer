@@ -6,6 +6,7 @@ import { socket } from '@/socket';
 import type { IUserFriend } from '@/types/user.types'
 import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react'
+import { MessageProfilePicture } from '../messages/MessageProfilePicture';
 
 interface FriendEntryProps {
     friendObject: IUserFriend;
@@ -40,10 +41,8 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
         <div className="p-2 flex flex-col gap-2 rounded-xl hover:bg-[#dad8d8] dark:hover:bg-accent">
             <div className='flex gap-2'>
 
-                <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                    <AvatarImage src={user.avatarURL} />
-                    <AvatarFallback>{(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
-                </Avatar>
+                {/* HACK: re-used a component that's actually meant to be used for messages */}
+                <MessageProfilePicture user={user} popoverSide='right' />
 
                 {!user.displayName ? (
                     <p className='text-muted-foreground self-center font-semibold'>@{user.username}</p>
