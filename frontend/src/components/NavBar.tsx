@@ -1,6 +1,7 @@
 import { MessagesSquare } from 'lucide-react';
 import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 import { ExpandableProfileCard } from './chat/profile/ExpandableProfileCard';
+import { Toaster } from './ui/sonner';
 
 export const NavBar = () => {
     const { usersOnline } = useGlobalStore();
@@ -16,6 +17,8 @@ export const NavBar = () => {
                 </div>
             </div>
             <ExpandableProfileCard />
+
+            <Toaster id='room-code-copied-toast' />
         </div>
     )
 }
