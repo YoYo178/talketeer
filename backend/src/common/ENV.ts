@@ -11,17 +11,26 @@ import { NodeEnvs } from './constants';
 const ENV = jetEnv({
   NodeEnv: isEnumVal(NodeEnvs),
   Port: num,
+  
+  /** General */
+  AppName: str,
 
   /** MongoDB */
   MongodbUri: str,
+
+  /** JWT */
+  AccessTokenSecret: str,
+  RefreshTokenSecret: str,
 
   /** Tenor API */
   TenorApiBaseUrl: str,
   TenorApiKey: str,
   TenorApiClientKey: str,
 
-  AccessTokenSecret: str,
-  RefreshTokenSecret: str,
+  /** SMTP */
+  SmtpProvider: str,
+  SmtpEmail: str,
+  SmtpPass: str
 });
 
 
