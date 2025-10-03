@@ -33,6 +33,7 @@
     "module-alias": "^2.2.3",
     "mongoose": "^8.19.0",
     "morgan": "^1.10.1",
+    "nodemailer": "^7.0.6",
     "socket.io": "^4.8.1",
     "winston": "^3.18.3",
     "zod": "^4.1.11"
@@ -52,6 +53,7 @@
     "@types/module-alias": "^2.0.4",
     "@types/morgan": "^1.9.10",
     "@types/node": "^24.6.2",
+    "@types/nodemailer": "^7.0.2",
     "@types/supertest": "^6.0.3",
     "cross-env": "^10.1.0",
     "eslint": "^9.36.0",
