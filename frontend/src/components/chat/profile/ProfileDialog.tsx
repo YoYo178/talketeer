@@ -9,10 +9,12 @@ import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { useUpdateMeMutation } from '@/hooks/network/users/useUpdateMeMutation';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { CircleUserRound } from 'lucide-react';
-import { useEffect, useState } from 'react'
+import { CircleUserRound, Pencil } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import z from 'zod';
+import { AvatarCropper } from './AvatarCropper';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const profileFormSchema = z.object({
     firstName: z.string().nonempty('First name is required'),
@@ -25,13 +27,18 @@ type ProfileFormFields = z.infer<typeof profileFormSchema>
 
 export const ProfileDialog = () => {
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, formState } = useForm<ProfileFormFields>()
+    const { register, handleSubmit, reset, formState } = useForm<ProfileFormFields>();
+
+    const me = useMe();
     const updateMeMutation = useUpdateMeMutation({});
 
     const [isOpen, setIsOpen] = useState(false);
-    const [errors, setErrors] = useState<{ [K in keyof ProfileFormFields]?: string } & { general?: string }>({})
+    const [errors, setErrors] = useState<{ [K in keyof ProfileFormFields]?: string } & { general?: string }>({});
 
-    const me = useMe();
+    const [selectedAvatarImage, setSelectedAvatarImage] = useState<string>('');
+    const [avatarUrl, setAvatarUrl] = useState<string>(me?.avatarURL ?? '');
+
+    const inputRef = useRef<HTMLInputElement>(null);
 
     if (!me)
         return;
@@ -49,44 +56,53 @@ export const ProfileDialog = () => {
     }
 
     const onSubmit: SubmitHandler<ProfileFormFields> = async (data: ProfileFormFields) => {
-        setErrors({})
+        // Avatar changed
+        if (me.avatarURL !== avatarUrl) {
+            // TODO: actually update avatar
 
-        try {
-            const validatedData = profileFormSchema.parse({ ...data })
+            queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+        }
 
-            // check if user exists
-            const response = await updateMeMutation.mutateAsync({
-                payload: { ...validatedData, name: validatedData.firstName + ' ' + validatedData.lastName }
-            });
+        // Details changed
+        if (formState.isDirty) {
+            setErrors({})
 
-            if (response?.success) {
-                reset({ ...validatedData }, {
-                    keepDirty: false,
-                    keepValues: false,
-                })
+            try {
+                const validatedData = profileFormSchema.parse({ ...data })
 
-                queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+                const response = await updateMeMutation.mutateAsync({
+                    payload: { ...validatedData, name: validatedData.firstName + ' ' + validatedData.lastName }
+                });
 
-                setIsOpen(false);
-            }
-        } catch (error) {
-            if (error instanceof z.ZodError) {
-                const newErrors: Record<string, string> = {}
-                error.issues.forEach(err => {
-                    if (err.path[0]) {
-                        newErrors[err.path[0] as string] = err.message
-                    }
-                })
-                setErrors(newErrors)
-            } else if (error instanceof AxiosError) {
-                // We have an unexpected error
-                if (!error.response?.data?.success) {
-                    const response = error.response?.data;
-                    const errorMessage = response?.message || 'Something went wrong. Please try again.'
-                    setErrors({ general: errorMessage })
+                if (response?.success) {
+                    reset({ ...validatedData }, {
+                        keepDirty: false,
+                        keepValues: false,
+                    })
+
+                    queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+
+                    setIsOpen(false);
                 }
-            } else {
-                setErrors({ general: 'Something went wrong. Please try again.' })
+            } catch (error) {
+                if (error instanceof z.ZodError) {
+                    const newErrors: Record<string, string> = {}
+                    error.issues.forEach(err => {
+                        if (err.path[0]) {
+                            newErrors[err.path[0] as string] = err.message
+                        }
+                    })
+                    setErrors(newErrors)
+                } else if (error instanceof AxiosError) {
+                    // We have an unexpected error
+                    if (!error.response?.data?.success) {
+                        const response = error.response?.data;
+                        const errorMessage = response?.message || 'Something went wrong. Please try again.'
+                        setErrors({ general: errorMessage })
+                    }
+                } else {
+                    setErrors({ general: 'Something went wrong. Please try again.' })
+                }
             }
         }
     }
@@ -97,9 +113,21 @@ export const ProfileDialog = () => {
                 keepDirty: false,
                 keepValues: false,
             })
-            setErrors({})
+            setErrors({});
+            setSelectedAvatarImage('');
+            setAvatarUrl(me?.avatarURL ?? '');
         }
     }, [isOpen])
+
+    const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+
+        if (!file)
+            return;
+
+        const url = URL.createObjectURL(file);
+        setSelectedAvatarImage(url);
+    }
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -119,13 +147,37 @@ export const ProfileDialog = () => {
 
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
                     <ScrollArea className='h-[50vh]'>
-                        <div className='flex flex-col gap-4 mb-2 mx-4'>
+                        <div className='flex flex-col gap-4 mb-2 mx-4 pt-4'>
                             <div className='flex-1 flex flex-wrap justify-center gap-4 w-full'>
-                                <img
-                                    className='rounded-full aspect-square max-h-[175px] max-w-[175px] h-[175px] w-[175px]'
-                                    src={me.avatarURL}
-                                    alt='Profile photo'
-                                />
+                                <div className='rounded-full aspect-square max-h-[175px] max-w-[175px] h-[175px] w-[175px] relative'>
+                                    {selectedAvatarImage && (
+                                        <AvatarCropper
+                                            imageSrc={selectedAvatarImage}
+                                            onCancel={() => setSelectedAvatarImage('')}
+                                            onCropDone={(file) => { setAvatarUrl(URL.createObjectURL(file)); setSelectedAvatarImage('') }}
+                                        />
+                                    )}
+                                    <Input
+                                        ref={inputRef}
+                                        className='hidden'
+                                        type='file'
+                                        accept='image/jpeg, image/png, image/webp'
+                                        onClick={e => (e.target as HTMLInputElement).value = ''}
+                                        onChange={handleImageSelect}
+                                    />
+                                    <button
+                                        className='absolute rounded-full aspect-square w-full h-full flex items-center justify-center z-1 cursor-pointer hover:[&>*]:opacity-100 hover:bg-[#00000064]'
+                                        onClick={(e) => { e.preventDefault(); inputRef.current?.click() }}
+                                    >
+                                        <Pencil className='opacity-0 transition-opacity duration-200 ease-out' />
+                                    </button>
+                                    <Avatar className='absolute rounded-full aspect-square size-full'>
+                                        <AvatarImage src={avatarUrl} />
+                                        <AvatarFallback className='text-primary text-4xl'>
+                                            {(me.displayName || me.username).split(' ').map(str => str[0].toUpperCase()).join('')}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </div>
                                 <div className='flex-1 flex flex-col gap-4'>
                                     <div className='flex-1 flex gap-2'>
 
@@ -176,7 +228,7 @@ export const ProfileDialog = () => {
                                 Close
                             </Button>
                         </DialogClose>
-                        {formState.isDirty && (<Button type='submit'>Save</Button>)}
+                        {(formState.isDirty || me.avatarURL !== avatarUrl) && (<Button type='submit'>Save</Button>)}
                     </DialogFooter>
                 </form>
 
