@@ -10,11 +10,13 @@ import { useUpdateMeMutation } from '@/hooks/network/users/useUpdateMeMutation';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { CircleUserRound, Pencil } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import z from 'zod';
 import { AvatarCropper } from './AvatarCropper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useUpdateAvatarMutation } from '@/hooks/network/files/useUpdateAvatarMutation';
+import { getAvatarUrl } from '@/utils/avatar.utils';
 
 const profileFormSchema = z.object({
     firstName: z.string().nonempty('First name is required'),
@@ -31,12 +33,14 @@ export const ProfileDialog = () => {
 
     const me = useMe();
     const updateMeMutation = useUpdateMeMutation({});
+    const updateAvatarMutation = useUpdateAvatarMutation({});
 
     const [isOpen, setIsOpen] = useState(false);
     const [errors, setErrors] = useState<{ [K in keyof ProfileFormFields]?: string } & { general?: string }>({});
 
     const [selectedAvatarImage, setSelectedAvatarImage] = useState<string>('');
-    const [avatarUrl, setAvatarUrl] = useState<string>(me?.avatarURL ?? '');
+    const [newAvatar, setNewAvatar] = useState<Blob | null>(null);
+    const newAvatarUrl = useMemo(() => newAvatar ? URL.createObjectURL(newAvatar) : '', [newAvatar])
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -57,10 +61,17 @@ export const ProfileDialog = () => {
 
     const onSubmit: SubmitHandler<ProfileFormFields> = async (data: ProfileFormFields) => {
         // Avatar changed
-        if (me.avatarURL !== avatarUrl) {
-            // TODO: actually update avatar
+        if (newAvatar) {
+            try {
+                const formData = new FormData();
+                formData.append('avatar', newAvatar)
 
-            queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+                await updateAvatarMutation.mutateAsync({ payload: formData })
+
+                queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
+            } catch (error) {
+                setErrors({ general: 'Something went wrong. Please try again.' })
+            }
         }
 
         // Details changed
@@ -81,8 +92,6 @@ export const ProfileDialog = () => {
                     })
 
                     queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
-
-                    setIsOpen(false);
                 }
             } catch (error) {
                 if (error instanceof z.ZodError) {
@@ -105,6 +114,9 @@ export const ProfileDialog = () => {
                 }
             }
         }
+
+        if (!Object.keys(errors).length)
+            setIsOpen(false);
     }
 
     useEffect(() => {
@@ -115,7 +127,7 @@ export const ProfileDialog = () => {
             })
             setErrors({});
             setSelectedAvatarImage('');
-            setAvatarUrl(me?.avatarURL ?? '');
+            setNewAvatar(null);
         }
     }, [isOpen])
 
@@ -154,7 +166,7 @@ export const ProfileDialog = () => {
                                         <AvatarCropper
                                             imageSrc={selectedAvatarImage}
                                             onCancel={() => setSelectedAvatarImage('')}
-                                            onCropDone={(file) => { setAvatarUrl(URL.createObjectURL(file)); setSelectedAvatarImage('') }}
+                                            onCropDone={(file) => { setNewAvatar(file); setSelectedAvatarImage('') }}
                                         />
                                     )}
                                     <Input
@@ -172,7 +184,7 @@ export const ProfileDialog = () => {
                                         <Pencil className='opacity-0 transition-opacity duration-200 ease-out' />
                                     </button>
                                     <Avatar className='absolute rounded-full aspect-square size-full'>
-                                        <AvatarImage src={avatarUrl} />
+                                        <AvatarImage src={newAvatarUrl || getAvatarUrl(me.avatarURL)} />
                                         <AvatarFallback className='text-primary text-4xl'>
                                             {(me.displayName || me.username).split(' ').map(str => str[0].toUpperCase()).join('')}
                                         </AvatarFallback>
@@ -228,7 +240,7 @@ export const ProfileDialog = () => {
                                 Close
                             </Button>
                         </DialogClose>
-                        {(formState.isDirty || me.avatarURL !== avatarUrl) && (<Button type='submit'>Save</Button>)}
+                        {(formState.isDirty || newAvatar) && (<Button type='submit'>Save</Button>)}
                     </DialogFooter>
                 </form>
 
