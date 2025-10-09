@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # SSL certificates
 certs
+
+# Static assets
+assets
