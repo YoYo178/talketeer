@@ -19,7 +19,7 @@ import ENV from '@src/common/ENV';
 import { NodeEnvs } from '@src/common/constants';
 
 /** Configuration objects */
-import { CORSConfig } from '@src/config';
+import { ASSETS_PATH, CORSConfig } from '@src/config';
 
 /** Middlewares */
 import { errorHandler } from '@src/middlewares';
@@ -90,6 +90,8 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
     app.use(helmet());
   }
 }
+
+app.use('/assets', express.static(path.join(ASSETS_PATH)));
 
 // Attach IO instance via express middleware
 app.use((req: Request, _res: Response, next: NextFunction) => { req.io = io; next(); });
