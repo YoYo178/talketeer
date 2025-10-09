@@ -28,4 +28,16 @@ const userSchema = new mongoose.Schema<IUser>({
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', default: null },
 }, { timestamps: true })
 
+// Set the dynamic avatar URL for each user if not set already
+//
+// This could've been done using the 'default' property in the schema as well
+// but in order to get the document ID, we need this pre-save function
+userSchema.pre('save', function (next) {
+
+    if (!this.avatarURL?.length)
+        this.avatarURL = `assets/users/${this._id}/avatar.jpeg`
+
+    next();
+})
+
 export const User = MongooseModel<IUser>('User', userSchema)
