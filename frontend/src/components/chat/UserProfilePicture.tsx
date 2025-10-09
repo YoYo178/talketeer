@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { socket } from '@/socket';
 import type { IPublicUser, IUser } from '@/types/user.types';
+import { getAvatarUrl } from '@/utils/avatar.utils';
 import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react';
 import React from 'react';
@@ -50,7 +51,7 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
             <PopoverTrigger asChild>
                 <Button className='flex items-center justify-center size-10 min-w-10 max-w-10 aspect-square rounded-full bg-[#d8d8d8] dark:bg-[#242429] self-start'>
                     <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                        <AvatarImage src={user.avatarURL} />
+                        <AvatarImage src={getAvatarUrl(user.avatarURL)} />
                         <AvatarFallback className='text-primary'>
                             {(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}
                         </AvatarFallback>
@@ -62,7 +63,7 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
 
                     <div className='flex gap-2'>
                         <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
-                            <AvatarImage src={user.avatarURL} />
+                            <AvatarImage src={getAvatarUrl(user.avatarURL)} />
                             <AvatarFallback>
                                 {(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}
                             </AvatarFallback>

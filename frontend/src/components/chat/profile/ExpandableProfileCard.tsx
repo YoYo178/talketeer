@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { SettingsButton } from './SettingsButton';
 import { NotificationsButton } from './NotificationsButton';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
+import { getAvatarUrl } from '@/utils/avatar.utils';
 
 export const ExpandableProfileCard = () => {
     const [isCardOpen, setIsCardOpen] = useState(false);
@@ -34,7 +35,7 @@ export const ExpandableProfileCard = () => {
                 onClick={handleAvatarClick}
                 onTransitionEnd={() => setHasCardTransitionFinished(true)}
             >
-                <AvatarImage src={me.avatarURL} />
+                <AvatarImage src={getAvatarUrl(me.avatarURL)} />
                 <AvatarFallback>{(me.displayName || me.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
             </Avatar>
 
