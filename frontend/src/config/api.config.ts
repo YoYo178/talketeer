@@ -34,6 +34,12 @@ export const APIEndpoints: Endpoints = {
         URL: '/auth/check-email'
     },
 
+    // File routes
+    UPDATE_AVATAR: {
+        METHOD: 'POST',
+        URL: '/files/avatar'
+    },
+
     // GIF routes
     SEARCH_GIFS: {
         METHOD: 'GET',
