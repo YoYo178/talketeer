@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Slider } from '@/components/ui/slider';
 import { getCroppedImage } from '@/utils/avatar.utils';
 import { useCallback, useState, type FC } from 'react'
 import Cropper, { type Area, type Point } from 'react-easy-crop';
@@ -14,7 +15,7 @@ export const AvatarCropper: FC<AvatarCropperProps> = ({ imageSrc, onCancel, onCr
     const [isOpen, setIsOpen] = useState(true);
 
     const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
-    const [zoom, setZoom] = useState(1);
+    const [zoom, setZoom] = useState([1]);
     const [croppedAreaPixels, setcroppedAreaPixels] = useState<Area | null>(null);
 
     const onCropComplete = useCallback((_: Area, croppedArea: Area) => {
@@ -43,17 +44,26 @@ export const AvatarCropper: FC<AvatarCropperProps> = ({ imageSrc, onCancel, onCr
                     <Cropper
                         image={imageSrc}
                         crop={crop}
-                        zoom={zoom}
+                        zoom={zoom[0]}
                         aspect={1}
                         onCropChange={setCrop}
-                        onZoomChange={setZoom}
+                        onZoomChange={(zoom) => setZoom([zoom])}
                         onCropComplete={onCropComplete}
                         cropShape='round'
                         showGrid={false}
                         classes={{
-                            containerClassName: '',
+                            containerClassName: 'max-h-[280px]',
                             mediaClassName: ''
                         }}
+                    />
+
+                    <Slider
+                        className='absolute bottom-0'
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        value={zoom}
+                        onValueChange={setZoom}
                     />
                 </div>
 
