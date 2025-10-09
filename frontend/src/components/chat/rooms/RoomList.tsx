@@ -10,14 +10,15 @@ interface RoomListProps {
 export const RoomList: FC<RoomListProps> = ({ rooms }) => {
     return (
         <ScrollArea className='flex-1 overflow-y-auto rounded-md border border-border/40 divide-y divide-border/40'>
-            {rooms.length === 0 && (
+            {rooms.length <= 0 ? (
                 <div className='p-3 text-sm text-muted-foreground'>No rooms found</div>
+            ) : (
+                <div className='flex flex-col'>
+                    {rooms.map(room => (
+                        <RoomEntry key={room._id} room={room} />
+                    ))}
+                </div>
             )}
-            <div className='flex flex-col'>
-                {rooms.map(room => (
-                    <RoomEntry key={room._id} room={room} />
-                ))}
-            </div>
         </ScrollArea>
     )
 }
