@@ -59,7 +59,7 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
                 </Button>
             </PopoverTrigger>
             <PopoverContent side={popoverSide} sideOffset={10} asChild>
-                <div className='flex flex-col gap-4 w-fit'>
+                <div className='flex flex-col w-fit'>
 
                     <div className='flex gap-2'>
                         <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
@@ -71,14 +71,22 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
                         <div className='flex flex-col'>
                             {user.displayName && (<p className='font-semibold'>{user.displayName}</p>)}
                             <p className='text-sm text-muted-foreground -translate-y-0.5'>@{user.username}</p>
-                            <p className='text-sm'>
-                                Joined {new Date(user.createdAt || '').toLocaleDateString(undefined, { dateStyle: 'long' })}
-                            </p>
                         </div>
                     </div>
 
+                    {user.bio?.length > 0 && (
+                        <div className='border border-muted-foreground rounded-md min-h-[100px] max-h-[200px] p-2 rounded-tl-none my-2 relative'>
+                            <p className='text-sm text-muted-foreground font-semibold'>{user.bio}</p>
+                            <div className='absolute -top-[0.42rem] left-3.5 w-3 h-3 bg-[#d8d8d8] dark:bg-card border-r border-b border-muted-foreground rotate-225' />
+                        </div>
+                    )}
+
+                    <p className='text-sm text-muted-foreground'>
+                        Joined {new Date(user.createdAt || '').toLocaleDateString(undefined, { dateStyle: 'long' })}
+                    </p>
+
                     {isFriend && (
-                        <p className='flex-1 text-center text-muted-foreground text-sm font-semibold'>You're friends with this user</p>
+                        <p className='flex-1 text-center text-muted-foreground text-sm font-semibold pt-2'>You're friends with this user!</p>
                     )}
 
                     {(!isSelf && !isFriend) && (
