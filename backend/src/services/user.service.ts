@@ -1,17 +1,29 @@
-import { User } from "@src/models";
-import { IUser, IUserFriend } from "@src/types";
-import mongoose from "mongoose";
+import { User } from '@src/models';
+import { IUser, IUserFriend } from '@src/types';
+import mongoose from 'mongoose';
 
-export async function getAllUsers(filter = {}): Promise<IUser[]> {
-    return User.find(filter).select("-passwordHash").lean().exec();
+const publicUserFields = `
+    -passwordHash
+    -name
+    -email
+    -friends
+    -notifications
+    -room
+    -updatedAt
+    -isVerified
+    -verifiedAt
+`
+
+export async function getAllUsers(filter = {}, publicUser?: boolean): Promise<IUser[]> {
+    return User.find(filter).select(publicUser ? publicUserFields : '-passwordHash').lean().exec();
 }
 
-export async function getUser(userId: string): Promise<IUser | null> {
-    return User.findById(userId).select("-passwordHash").lean().exec();
+export async function getUser(userId: string, publicUser?: boolean): Promise<IUser | null> {
+    return User.findById(userId).select(publicUser ? publicUserFields : '-passwordHash').lean().exec();
 }
 
-export async function getUserByEmail(email: string): Promise<IUser | null> {
-    return User.findOne({ email }).select("-passwordHash").lean().exec();
+export async function getUserByEmail(email: string, publicUser?: boolean): Promise<IUser | null> {
+    return User.findOne({ email }).select(publicUser ? publicUserFields : '-passwordHash').lean().exec();
 }
 
 export async function createUser(userData: Partial<IUser>): Promise<IUser> {
@@ -19,11 +31,11 @@ export async function createUser(userData: Partial<IUser>): Promise<IUser> {
     return user.toObject();
 }
 
-export async function updateUser(userId: string, newUserData: Partial<IUser>): Promise<IUser | null> {
+export async function updateUser(userId: string, newUserData: Partial<IUser>, publicUser?: boolean): Promise<IUser | null> {
     return User.findByIdAndUpdate(
         userId,
         { $set: newUserData },
-        { new: true, lean: true, select: "-passwordHash" }
+        { new: true, lean: true, select: publicUser ? publicUserFields : '-passwordHash' }
     ).exec();
 }
 
@@ -31,11 +43,11 @@ export async function deleteUser(userId: string): Promise<IUser | null> {
     return User.findByIdAndDelete(userId).lean().exec();
 }
 
-export async function updateUserRoom(userId: string, roomId: string | null) {
+export async function updateUserRoom(userId: string, roomId: string | null, publicUser?: boolean) {
     return User.findByIdAndUpdate(
         userId,
         { $set: { room: roomId } },
-        { new: true, lean: true, select: "-passwordHash" }
+        { new: true, lean: true, select: publicUser ? publicUserFields : '-passwordHash' }
     ).exec();
 }
 
