@@ -45,7 +45,7 @@ interface TenorSearchParameters {
     searchfilter?: 'sticker' | 'static' | '-static';
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -54,8 +54,8 @@ interface TenorSearchParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -160,7 +160,7 @@ interface TenorFeaturedParameters {
     searchfilter?: 'sticker' | 'static' | '-static';
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -169,8 +169,8 @@ interface TenorFeaturedParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -228,8 +228,8 @@ interface TenorFeaturedResponse {
     /**
      * The locale for which the search string was parsed for.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * The country code in this field can be used to differentiate between dialects of the given language.
      * @note UNOFFICIAL - This property is not documented on Tenor's official documentation but is present in the API call.
@@ -265,7 +265,7 @@ interface TenorCategoriesParameters {
     client_key?: string;
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -274,8 +274,8 @@ interface TenorCategoriesParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -307,8 +307,8 @@ interface TenorCategoriesResponse {
     /**
      * The locale for which the search string was parsed for.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * The country code in this field can be used to differentiate between dialects of the given language.
      * @note UNOFFICIAL - This property is not documented on Tenor's official documentation but is present in the API call.
@@ -344,7 +344,7 @@ interface TenorSearchSuggestionsParameters {
     client_key?: string;
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -353,8 +353,8 @@ interface TenorSearchSuggestionsParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -379,8 +379,8 @@ interface TenorSearchSuggestionsResponse {
     /**
      * The locale for which the search string was parsed for.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * The country code in this field can be used to differentiate between dialects of the given language.
      * @note UNOFFICIAL - This property is not documented on Tenor's official documentation but is present in the API call.
@@ -416,7 +416,7 @@ interface TenorAutocompleteParameters {
     client_key?: string;
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -425,8 +425,8 @@ interface TenorAutocompleteParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -451,8 +451,8 @@ interface TenorAutocompleteResponse {
     /**
      * The locale for which the search string was parsed for.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * The country code in this field can be used to differentiate between dialects of the given language.
      * @note UNOFFICIAL - This property is not documented on Tenor's official documentation but is present in the API call.
@@ -485,7 +485,7 @@ interface TenorTrendingSearchTermsParameters {
     client_key?: string;
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -494,8 +494,8 @@ interface TenorTrendingSearchTermsParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -520,8 +520,8 @@ interface TenorTrendingSearchTermsResponse {
     /**
      * The locale for which the search string was parsed for.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * The country code in this field can be used to differentiate between dialects of the given language.
      * @note UNOFFICIAL - This property is not documented on Tenor's official documentation but is present in the API call.
@@ -557,7 +557,7 @@ interface TenorRegisterShareParameters {
     client_key?: string;
 
     /**
-     * Specify the country of origin for the request. To do so, provide its two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * Specify the country of origin for the request. To do so, provide its two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
      * @default 'US'
      */
@@ -566,8 +566,8 @@ interface TenorRegisterShareParameters {
     /**
      * Specify the default language to interpret the search string.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * You can use the country code that you provide in locale to differentiate between dialects of the given language.
      * @note While this property is optional, it is **strongly recommended** to provide a value for this field.
@@ -648,8 +648,8 @@ interface TenorPostsResponse {
     /**
      * The locale for which the search string was parsed for.
      * 
-     * First two letters `xx` are the language's {@link https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes ISO 639-1} language code.
-     * While the optional last two letters `_YY` are the two-letter {@link https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes ISO 3166-1} country code.
+     * First two letters `xx` are the language's [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) language code.
+     * While the optional last two letters `_YY` are the two-letter [ISO 3166-1](https://en.wikipedia.org/wiki/ISO_3166-1#Current_codes) country code.
      * 
      * The country code in this field can be used to differentiate between dialects of the given language.
      * @note UNOFFICIAL - This property is not documented on Tenor's official documentation but is present in the API call.
