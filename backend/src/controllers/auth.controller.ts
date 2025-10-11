@@ -8,6 +8,8 @@ import { TCheckEmailBody, TLoginBody, TSignUpBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
 import { APIError } from '@src/utils/api.utils';
+import { generateVerificationObject } from '@src/services/verification.service';
+import { sendVerificationMail } from '@src/utils/mail.utils';
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
     // Enforce types
@@ -19,6 +21,9 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
     // If the user does not exist, respond with a 404 Not Found
     if (!user)
         throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND)
+
+    if (!user.isVerified)
+        throw new APIError('User is not verified, please verify to continue', HttpStatusCodes.UNAUTHORIZED)
 
     // If the user does exist, respond with a 200 OK
     res.status(HttpStatusCodes.OK).json({
@@ -37,6 +42,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
     if (!user)
         throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
+
+    if (!user.isVerified)
+        throw new APIError('User is not verified, please verify to continue', HttpStatusCodes.UNAUTHORIZED)
 
     const passwordMatches = !!await bcrypt.compare(password, user.passwordHash);
 
@@ -93,5 +101,9 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const user = await User.create({ username, name, displayName, email, passwordHash: hashedPassword });
     const { passwordHash, ...rest } = user.toObject();
 
-    res.status(HttpStatusCodes.OK).json({ success: true, message: 'Created user successfully!', data: { user: rest } })
+    const [token, code] = await generateVerificationObject(email, 'email-verification');
+
+    await sendVerificationMail(email, code, token);
+
+    res.status(HttpStatusCodes.OK).json({ success: true, message: 'User successfully registered, Please verify email to continue', data: { user: rest } })
 }
