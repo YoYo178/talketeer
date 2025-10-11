@@ -1,6 +1,9 @@
+import Mail from 'nodemailer/lib/mailer';
+
 import ENV from '@src/common/ENV';
 import { SMTPClient } from '@src/services/mail.service';
-import Mail from 'nodemailer/lib/mailer';
+
+import { passwordResetMailTemplate, verificationMailTemplate } from '@src/templates/mail.templates';
 
 const SmtpClient = SMTPClient.getInstance();
 
@@ -17,18 +20,26 @@ export function obfuscateEmail(email: string) {
     return `${obfuscatedUser}@${obfuscatedDomain}.${domainTLD}`;
 }
 
-export async function sendVerificationMail(to: string | Mail.Address | (string | Mail.Address)[], code: string) {
+export async function sendVerificationMail(to: string | Mail.Address | (string | Mail.Address)[], code: string, token: string) {
+    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?token=${token}`;
+
     return await SmtpClient.sendMail({
         to,
-        subject: `${ENV.AppName} | Verify your email`,
-        html: `<p>Your code: <strong>${code}</strong></p>`,
+        subject: verificationMailTemplate.subject.replace('{appName}', ENV.AppName),
+        html: verificationMailTemplate.body
+            .replace('{link}', link)
+            .replace('{code}', code),
     });
 }
 
-export async function sendPasswordResetEmail(to: string | Mail.Address | (string | Mail.Address)[], code: string) {
+export async function sendPasswordResetEmail(to: string | Mail.Address | (string | Mail.Address)[], code: string, token: string) {
+    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?token=${token}`;
+
     return await SmtpClient.sendMail({
         to,
-        subject: `${ENV.AppName} | Reset your Password`,
-        html: `<p>Use this code to reset your password: <strong>${code}</strong></p>`,
+        subject: passwordResetMailTemplate.subject.replace('{appName}', ENV.AppName),
+        html: passwordResetMailTemplate.body
+            .replace('{link}', link)
+            .replace('{code}', code),
     });
 }
