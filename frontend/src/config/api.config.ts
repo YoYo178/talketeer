@@ -33,6 +33,10 @@ export const APIEndpoints: Endpoints = {
         METHOD: 'POST',
         URL: '/auth/check-email'
     },
+    VERIFY_EMAIL: {
+        METHOD: 'POST',
+        URL: '/auth/verify-email'
+    },
 
     // File routes
     UPDATE_AVATAR: {
