@@ -5,7 +5,8 @@ import { DEFAULT_RATE_LIMIT_OPTIONS } from "@src/config/api.config";
 import { requireAuth, validate } from "@src/middlewares";
 import { checkEmailSchema, loginSchema, signupSchema } from "@src/schemas";
 
-import { checkEmail, login, logout, signup } from '@src/controllers';
+import { checkEmail, login, logout, signup, verifyEmail } from '@src/controllers';
+import { emailVerificationBodySchema } from "@src/schemas/verification.schema";
 
 const loginLimiter = rateLimit({
     ...DEFAULT_RATE_LIMIT_OPTIONS,
@@ -19,5 +20,7 @@ AuthRouter.post('/login', loginLimiter, validate({ body: loginSchema }), login)
 AuthRouter.post('/check-email', validate({ body: checkEmailSchema }), checkEmail)
 AuthRouter.post('/logout', requireAuth, logout)
 AuthRouter.post('/signup', validate({ body: signupSchema }), signup)
+
+AuthRouter.post('/verify-email', validate({ body: emailVerificationBodySchema }), verifyEmail)
 
 export default AuthRouter;
