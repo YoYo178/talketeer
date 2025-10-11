@@ -7,3 +7,4 @@ export * from './room.types';
 export * from './schema.types';
 export * from './socket.types';
 export * from './user.types';
+export * from './verification.types';
