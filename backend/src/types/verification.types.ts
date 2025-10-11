@@ -1,6 +1,6 @@
 export interface IVerification {
     email: string;
-    purpose: 'email-verification' | 'password-reset';
+    purpose: 'email-verification' | 'reset-password';
     token: string;
     code: string;
 

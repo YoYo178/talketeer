@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 const verificationSchema = new mongoose.Schema<IVerification>({
     code: { type: String, required: true },
     email: { type: String, required: true },
-    purpose: { type: String, enum: ['email-verification', 'password-reset'], required: true },
+    purpose: { type: String, enum: ['email-verification', 'reset-password'], required: true },
     token: { type: String, required: true },
 
     // TTL target field
