@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { MessageBlock, MessageBlockSkeleton } from './MessageBlock'
 import type { IMessage } from '@/types/message.types';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -91,7 +91,7 @@ export const MessageList = () => {
             chatEndRef.current.scrollIntoView({ behavior: 'auto' });
     };
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (hasScrolled.current)
             return;
 
