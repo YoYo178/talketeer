@@ -1,7 +1,7 @@
 import { AuthForm } from '@/components/auth-form'
 import { useQueryClient } from '@tanstack/react-query'
 
-export const Auth = () => {
+export const AuthPage = () => {
   const queryClient = useQueryClient();
   
   const handleSuccessfulLogin = () => {

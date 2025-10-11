@@ -7,7 +7,7 @@ import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { UserRoute } from './components/auth/UserRoute.tsx';
 import { GuestRoute } from './components/auth/GuestRoute.tsx';
 
-import { LandingPage, Auth } from './pages/guest';
+import { LandingPage, AuthPage } from './pages/guest';
 import { Chat } from './pages/user';
 import { useSettingsStore } from './hooks/state/useSettingsStore.ts';
 import { useEffect } from 'react';
@@ -42,7 +42,7 @@ function App() {
             <Route element={<GuestRoute />}>
               <Route element={<GuestLayout />}>
                 <Route index element={<LandingPage />} />
-                <Route path='/auth' element={<Auth />} />
+                <Route path='/auth' element={<AuthPage />} />
               </Route>
             </Route>
           </Routes>
