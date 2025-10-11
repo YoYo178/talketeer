@@ -17,5 +17,5 @@ export async function generateVerificationObject(email: string, purpose: IVerifi
         purpose
     })
 
-    return [verificationObj.token, verificationObj.code]
+    return [token, verificationObj.code]
 }
