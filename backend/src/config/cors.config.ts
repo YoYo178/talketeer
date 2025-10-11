@@ -1,9 +1,10 @@
+import ENV from "@src/common/ENV";
 import { CorsOptions } from "cors"
 
 const allowedOrigins = [
     'https://localhost:5173',
     'https://yoyo178.github.io',
-    'https://yoyo178.github.io/talketeer/',
+    ENV.FrontendOrigin
 ]
 
 export const CORSConfig: CorsOptions = {
