@@ -45,6 +45,12 @@ export interface IUser {
     /** The room the user is currently in */
     room: DBRef<IRoom> | null;
 
+    /** Whether the user is verified */
+    isVerified: boolean;
+
+    /** The date when the user was verified */
+    verifiedAt: Date;
+
     createdAt: number;
     updatedAt: number;
 }
@@ -57,5 +63,7 @@ export type IPublicUser = Omit<
     'notifications' |
     'passwordHash' |
     'room' |
-    'updatedAt'
+    'updatedAt' |
+    'isVerified' |
+    'verifiedAt'
 >

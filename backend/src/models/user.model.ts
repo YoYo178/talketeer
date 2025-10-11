@@ -26,6 +26,9 @@ const userSchema = new mongoose.Schema<IUser>({
     notifications: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification', required: true }],
 
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', default: null },
+
+    isVerified: { type: Boolean, default: false },
+    verifiedAt: { type: Date, default: Date.now }
 }, { timestamps: true })
 
 // Set the dynamic avatar URL for each user if not set already
