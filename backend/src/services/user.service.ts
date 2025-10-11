@@ -108,3 +108,9 @@ export async function removeFriendObject(userOneId: string, userTwoId: string) {
         { $pull: { friends: { userId: userOneId } } }
     )
 }
+
+export function getPublicUser(user: IUser) {
+    const publicUser = { ...user };
+    sensitiveUserFields.forEach(field => delete publicUser[field])
+    return publicUser;
+}
