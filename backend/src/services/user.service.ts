@@ -2,28 +2,30 @@ import { User } from '@src/models';
 import { IUser, IUserFriend } from '@src/types';
 import mongoose from 'mongoose';
 
-const publicUserFields = `
-    -passwordHash
-    -name
-    -email
-    -friends
-    -notifications
-    -room
-    -updatedAt
-    -isVerified
-    -verifiedAt
-`
+const sensitiveUserFields: Array<keyof IUser> = [
+    'passwordHash',
+    'name',
+    'email',
+    'friends',
+    'notifications',
+    'room',
+    'updatedAt',
+    'isVerified',
+    'verifiedAt'
+]
+
+const publicUserFilterString = sensitiveUserFields.map(key => `-${key}`).join(' ');
 
 export async function getAllUsers(filter = {}, publicUser?: boolean): Promise<IUser[]> {
-    return User.find(filter).select(publicUser ? publicUserFields : '-passwordHash').lean().exec();
+    return User.find(filter).select(publicUser ? publicUserFilterString : '-passwordHash').lean().exec();
 }
 
 export async function getUser(userId: string, publicUser?: boolean): Promise<IUser | null> {
-    return User.findById(userId).select(publicUser ? publicUserFields : '-passwordHash').lean().exec();
+    return User.findById(userId).select(publicUser ? publicUserFilterString : '-passwordHash').lean().exec();
 }
 
 export async function getUserByEmail(email: string, publicUser?: boolean): Promise<IUser | null> {
-    return User.findOne({ email }).select(publicUser ? publicUserFields : '-passwordHash').lean().exec();
+    return User.findOne({ email }).select(publicUser ? publicUserFilterString : '-passwordHash').lean().exec();
 }
 
 export async function createUser(userData: Partial<IUser>): Promise<IUser> {
@@ -35,7 +37,7 @@ export async function updateUser(userId: string, newUserData: Partial<IUser>, pu
     return User.findByIdAndUpdate(
         userId,
         { $set: newUserData },
-        { new: true, lean: true, select: publicUser ? publicUserFields : '-passwordHash' }
+        { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash' }
     ).exec();
 }
 
@@ -47,7 +49,7 @@ export async function updateUserRoom(userId: string, roomId: string | null, publ
     return User.findByIdAndUpdate(
         userId,
         { $set: { room: roomId } },
-        { new: true, lean: true, select: publicUser ? publicUserFields : '-passwordHash' }
+        { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash' }
     ).exec();
 }
 
