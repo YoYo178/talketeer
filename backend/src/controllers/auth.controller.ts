@@ -8,8 +8,50 @@ import { TCheckEmailBody, TLoginBody, TSignUpBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
 import { APIError } from '@src/utils/api.utils';
-import { generateVerificationObject } from '@src/services/verification.service';
+import { generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { sendVerificationMail } from '@src/utils/mail.utils';
+import { TEmailVerificationBody } from '@src/schemas/verification.schema';
+import { getPublicUser, getUserByEmail, updateUser } from '@src/services/user.service';
+
+export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
+    const { email, method, data } = req.body as TEmailVerificationBody;
+
+    const verificationObj = await getVerificationObject(email);
+
+    if (!verificationObj || verificationObj.purpose === 'reset-password')
+        throw new APIError('Invalid or expired request', HttpStatusCodes.BAD_REQUEST);
+
+    const user = await getUserByEmail(email);
+
+    if (!user)
+        throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+
+    if (user.isVerified)
+        throw new APIError('User is already verified', HttpStatusCodes.FORBIDDEN);
+
+    switch (method) {
+        case 'code':
+            if (data !== verificationObj.code)
+                throw new APIError('Invalid code', HttpStatusCodes.BAD_REQUEST);
+
+            await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
+            break;
+        case 'token':
+            const doesMatch = await bcrypt.compare(data, verificationObj.token);
+
+            if (!doesMatch)
+                throw new APIError('Invalid token, make sure the link is correct!', HttpStatusCodes.BAD_REQUEST);
+
+            await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
+            break;
+        default:
+            throw new APIError('Unknown method', HttpStatusCodes.BAD_REQUEST);
+    }
+
+    // TODO: Issue tokens to user so the user doesn't need to login again after the entire process
+
+    res.status(HttpStatusCodes.OK).json({ message: 'User verified successfully!', data: { user: getPublicUser(user) } })
+}
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
     // Enforce types
