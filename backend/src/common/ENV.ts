@@ -11,9 +11,12 @@ import { NodeEnvs } from './constants';
 const ENV = jetEnv({
   NodeEnv: isEnumVal(NodeEnvs),
   Port: num,
-  
+
   /** General */
   AppName: str,
+
+  /** Frontend */
+  FrontendOrigin: str,
 
   /** MongoDB */
   MongodbUri: str,
