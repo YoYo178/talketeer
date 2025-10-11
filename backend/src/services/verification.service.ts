@@ -3,6 +3,10 @@ import bcrypt from 'bcrypt';
 import { Verification } from "@src/models";
 import { IVerification } from '@src/types';
 
+export async function getVerificationObject(email: string) {
+    return Verification.findOne({ email }).lean().exec();
+}
+
 export async function generateVerificationObject(email: string, purpose: IVerification['purpose']) {
     await Verification.deleteMany({ email });
 
