@@ -37,6 +37,10 @@ export const APIEndpoints: Endpoints = {
         METHOD: 'POST',
         URL: '/auth/verify-email'
     },
+    RESEND_VERIFICATION: {
+        METHOD: 'POST',
+        URL: '/auth/resend-verification'
+    },
 
     // File routes
     UPDATE_AVATAR: {
