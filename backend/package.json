@@ -55,7 +55,7 @@
     "@types/module-alias": "^2.0.4",
     "@types/morgan": "^1.9.10",
     "@types/multer": "^2.0.0",
-    "@types/node": "^24.7.1",
+    "@types/node": "^24.7.2",
     "@types/nodemailer": "^7.0.2",
     "@types/supertest": "^6.0.3",
     "cross-env": "^10.1.0",
