@@ -11,7 +11,7 @@ import { APIError } from '@src/utils/api.utils';
 import { generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { sendVerificationMail } from '@src/utils/mail.utils';
 import { TEmailVerificationBody } from '@src/schemas/verification.schema';
-import { getUserByEmail, updateUser } from '@src/services/user.service';
+import { createUser, getAllUsers, getUserByEmail, updateUser } from '@src/services/user.service';
 
 export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
     const { email, method, data } = req.body as TEmailVerificationBody;
@@ -61,9 +61,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
         maxAge: tokenConfig.refreshToken.expiry
     });
 
-    const { passwordHash, ...rest } = user;
-
-    res.status(HttpStatusCodes.OK).json({ message: 'User verified successfully!', data: { user: rest } })
+    res.status(HttpStatusCodes.OK).json({ message: 'User verified successfully!', data: { user } })
 }
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
@@ -71,7 +69,7 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
     const { email } = req.body as TCheckEmailBody;
 
     // Fetch the user with the given email
-    const user = await User.findOne({ email }).select('-password').lean().exec();
+    const user = await getUserByEmail(email);
 
     // If the user does not exist, respond with a 404 Not Found
     if (!user)
@@ -93,7 +91,7 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
 export const login = async (req: Request, res: Response, next: NextFunction) => {
     const { email, password } = req.body as TLoginBody;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean().exec();
 
     if (!user)
         throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
@@ -143,18 +141,18 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const emailExists = !!await User.findOne({ email }).select('-passwordHash').lean();
+    const emailExists = !!await getUserByEmail(email);
 
     if (emailExists)
         throw new APIError('An account already exists with this email!', HttpStatusCodes.CONFLICT);
 
-    const usernameExists = !!await User.findOne({ username }).select('-passwordHash').lean();
+    const usernameExists = !!await User.findOne({ username }).select('-passwordHash').lean().exec();
 
     if (usernameExists)
         throw new APIError('This username is already taken, try another.', HttpStatusCodes.CONFLICT);
 
-    const user = await User.create({ username, name, displayName, email, passwordHash: hashedPassword });
-    const { passwordHash, ...rest } = user.toObject();
+    const user = await createUser({ username, name, displayName, email, passwordHash: hashedPassword });
+    const { passwordHash, ...rest } = user;
 
     const [token, code] = await generateVerificationObject(email, 'email-verification');
 
