@@ -7,10 +7,9 @@ import { useEffect, type FC } from 'react'
 import { AxiosError } from 'axios'
 import { useSignupMutation } from '@/hooks/network/auth/useSignupMutation'
 import { useForm, type SubmitHandler } from 'react-hook-form'
+import { useAuthStore } from '@/hooks/state/useAuthStore'
 
 interface SignupFormProps {
-    email: string;
-    onEmailChange: (email: string) => void;
     onActionSuccess: () => void;
 }
 
@@ -23,8 +22,10 @@ interface SignupFormFields {
     password: string;
 }
 
-export const SignupForm: FC<SignupFormProps> = ({ email, onEmailChange, onActionSuccess }) => {
+export const SignupForm: FC<SignupFormProps> = ({ onActionSuccess }) => {
     const navigate = useNavigate();
+
+    const { email, setEmail } = useAuthStore();
     const { register, handleSubmit, formState: { errors, isSubmitting }, setError } = useForm<SignupFormFields>({
         defaultValues: { email }
     });
@@ -96,7 +97,7 @@ export const SignupForm: FC<SignupFormProps> = ({ email, onEmailChange, onAction
                                 type='button'
                                 variant='ghost'
                                 size='sm'
-                                onClick={() => onEmailChange('')}
+                                onClick={() => setEmail('')}
                                 className='p-1 h-auto'
                             >
                                 <ArrowLeft className='size-4' />

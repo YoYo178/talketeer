@@ -6,17 +6,17 @@ import { useEffect, useState, type FC } from 'react'
 import { useLoginMutation } from '@/hooks/network/auth/useLoginMutation'
 import { AxiosError } from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuthStore } from '@/hooks/state/useAuthStore'
 
 interface LoginFormProps {
-    email: string;
-    onEmailChange: (email: string) => void;
     onActionSuccess: (isVerified: boolean) => void;
 }
 
-export const LoginForm: FC<LoginFormProps> = ({ email, onEmailChange, onActionSuccess }) => {
+export const LoginForm: FC<LoginFormProps> = ({ onActionSuccess }) => {
     const navigate = useNavigate();
     const loginMutation = useLoginMutation({ queryKey: ['auth', 'login'] })
 
+    const { email, setEmail } = useAuthStore();
     const [error, setError] = useState('');
     const [password, setPassword] = useState('');
 
@@ -82,7 +82,7 @@ export const LoginForm: FC<LoginFormProps> = ({ email, onEmailChange, onActionSu
                                 type='button'
                                 variant='ghost'
                                 size='sm'
-                                onClick={() => onEmailChange('')}
+                                onClick={() => setEmail('')}
                                 className='p-1 h-auto'
                             >
                                 <ArrowLeft className='size-4' />

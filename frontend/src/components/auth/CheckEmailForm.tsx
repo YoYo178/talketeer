@@ -7,10 +7,9 @@ import { useCheckEmailMutation } from '@/hooks/network/auth/useCheckEmailMutatio
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
+import { useAuthStore } from '@/hooks/state/useAuthStore';
 
 interface CheckEmailFormProps {
-    email: string;
-    onEmailChange: (email: string) => void;
     onActionSuccess: (userExists: boolean, isVerified: boolean) => void;
 }
 
@@ -18,7 +17,8 @@ const emailSchema = z.object({
     email: z.email('Please enter a valid email address')
 })
 
-export const CheckEmailForm: FC<CheckEmailFormProps> = ({ email, onEmailChange, onActionSuccess }) => {
+export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => {
+    const { email, setEmail } = useAuthStore();
     const [error, setError] = useState('');
 
     const checkEmailMutation = useCheckEmailMutation({ queryKey: ['auth', 'check-email'] });
@@ -89,7 +89,7 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ email, onEmailChange, 
                                 placeholder='m@example.com'
                                 autoComplete='email'
                                 value={email}
-                                onChange={(e) => onEmailChange(e.target.value)}
+                                onChange={(e) => setEmail(e.target.value)}
                                 className={error ? 'border-red-500' : ''}
                                 required
                             />
