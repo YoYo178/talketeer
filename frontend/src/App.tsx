@@ -22,11 +22,11 @@ function App() {
   useEffect(() => {
     const root = document.documentElement
     if (isDark) {
-      root.classList.add("dark")
-      window.localStorage.setItem(THEME_STORAGE_KEY, "dark")
+      root.classList.add('dark')
+      window.localStorage.setItem(THEME_STORAGE_KEY, 'dark')
     } else {
-      root.classList.remove("dark")
-      window.localStorage.setItem(THEME_STORAGE_KEY, "light")
+      root.classList.remove('dark')
+      window.localStorage.setItem(THEME_STORAGE_KEY, 'light')
     }
   }, [isDark]);
 
