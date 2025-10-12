@@ -20,13 +20,13 @@ export const AuthPage = () => {
 
         if (isVerified)
             navigate('/auth/login');
-
-        // TODO: Redirect to verification page if not verified
+        else
+            navigate('/auth/verify');
     }
 
     const handleLoginSuccess = (isVerified: boolean) => {
         if (!isVerified) {
-            // TODO: Redirect to verification page
+            navigate('/auth/verify');
             return;
         }
 
@@ -35,7 +35,7 @@ export const AuthPage = () => {
     }
 
     const handleSignupSuccess = () => {
-        // TODO: Redirect to verification page
+        navigate('/auth/verify');
     }
 
     const getRender = () => {

@@ -48,6 +48,8 @@ function App() {
                 </Route>
               </Route>
             </Route>
+
+            <Route path="/*" element={<h1>TODO: Not found page</h1>} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
