@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { GuestLayout } from './layouts/GuestLayout.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 
-import { UserRoute } from './components/auth/UserRoute.tsx';
-import { GuestRoute } from './components/auth/GuestRoute.tsx';
+import { UserRoute } from './components/wrappers/UserRoute.tsx';
+import { GuestRoute } from './components/wrappers/GuestRoute.tsx';
 
 import { LandingPage, AuthPage } from './pages/guest';
 import { Chat } from './pages/user';
