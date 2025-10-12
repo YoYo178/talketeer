@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { GuestLayout } from './layouts/GuestLayout.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 
@@ -42,7 +42,10 @@ function App() {
             <Route element={<GuestRoute />}>
               <Route element={<GuestLayout />}>
                 <Route index element={<LandingPage />} />
-                <Route path='/auth' element={<AuthPage />} />
+                <Route path='/auth' element={<AuthPage />}>
+                  <Route path='login' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
+                  <Route path='signup' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
+                </Route>
               </Route>
             </Route>
           </Routes>
