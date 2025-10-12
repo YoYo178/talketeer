@@ -11,7 +11,7 @@ import { APIError } from '@src/utils/api.utils';
 import { generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { sendVerificationMail } from '@src/utils/mail.utils';
 import { TEmailVerificationBody } from '@src/schemas/verification.schema';
-import { getPublicUser, getUserByEmail, updateUser } from '@src/services/user.service';
+import { getUserByEmail, updateUser } from '@src/services/user.service';
 
 export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
     const { email, method, data } = req.body as TEmailVerificationBody;
@@ -48,9 +48,22 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
             throw new APIError('Unknown method', HttpStatusCodes.BAD_REQUEST);
     }
 
-    // TODO: Issue tokens to user so the user doesn't need to login again after the entire process
+    const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
+    const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
 
-    res.status(HttpStatusCodes.OK).json({ message: 'User verified successfully!', data: { user: getPublicUser(user) } })
+    res.cookie('accessToken', accessToken, {
+        ...cookieConfig,
+        maxAge: tokenConfig.accessToken.expiry
+    });
+
+    res.cookie('refreshToken', refreshToken, {
+        ...cookieConfig,
+        maxAge: tokenConfig.refreshToken.expiry
+    });
+
+    const { passwordHash, ...rest } = user;
+
+    res.status(HttpStatusCodes.OK).json({ message: 'User verified successfully!', data: { user: rest } })
 }
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
