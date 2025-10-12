@@ -10,8 +10,8 @@ import { generateAccessToken, generateRefreshToken } from "@src/utils";
 import { APIError } from '@src/utils/api.utils';
 import { generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { sendVerificationMail } from '@src/utils/mail.utils';
-import { TEmailVerificationBody } from '@src/schemas/verification.schema';
-import { createUser, getAllUsers, getUserByEmail, updateUser } from '@src/services/user.service';
+import { TEmailVerificationBody, TResendVerificationBody } from '@src/schemas/verification.schema';
+import { createUser, getUserByEmail, updateUser } from '@src/services/user.service';
 
 export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
     const { email, method, data } = req.body as TEmailVerificationBody;
@@ -155,8 +155,24 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const { passwordHash, ...rest } = user;
 
     const [token, code] = await generateVerificationObject(email, 'email-verification');
-
     await sendVerificationMail(email, code, token);
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'User successfully registered, Please verify email to continue', data: { user: rest } })
+}
+
+export const resendVerification = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body as TResendVerificationBody;
+
+    const user = await getUserByEmail(email);
+
+    if (!user)
+        throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+
+    if (user.isVerified)
+        throw new APIError('User is already verified', HttpStatusCodes.BAD_REQUEST);
+
+    const [token, code] = await generateVerificationObject(email, 'email-verification');
+    await sendVerificationMail(email, code, token);
+
+    res.status(HttpStatusCodes.OK).json({ success: true, message: 'Resent verification email successfully' })
 }

@@ -8,3 +8,10 @@ export const emailVerificationBodySchema = z.object({
 })
 
 export type TEmailVerificationBody = z.infer<typeof emailVerificationBodySchema>;
+
+// Resend verification schema
+export const resendVerificationSchema = z.object({
+    email: z.email().nonempty()
+})
+
+export type TResendVerificationBody = z.infer<typeof resendVerificationSchema>;
