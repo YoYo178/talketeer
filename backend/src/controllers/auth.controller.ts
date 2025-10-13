@@ -61,7 +61,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
         maxAge: tokenConfig.refreshToken.expiry
     });
 
-    res.status(HttpStatusCodes.OK).json({ message: 'User verified successfully!', data: { user } })
+    res.status(HttpStatusCodes.OK).json({ success: true, message: 'User verified successfully!', data: { user } })
 }
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
