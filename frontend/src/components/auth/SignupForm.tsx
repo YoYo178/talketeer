@@ -10,7 +10,7 @@ import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useAuthStore } from '@/hooks/state/useAuthStore'
 
 interface SignupFormProps {
-    onActionSuccess: () => void;
+    onActionSuccess: (userId: string) => void;
 }
 
 interface SignupFormFields {
@@ -39,7 +39,7 @@ export const SignupForm: FC<SignupFormProps> = ({ onActionSuccess }) => {
 
     const onSubmit: SubmitHandler<SignupFormFields> = async (data: SignupFormFields) => {
         try {
-            await signupMutation.mutateAsync({
+            const res = await signupMutation.mutateAsync({
                 payload: {
                     name: `${data.firstName} ${data.lastName}`,
                     displayName: data.displayName,
@@ -49,7 +49,7 @@ export const SignupForm: FC<SignupFormProps> = ({ onActionSuccess }) => {
                 }
             })
 
-            onActionSuccess();
+            onActionSuccess(res?.data?.user._id || '');
         } catch (error) {
             if (error instanceof AxiosError) {
                 // Here, we expect a 409 Conflict, in case the email (unlikely) or username already exists
