@@ -24,6 +24,6 @@ export async function generateVerificationObject(userId: string, purpose: IVerif
     return [token, verificationObj.code]
 }
 
-async function cleanupVerification(userId: string) {
+export async function cleanupVerification(userId: string) {
     await Verification.deleteMany({ userId })
 }
