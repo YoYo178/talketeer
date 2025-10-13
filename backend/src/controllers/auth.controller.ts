@@ -152,12 +152,19 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
         throw new APIError('This username is already taken, try another.', HttpStatusCodes.CONFLICT);
 
     const user = await createUser({ username, name, displayName, email, passwordHash: hashedPassword });
-    const { passwordHash, ...rest } = user;
 
     const [token, code] = await generateVerificationObject(user._id.toString(), 'email-verification');
     await sendVerificationMail(user.email, user._id.toString(), code, token);
 
-    res.status(HttpStatusCodes.OK).json({ success: true, message: 'User successfully registered, Please verify email to continue', data: { user: rest } })
+    res.status(HttpStatusCodes.OK).json({
+        success: true,
+        message: 'User successfully registered, Please verify email to continue',
+        data: {
+            user: {
+                _id: user._id.toString()
+            }
+        }
+    })
 }
 
 export const resendVerification = async (req: Request, res: Response, next: NextFunction) => {
