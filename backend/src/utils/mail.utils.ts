@@ -20,8 +20,8 @@ export function obfuscateEmail(email: string) {
     return `${obfuscatedUser}@${obfuscatedDomain}.${domainTLD}`;
 }
 
-export async function sendVerificationMail(to: string | Mail.Address | (string | Mail.Address)[], code: string, token: string) {
-    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?token=${token}`;
+export async function sendVerificationMail(to: string | Mail.Address | (string | Mail.Address)[], userId: string, code: string, token: string) {
+    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?userId=${userId}&token=${token}`;
 
     return await SmtpClient.sendMail({
         to,
@@ -32,8 +32,8 @@ export async function sendVerificationMail(to: string | Mail.Address | (string |
     });
 }
 
-export async function sendPasswordResetEmail(to: string | Mail.Address | (string | Mail.Address)[], code: string, token: string) {
-    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?token=${token}`;
+export async function sendPasswordResetEmail(to: string | Mail.Address | (string | Mail.Address)[], userId: string, code: string, token: string) {
+    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?userId=${userId}&token=${token}`;
 
     return await SmtpClient.sendMail({
         to,

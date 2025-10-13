@@ -11,17 +11,17 @@ import { APIError } from '@src/utils/api.utils';
 import { generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { sendVerificationMail } from '@src/utils/mail.utils';
 import { TEmailVerificationBody, TResendVerificationBody } from '@src/schemas/verification.schema';
-import { createUser, getUserByEmail, updateUser } from '@src/services/user.service';
+import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
 
 export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
-    const { email, method, data } = req.body as TEmailVerificationBody;
+    const { userId, method, data } = req.body as TEmailVerificationBody;
 
-    const verificationObj = await getVerificationObject(email);
+    const verificationObj = await getVerificationObject(userId);
 
     if (!verificationObj || verificationObj.purpose === 'reset-password')
         throw new APIError('Invalid or expired request', HttpStatusCodes.BAD_REQUEST);
 
-    const user = await getUserByEmail(email);
+    const user = await getUser(userId);
 
     if (!user)
         throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
@@ -154,16 +154,16 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
     const user = await createUser({ username, name, displayName, email, passwordHash: hashedPassword });
     const { passwordHash, ...rest } = user;
 
-    const [token, code] = await generateVerificationObject(email, 'email-verification');
-    await sendVerificationMail(email, code, token);
+    const [token, code] = await generateVerificationObject(user._id.toString(), 'email-verification');
+    await sendVerificationMail(user.email, user._id.toString(), code, token);
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'User successfully registered, Please verify email to continue', data: { user: rest } })
 }
 
 export const resendVerification = async (req: Request, res: Response, next: NextFunction) => {
-    const { email } = req.body as TResendVerificationBody;
+    const { userId } = req.body as TResendVerificationBody;
 
-    const user = await getUserByEmail(email);
+    const user = await getUser(userId);
 
     if (!user)
         throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
@@ -171,8 +171,8 @@ export const resendVerification = async (req: Request, res: Response, next: Next
     if (user.isVerified)
         throw new APIError('User is already verified', HttpStatusCodes.BAD_REQUEST);
 
-    const [token, code] = await generateVerificationObject(email, 'email-verification');
-    await sendVerificationMail(email, code, token);
+    const [token, code] = await generateVerificationObject(userId, 'email-verification');
+    await sendVerificationMail(user.email, userId, code, token);
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'Resent verification email successfully' })
 }

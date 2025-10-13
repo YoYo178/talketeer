@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 
 const verificationSchema = new mongoose.Schema<IVerification>({
     code: { type: String, required: true },
-    email: { type: String, required: true },
+    userId: { type: mongoose.Schema.Types.ObjectId, required: true },
     purpose: { type: String, enum: ['email-verification', 'reset-password'], required: true },
     token: { type: String, required: true },
 
