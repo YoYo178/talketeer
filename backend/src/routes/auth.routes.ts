@@ -1,5 +1,5 @@
 import { Router } from "express";
-import rateLimit from 'express-rate-limit';
+import rateLimit, { Options } from 'express-rate-limit';
 
 import { DEFAULT_RATE_LIMIT_OPTIONS } from "@src/config/api.config";
 import { requireAuth, validate } from "@src/middlewares";
@@ -8,20 +8,17 @@ import { checkEmailSchema, loginSchema, signupSchema } from "@src/schemas";
 import { checkEmail, login, logout, signup, verifyEmail, resendVerification } from '@src/controllers';
 import { emailVerificationBodySchema, resendVerificationSchema } from "@src/schemas/verification.schema";
 
-const loginLimiter = rateLimit({
-    ...DEFAULT_RATE_LIMIT_OPTIONS,
-    limit: 5,
-    message: { message: 'Too many login attempts from this IP, Please try again later' }
-});
+// Helper function to add rate limits
+const limit = (options?: Partial<Options>) => rateLimit({ ...DEFAULT_RATE_LIMIT_OPTIONS, ...options })
 
 const AuthRouter = Router();
 
-AuthRouter.post('/login', loginLimiter, validate({ body: loginSchema }), login)
-AuthRouter.post('/check-email', validate({ body: checkEmailSchema }), checkEmail)
+AuthRouter.post('/login', limit({ limit: 5 }), validate({ body: loginSchema }), login)
+AuthRouter.post('/check-email', limit({ limit: 10 }), validate({ body: checkEmailSchema }), checkEmail)
 AuthRouter.post('/logout', requireAuth, logout)
-AuthRouter.post('/signup', validate({ body: signupSchema }), signup)
+AuthRouter.post('/signup', limit({ limit: 15 }), validate({ body: signupSchema }), signup)
 
 AuthRouter.post('/verify-email', validate({ body: emailVerificationBodySchema }), verifyEmail)
-AuthRouter.post('/resend-verification', validate({ body: resendVerificationSchema }), resendVerification)
+AuthRouter.post('/resend-verification', limit({ limit: 7 }), validate({ body: resendVerificationSchema }), resendVerification)
 
 export default AuthRouter;
