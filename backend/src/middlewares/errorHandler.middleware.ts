@@ -18,8 +18,10 @@ export const errorHandler = (err: unknown, req: Request, res: Response, next: Ne
 
         res.status(err.statusCode ?? HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
             success: false,
-            message: err.message
+            message: err.message,
+            ...(Object.keys(err.data).length > 0 ? { data: err.data } : {})
         });
+
         return;
     }
 
