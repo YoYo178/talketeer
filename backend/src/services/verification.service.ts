@@ -8,7 +8,7 @@ export async function getVerificationObject(userId: string) {
 }
 
 export async function generateVerificationObject(userId: string, purpose: IVerification['purpose']) {
-    await Verification.deleteMany({ userId });
+    await cleanupVerification(userId);
 
     const token = crypto.randomBytes(32).toString("hex");
     const hashedToken = await bcrypt.hash(token, 10);
@@ -22,4 +22,8 @@ export async function generateVerificationObject(userId: string, purpose: IVerif
     })
 
     return [token, verificationObj.code]
+}
+
+async function cleanupVerification(userId: string) {
+    await Verification.deleteMany({ userId })
 }

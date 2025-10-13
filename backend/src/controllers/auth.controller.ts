@@ -8,7 +8,7 @@ import { TCheckEmailBody, TLoginBody, TSignUpBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
 import { APIError } from '@src/utils/api.utils';
-import { generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
+import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { sendVerificationMail } from '@src/utils/mail.utils';
 import { TEmailVerificationBody, TResendVerificationBody } from '@src/schemas/verification.schema';
 import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
@@ -47,6 +47,8 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
         default:
             throw new APIError('Unknown method', HttpStatusCodes.BAD_REQUEST);
     }
+
+    await cleanupVerification(userId);
 
     const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
     const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
