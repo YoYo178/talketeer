@@ -10,7 +10,7 @@ import { Button } from '../ui/button';
 import { useAuthStore } from '@/hooks/state/useAuthStore';
 
 interface CheckEmailFormProps {
-    onActionSuccess: (userExists: boolean, isVerified: boolean) => void;
+    onActionSuccess: (userExists: boolean, isVerified: boolean, userId?: string) => void;
 }
 
 const emailSchema = z.object({
@@ -44,7 +44,7 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
                 // Here, we expect a 401 (User not verified) OR a 404 (User simply doesn't exist) from the backend
                 if (!error.response?.data?.success) {
                     if (error.response?.status === 401) {
-                        onActionSuccess(true, false)
+                        onActionSuccess(true, false, error.response.data?.data.user._id)
                     } else if (error.response?.status === 404) {
                         onActionSuccess(false, false)
                     } else {
