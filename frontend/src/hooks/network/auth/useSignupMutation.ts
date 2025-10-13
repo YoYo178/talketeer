@@ -10,4 +10,10 @@ export interface TSignupMutationBody {
     password: string;
 }
 
-export const useSignupMutation = useMutationBase<TSignupMutationBody>(APIEndpoints.SIGNUP, "Sign up");
+export interface TSignupMutationResponse {
+    user: {
+        _id: string;
+    }
+}
+
+export const useSignupMutation = useMutationBase<TSignupMutationBody, TSignupMutationResponse>(APIEndpoints.SIGNUP, "Sign up");
