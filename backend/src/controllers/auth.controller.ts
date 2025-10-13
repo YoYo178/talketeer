@@ -117,7 +117,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         maxAge: tokenConfig.refreshToken.expiry
     });
 
-    const { passwordHash, ...rest } = user.toObject();
+    const { passwordHash, ...rest } = user;
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'Logged in successfully!', data: { user: rest } });
 }
