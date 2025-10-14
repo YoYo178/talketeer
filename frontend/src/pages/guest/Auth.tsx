@@ -9,16 +9,18 @@ export const AuthPage = () => {
     const location = useLocation();
     const queryClient = useQueryClient();
 
-    const handleCheckEmailSuccess = (userExists: boolean, isVerified: boolean) => {
+    const handleCheckEmailSuccess = (userExists: boolean, isVerified: boolean, userId?: string) => {
         if (!userExists) {
             navigate('/auth/signup');
             return;
         }
 
-        if (isVerified)
-            navigate('/auth/login');
-        else
-            navigate('/auth/verify');
+        if (!isVerified && userId?.length) {
+            navigate(`/auth/verify?userId=${userId}`);
+            return;
+        }
+
+        navigate('/auth/login');
     }
 
     const handleLoginSuccess = (isVerified: boolean) => {
@@ -31,8 +33,8 @@ export const AuthPage = () => {
         navigate('/chat')
     }
 
-    const handleSignupSuccess = () => {
-        navigate('/auth/verify');
+    const handleSignupSuccess = (userId: string) => {
+        navigate(`/auth/verify?userId=${userId}`);
     }
 
     const getRender = () => {
