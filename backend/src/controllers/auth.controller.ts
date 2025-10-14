@@ -78,8 +78,12 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
         throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND)
 
     if (!user.isVerified) {
-        const [token, code] = await generateVerificationObject(user._id.toString(), 'email-verification');
-        await sendVerificationMail(user.email, user._id.toString(), code, token);
+        const existingObj = await getVerificationObject(user._id.toString());
+
+        if (!existingObj) {
+            const [token, code] = await generateVerificationObject(user._id.toString(), 'email-verification');
+            await sendVerificationMail(user.email, user._id.toString(), code, token);
+        }
 
         throw new APIError('User is not verified, please verify to continue', HttpStatusCodes.UNAUTHORIZED, { user: { _id: user._id.toString() } });
     }
