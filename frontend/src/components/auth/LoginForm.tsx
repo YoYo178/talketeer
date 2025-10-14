@@ -76,7 +76,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onActionSuccess }) => {
                     <h1 className='text-xl font-bold'>Welcome to Talketeer</h1>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className='flex flex-col gap-6'>
+                    <div className='flex flex-col'>
                         <div className='flex items-center gap-2'>
                             <Button
                                 type='button'
@@ -91,21 +91,26 @@ export const LoginForm: FC<LoginFormProps> = ({ onActionSuccess }) => {
                                 Welcome back! Please enter your password.
                             </span>
                         </div>
-                        <div className='grid gap-3'>
-                            <Label htmlFor='login-password'>Password</Label>
-                            <Input
-                                id='password'
-                                type='password'
-                                placeholder='Enter your password'
-                                autoComplete='off'
-                                value={password}
-                                onChange={(e) => { setError(''); setPassword(e.target.value) }}
-                                className={error ? 'border-red-500' : ''}
-                                required
-                            />
-                            {error && (
-                                <p className='text-sm text-red-500'>{error}</p>
-                            )}
+                        <div className='flex flex-col gap-1 my-4'>
+
+                            <div className='grid gap-3'>
+                                <Label htmlFor='login-password'>Password</Label>
+                                <Input
+                                    id='password'
+                                    type='password'
+                                    placeholder='Enter your password'
+                                    autoComplete='off'
+                                    value={password}
+                                    onChange={(e) => { setError(''); setPassword(e.target.value) }}
+                                    className={error ? 'border-red-500' : ''}
+                                    required
+                                />
+                                {error && (
+                                    <p className='text-sm text-red-500'>{error}</p>
+                                )}
+                            </div>
+
+                            <Link to='/auth/reset' className='text-sm text-muted-foreground underline self-end'>Forgot password?</Link>
                         </div>
                         <Button
                             type='submit'

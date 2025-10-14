@@ -7,7 +7,7 @@ import { ErrorBoundary } from './components/ErrorBoundary.tsx';
 import { UserRoute } from './components/wrappers/UserRoute.tsx';
 import { GuestRoute } from './components/wrappers/GuestRoute.tsx';
 
-import { LandingPage, AuthPage, VerifyPage } from './pages/guest';
+import { LandingPage, AuthPage, VerifyPage, ResetPage } from './pages/guest';
 import { Chat } from './pages/user';
 import { useSettingsStore } from './hooks/state/useSettingsStore.ts';
 import { useEffect } from 'react';
@@ -46,6 +46,7 @@ function App() {
                 <Route path='/auth' element={<AuthPage />}>
                   <Route path='login' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
                   <Route path='signup' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
+                  <Route path='reset' element={<ResetPage />} />
                   <Route path='verify' element={<VerifyPage />} />
                 </Route>
               </Route>
