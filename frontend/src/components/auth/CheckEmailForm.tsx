@@ -97,8 +97,8 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
                                 <p className='text-sm text-red-500'>{error}</p>
                             )}
                         </div>
-                        <Button type='submit' className='w-full'>
-                            Continue
+                        <Button type='submit' className='w-full' disabled={checkEmailMutation.isPending}>
+                            {checkEmailMutation.isPending ? 'Please wait...' : 'Continue'}
                         </Button>
                     </div>
                 </form>
