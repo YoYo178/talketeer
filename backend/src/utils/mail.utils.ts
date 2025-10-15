@@ -27,19 +27,20 @@ export async function sendVerificationMail(to: string | Mail.Address | (string |
         to,
         subject: verificationMailTemplate.subject.replace('{appName}', ENV.AppName),
         html: verificationMailTemplate.body
+            .replace('{appName}', ENV.AppName)
             .replace('{link}', link)
-            .replace('{code}', code),
+            .replace('{code}', code)
     });
 }
 
-export async function sendPasswordResetEmail(to: string | Mail.Address | (string | Mail.Address)[], userId: string, code: string, token: string) {
-    const link = `${ENV.FrontendOrigin}/talketeer/auth/verify?userId=${userId}&token=${token}`;
+export async function sendPasswordResetMail(to: string | Mail.Address | (string | Mail.Address)[], userId: string, token: string) {
+    const link = `${ENV.FrontendOrigin}/talketeer/auth/reset?userId=${userId}&token=${token}`;
 
     return await SmtpClient.sendMail({
         to,
         subject: passwordResetMailTemplate.subject.replace('{appName}', ENV.AppName),
         html: passwordResetMailTemplate.body
+            .replace('{appName}', ENV.AppName)
             .replace('{link}', link)
-            .replace('{code}', code),
     });
 }
