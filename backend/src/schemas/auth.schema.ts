@@ -43,3 +43,12 @@ export const resendVerificationSchema = z.object({
 })
 
 export type TResendVerificationBody = z.infer<typeof resendVerificationSchema>;
+
+// Reset password schema
+export const resetPasswordSchema = z.object({
+    userId: mongooseObjectId,
+    password: z.string().min(8),
+    token: z.string().min(32)
+})
+
+export type TResetPasswordBody = z.infer<typeof resetPasswordSchema>;
