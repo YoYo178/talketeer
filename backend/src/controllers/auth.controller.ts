@@ -4,13 +4,11 @@ import type { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 
 import { User } from "@src/models";
-import { TCheckEmailBody, TLoginBody, TSignUpBody } from "@src/schemas";
+import { TCheckEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
-import { APIError } from '@src/utils/api.utils';
 import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
-import { sendVerificationMail } from '@src/utils/mail.utils';
-import { TEmailVerificationBody, TResendVerificationBody } from '@src/schemas/verification.schema';
+import { APIError, sendVerificationMail } from '@src/utils';
 import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
 
 export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {

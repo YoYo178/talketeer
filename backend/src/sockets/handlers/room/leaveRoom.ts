@@ -1,5 +1,5 @@
 import { leaveRoom } from "@src/services/room.service";
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import { leaveRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 

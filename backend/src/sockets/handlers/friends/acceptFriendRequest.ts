@@ -1,6 +1,6 @@
 import { saveNotification } from '@src/services/notification.service';
 import { acceptUserFriendRequest, getUser } from '@src/services/user.service';
-import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
+import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
 
 export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['acceptFriendRequest'] => {

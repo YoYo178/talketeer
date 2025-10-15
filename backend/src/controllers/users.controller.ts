@@ -1,7 +1,7 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { User } from "@src/models";
 import { TUpdateMeBody, TUserIdParams } from "@src/schemas";
-import { APIError } from "@src/utils/api.utils";
+import { APIError } from "@src/utils";
 import type { Request, Response, NextFunction } from "express";
 
 export const getMe = async (req: Request, res: Response, next: NextFunction) => {

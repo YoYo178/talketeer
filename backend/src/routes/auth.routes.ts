@@ -1,12 +1,12 @@
 import { Router } from "express";
 import rateLimit, { Options } from 'express-rate-limit';
 
-import { DEFAULT_RATE_LIMIT_OPTIONS } from "@src/config/api.config";
+import { DEFAULT_RATE_LIMIT_OPTIONS } from "@src/config";
 import { requireAuth, validate } from "@src/middlewares";
-import { checkEmailSchema, loginSchema, signupSchema } from "@src/schemas";
+
+import { checkEmailSchema, loginSchema, signupSchema, emailVerificationBodySchema, resendVerificationSchema } from "@src/schemas";
 
 import { checkEmail, login, logout, signup, verifyEmail, resendVerification } from '@src/controllers';
-import { emailVerificationBodySchema, resendVerificationSchema } from "@src/schemas/verification.schema";
 
 // Helper function to add rate limits
 const limit = (options?: Partial<Options>) => rateLimit({ ...DEFAULT_RATE_LIMIT_OPTIONS, ...options })

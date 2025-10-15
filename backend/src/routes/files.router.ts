@@ -3,7 +3,7 @@ import multer from 'multer'
 import path from "path";
 import fs from 'fs'
 
-import { APIError } from "@src/utils/api.utils";
+import { APIError } from "@src/utils";
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 
 import { ASSETS_PATH } from "@src/config";

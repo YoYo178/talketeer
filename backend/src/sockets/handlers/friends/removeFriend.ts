@@ -1,6 +1,6 @@
 import { saveNotification } from '@src/services/notification.service';
 import { getUser, removeFriendObject } from '@src/services/user.service';
-import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
+import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
 
 export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['removeFriend'] => {

@@ -1,5 +1,5 @@
 import { User } from "@src/models";
-import { Notification } from "@src/models/notification.model";
+import { Notification } from "@src/models";
 import { INotification } from "@src/types";
 
 export async function saveNotification(userId: string, notificationObj: Omit<INotification, '_id' | 'createdAt' | 'updatedAt'>) {

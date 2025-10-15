@@ -1,4 +1,4 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types';
+import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
 
 import { getJoinRoomEventCallback } from './joinRoom';
 import { getLeaveRoomEventCallback } from './leaveRoom';

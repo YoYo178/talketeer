@@ -1,4 +1,4 @@
-import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import logger from "@src/utils/logger.utils";
 
 export const getDisconnectingEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {

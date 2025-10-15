@@ -1,7 +1,7 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { Message } from "@src/models";
 import { TMessagesQuery, TMessageIdParams } from "@src/schemas"
-import { APIError } from "@src/utils/api.utils";
+import { APIError } from "@src/utils";
 import type { Request, Response, NextFunction } from "express"
 
 const MESSAGES_PER_PAGE = 20;

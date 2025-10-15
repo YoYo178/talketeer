@@ -1,7 +1,8 @@
 import HttpStatusCodes from "@src/common/HttpStatusCodes"
 import type { Request, Response, NextFunction } from "express"
-import logger from "@src/utils/logger.utils";
-import { APIError } from "@src/utils/api.utils";
+
+import { APIError } from "@src/utils";
+import logger from "@src/utils/logger.utils"; // Default export, need to be imported separately
 
 export const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof APIError) {

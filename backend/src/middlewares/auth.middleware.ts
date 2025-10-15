@@ -7,8 +7,7 @@ import HttpStatusCodes from "@src/common/HttpStatusCodes";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { User } from "@src/models";
 import { TalketeerSocket, TVerifyAuthReturn } from "@src/types";
-import { generateAccessToken, verifyAccessToken, verifyRefreshToken } from "@src/utils";
-import { APIError } from "@src/utils/api.utils";
+import { APIError, generateAccessToken, verifyAccessToken, verifyRefreshToken } from "@src/utils";
 
 const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<TVerifyAuthReturn> => {
     const returnObj: TVerifyAuthReturn = { success: false, isMaliciousUser: false, data: { user: null } };

@@ -1,5 +1,5 @@
 import { Message, Room } from "@src/models";
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import { sendMessageSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 

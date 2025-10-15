@@ -1,7 +1,7 @@
 import { banUser, isUserBanned } from "@src/services/ban.service";
 import { getRoom, isUserInRoom, leaveRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import logger from "@src/utils/logger.utils";
 
 export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['banFromRoom'] => {

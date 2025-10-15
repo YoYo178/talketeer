@@ -1,5 +1,5 @@
 import { getRoom, getRoomByCode, joinRoom } from "@src/services/room.service";
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import { joinRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 import { getBan, isUserBanned } from "@src/services/ban.service";

@@ -1,4 +1,4 @@
-import { TalketeerSocket, TalketeerSocketServer } from "@src/types/socket.types";
+import { TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import { registerGeneralHandlers } from "./handlers/general";
 import { registerRoomHandlers } from "./handlers/room";
 import { registerMessageHandlers } from "./handlers/message";
