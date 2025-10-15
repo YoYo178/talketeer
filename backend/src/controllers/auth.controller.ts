@@ -4,7 +4,7 @@ import type { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 
 import { User } from "@src/models";
-import { TCheckEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody } from "@src/schemas";
+import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
 import { generateAccessToken, generateRefreshToken } from "@src/utils";
 import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
@@ -66,7 +66,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
 
 export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
     // Enforce types
-    const { email } = req.body as TCheckEmailBody;
+    const { email } = req.body as TEmailBody;
 
     // Fetch the user with the given email
     const user = await getUserByEmail(email);

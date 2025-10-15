@@ -9,12 +9,12 @@ export const loginSchema = z.object({
 
 export type TLoginBody = z.infer<typeof loginSchema>
 
-// CheckEmail
-export const checkEmailSchema = z.object({
+// Check Email
+export const emailSchema = z.object({
     email: z.email()
 })
 
-export type TCheckEmailBody = z.infer<typeof checkEmailSchema>
+export type TEmailBody = z.infer<typeof emailSchema>
 
 // Sign-up
 export const signupSchema = z.object({
