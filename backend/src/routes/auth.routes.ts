@@ -24,7 +24,7 @@ AuthRouter.post('/verify-email', validate({ body: emailVerificationBodySchema })
 AuthRouter.post('/resend-verification', limit({ limit: 7 }), validate({ body: resendVerificationSchema }), resendVerification)
 
 // Reset password (Account recovery)
-AuthRouter.post('/request-reset', validate({ body: emailSchema }), requestPasswordReset)
-AuthRouter.post('/reset-password', validate({ body: resetPasswordSchema }), resetPassword)
+AuthRouter.post('/request-reset', limit({ limit: 5 }), validate({ body: emailSchema }), requestPasswordReset)
+AuthRouter.post('/reset-password', limit({ limit: 2 }),  validate({ body: resetPasswordSchema }), resetPassword)
 
 export default AuthRouter;
