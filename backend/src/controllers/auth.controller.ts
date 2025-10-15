@@ -4,9 +4,9 @@ import type { Request, Response, NextFunction } from "express";
 import HttpStatusCodes from "@src/common/HttpStatusCodes";
 
 import { User } from "@src/models";
-import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody } from "@src/schemas";
+import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody, TResetPasswordBody } from "@src/schemas";
 import { cookieConfig, tokenConfig } from "@src/config";
-import { generateAccessToken, generateRefreshToken } from "@src/utils";
+import { generateAccessToken, generateRefreshToken, sendPasswordResetMail } from "@src/utils";
 import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { APIError, sendVerificationMail } from '@src/utils';
 import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
@@ -190,4 +190,48 @@ export const resendVerification = async (req: Request, res: Response, next: Next
     await sendVerificationMail(user.email, userId, code, token);
 
     res.status(HttpStatusCodes.OK).json({ success: true, message: 'Resent verification email successfully' })
+}
+
+export const requestPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body as TEmailBody;
+
+    const user = await getUserByEmail(email);
+
+    if (!user)
+        throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+
+    const existingObj = await getVerificationObject(user._id.toString());
+
+    if (!existingObj) {
+        const [token] = await generateVerificationObject(user._id.toString(), 'reset-password');
+        await sendPasswordResetMail(user.email, user._id.toString(), token);
+    }
+
+    res.status(HttpStatusCodes.OK).json({ success: true, message: 'Sent password reset mail successfully' });
+}
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const { userId, password, token } = req.body as TResetPasswordBody;
+
+    const user = await getUser(userId);
+
+    if (!user)
+        throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
+
+    const verificationObj = await getVerificationObject(user._id.toString());
+
+    if (!verificationObj)
+        throw new APIError('Invalid or expired request', HttpStatusCodes.NOT_FOUND);
+
+    const tokenMatches = !!await bcrypt.compare(token, verificationObj.token);
+
+    if (!tokenMatches)
+        throw new APIError('Invalid token', HttpStatusCodes.BAD_REQUEST);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await updateUser(userId, { passwordHash: hashedPassword });
+
+    await cleanupVerification(userId);
+
+    res.status(HttpStatusCodes.OK).json({ success: true, message: 'Password successfully reset, please login to continue' });
 }
