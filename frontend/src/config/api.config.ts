@@ -41,6 +41,14 @@ export const APIEndpoints: Endpoints = {
         METHOD: 'POST',
         URL: '/auth/resend-verification'
     },
+    REQUEST_PASSWORD_RESET: {
+        METHOD: 'POST',
+        URL: '/auth/request-reset'
+    },
+    RESET_PASSWORD: {
+        METHOD: 'POST',
+        URL: '/auth/reset-password'
+    },
 
     // File routes
     UPDATE_AVATAR: {
