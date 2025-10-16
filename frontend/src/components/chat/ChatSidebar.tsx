@@ -31,19 +31,37 @@ export const ChatSidebar = () => {
     // can't be bothered to add like hundreds of more conditionals to the main return block
     if (isMobile) {
         return (
-            <div className='flex flex-col gap-3 w-full md:w-72 p-3 rounded-xl bg-accent dark:bg-primary-foreground'>
-                <div className='flex gap-2 max-w-full'>
-                    <CreateRoomDialog />
-                    <JoinRoomDialog />
-                </div>
-                <Input
-                    placeholder='Search rooms…'
-                    autoComplete='off'
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                />
-                <RoomList rooms={filteredRooms} />
-            </div>
+            <Tabs
+                defaultValue='rooms'
+                className='flex rounded-xl bg-accent dark:bg-primary-foreground p-3'
+            >
+                <TabsList className='w-full'>
+                    <TabsTrigger value='rooms' className='cursor-pointer'>Rooms</TabsTrigger>
+                    <TabsTrigger value='friends' className='cursor-pointer'>Friends</TabsTrigger>
+                </TabsList>
+
+                {/* Rooms list tab */}
+                <TabsContent value='rooms' className='min-h-[300px] flex flex-col gap-3 overflow-hidden'>
+                    <div className='flex gap-2'>
+                        <CreateRoomDialog />
+                        <JoinRoomDialog />
+                    </div>
+
+                    <Input
+                        placeholder='Search rooms…'
+                        autoComplete='off'
+                        value={searchText}
+                        onChange={(e) => setSearchText(e.target.value)}
+                    />
+
+                    <RoomList rooms={filteredRooms} />
+                </TabsContent>
+
+                {/* Friends list tab */}
+                <TabsContent value='friends' className='min-h-[300px] flex flex-col mb-3 gap-3 overflow-hidden'>
+                    <FriendList friends={me?.friends || []} />
+                </TabsContent>
+            </Tabs>
         )
     }
 
