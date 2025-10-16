@@ -6,6 +6,9 @@ interface GlobalState {
 
     hasNewNotifications: boolean;
     setHasNewNotifications: (hasNewNotifications: boolean) => void;
+
+    isAvatarCardOpen: boolean;
+    setIsAvatarCardOpen: (isAvatarCardOpen: boolean) => void;
 }
 
 export const useGlobalStore = create<GlobalState>(set => ({
@@ -13,5 +16,8 @@ export const useGlobalStore = create<GlobalState>(set => ({
     setUsersOnline: (usersOnline) => set({ usersOnline }),
 
     hasNewNotifications: false,
-    setHasNewNotifications: (hasNewNotifications: boolean) => set({ hasNewNotifications })
+    setHasNewNotifications: (hasNewNotifications: boolean) => set({ hasNewNotifications }),
+
+    isAvatarCardOpen: false,
+    setIsAvatarCardOpen: (isAvatarCardOpen) => set({ isAvatarCardOpen })
 }))
