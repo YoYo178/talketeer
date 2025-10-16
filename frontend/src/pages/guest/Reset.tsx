@@ -113,12 +113,12 @@ export const ResetPage = () => {
                         <span className='sr-only'>Talketeer</span>
                     </Link>
                     <h1 className='text-xl font-bold'>Reset password</h1>
-                    <p className='text-l text-muted-foreground mb-4'>
+                    <p className='text-muted-foreground mb-4'>
                         Your password has been reset successfully
                         <br />
                         Please login to continue.
                     </p>
-                    <p className='text-l text-muted-foreground mb-4'>Redirecting to home page...</p>
+                    <p className='text-muted-foreground mb-4'>Redirecting to home page...</p>
                 </div>
             </div>
         )
@@ -187,7 +187,7 @@ export const ResetPage = () => {
                     <span className='sr-only'>Talketeer</span>
                 </Link>
                 <h1 className='text-xl font-bold'>Reset password</h1>
-                <p className='text-l text-muted-foreground'>We've sent a password reset link to your email. Follow the instructions to set a new password.</p>
+                <p className='text-muted-foreground'>We've sent a password reset link to your email. Follow the instructions to set a new password.</p>
                 <Button className='my-2 px-8' onClick={navigateToHome}>Ok</Button>
             </div>
         </div>

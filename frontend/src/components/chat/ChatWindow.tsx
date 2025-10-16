@@ -117,7 +117,7 @@ export const ChatWindow = () => {
                                 </div>
                             ) : (
                                 <div className="flex flex-col items-center gap-4 text-center">
-                                    <p className='text-l'>This is a private room, you cannot join unless you are invited by the owner or you have the code for the room.</p>
+                                    <p>This is a private room, you cannot join unless you are invited by the owner or you have the code for the room.</p>
                                     <Button className='w-fit' onClick={handleClearSelection}>Go back</Button>
                                 </div>
                             )}
