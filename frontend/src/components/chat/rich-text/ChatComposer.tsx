@@ -35,7 +35,7 @@ export const ChatComposer = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className='p-3 flex gap-3'>
+        <form onSubmit={handleSubmit} className='p-3 flex items-center gap-3'>
             <AttachFileButton />
             <Textarea
                 rows={1}
