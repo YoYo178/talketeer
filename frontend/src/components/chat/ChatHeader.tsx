@@ -61,23 +61,22 @@ export const ChatHeader = () => {
     };
 
     return (
-        <div className='flex p-4 justify-between'>
-            <div className='flex gap-2 items-center flex-wrap'>
-                <p className='text-xl'>{room.name}</p>
+        <div className='flex items-center p-4 justify-between'>
+            <div className='flex gap-2 items-center'>
+                <p className='text-sm md:text-base lg:text-lg font-semibold'>{room.name}</p>
                 <div className='flex'>
                     {/* Copy room code button */}
                     {(room.visibility === 'public' || isRoomOwner) && (
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <ChatButton onClick={handleCopyRoomCode}>
-                                    <Copy />
+                                    <Copy className='size-4' />
                                 </ChatButton>
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>Copy room code</p>
                             </TooltipContent>
                         </Tooltip>
-
                     )}
 
                     {isRoomOwner && (
@@ -89,7 +88,10 @@ export const ChatHeader = () => {
                 </div>
             </div>
 
-            <Button onClick={handleRoomLeave}><X />Leave room</Button>
+            <Button onClick={handleRoomLeave} >
+                <X className='size-4' />
+                <span className='text-xs sm:text-sm md:text-base'>Leave room</span>
+            </Button>
         </div>
     )
 }
