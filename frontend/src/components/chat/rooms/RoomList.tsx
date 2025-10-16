@@ -12,7 +12,7 @@ export const RoomList: FC<RoomListProps> = ({ rooms }) => {
         <ScrollArea className='flex-1 rounded-md border border-border/40'>
             <div className='flex min-h-[200px] h-full flex-col divide-y divide-border/40'>
                 {rooms.length <= 0 ? (
-                    <p className='p-3 text-xl text-muted-foreground m-auto'>No rooms found</p>
+                    <p className='p-3 text-base font-medium text-muted-foreground m-auto'>No rooms found</p>
                 ) : (
                     rooms.map((room) => (
                         <RoomEntry key={room._id} room={room} />

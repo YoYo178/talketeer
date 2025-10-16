@@ -90,7 +90,7 @@ export const ChatHeader = () => {
 
             <Button onClick={handleRoomLeave} >
                 <X className='size-4' />
-                <span className='text-xs sm:text-sm md:text-base'>Leave room</span>
+                <span className='text-xs sm:text-sm md:text-base font-bold'>Leave room</span>
             </Button>
         </div>
     )

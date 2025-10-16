@@ -111,10 +111,10 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
                 {room.visibility === 'private' && (
                     <Lock className='text-muted-foreground' size={16} />
                 )}
-                <div className='font-medium'>{room.name}</div>
+                <h1 className='text-sm md:text-base font-medium'>{room.name}</h1>
 
                 {room.isSystemGenerated && (
-                    <span className='text-[10px] px-1.5 py-0.5 rounded-md bg-secondary-foreground text-primary-foreground font-bold'>SYSTEM</span>
+                    <span className='text-[8px] md:text-[10px] px-1.5 py-0.5 rounded-md bg-secondary-foreground text-primary-foreground font-bold'>SYSTEM</span>
                 )}
             </div>
             <div className='text-xs text-muted-foreground'>Members: {room.memberCount}/{room.memberLimit}</div>

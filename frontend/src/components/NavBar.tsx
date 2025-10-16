@@ -15,10 +15,10 @@ export const NavBar = () => {
             {isMobile ? (
                 <div className={`overflow-hidden origin-left transition-[opacity,visibility,max-width] ease-out ${!isAvatarCardOpen ? 'opacity-100 visible max-w-[200px] duration-800' : 'opacity-0 invisible max-w-0 duration-300'}`}>
                     <div className={`flex gap-2 min-w-[200px]`}>
-                        <MessagesSquare className='size-8' />
+                        <MessagesSquare className='size-6' />
                         <div className="flex flex-col">
-                            <h1 className='text-2xl font-bold'>Talketeer</h1>
-                            <p className='text-sm text-muted-foreground font-bold'>Users online: {usersOnline}</p>
+                            <h1 className='text-lg font-bold'>Talketeer</h1>
+                            <p className='text-xs text-muted-foreground font-bold'>Users online: {usersOnline}</p>
                         </div>
                     </div>
                 </div>

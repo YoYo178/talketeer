@@ -65,8 +65,9 @@ export const CreateRoomDialog = () => {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
 
-                <Button className='flex-1 whitespace-nowrap'>
-                    <Plus className='size-5' /> New room
+                <Button className='flex-1 whitespace-nowrap font-semibold text-xs md:text-sm'>
+                    <Plus className='size-4 md:size-5' />
+                    <span>New room</span>
                 </Button>
 
             </DialogTrigger>

@@ -114,8 +114,8 @@ export const MessageList = () => {
                     <MessageListSkeleton />
                 ) : (
                     <div className='text-center'>
-                        <p className='text-xl text-card-foreground'>This room currently has no messages.</p>
-                        <p className='text-m text-muted-foreground'>Send a message to get started!</p>
+                        <p className='text-base text-muted-foreground md:text-xl'>This room currently has no messages.</p>
+                        <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
                     </div>
                 )}
             </div>
@@ -128,7 +128,7 @@ export const MessageList = () => {
                 {messageElements.length > 0 && !hasNextPage && (
                     <div className="flex items-center my-2">
                         <Separator className='flex-1' />
-                        <span className="mx-2 bg-transparent text-center px-2 dark:text-muted-foreground">
+                        <span className="mx-2 bg-transparent text-center px-2 dark:text-muted-foreground text-sm md:text-base">
                             You've reached the end of this chatroom!
                         </span>
                         <Separator className='flex-1' />

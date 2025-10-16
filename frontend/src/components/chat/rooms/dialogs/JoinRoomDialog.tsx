@@ -71,8 +71,8 @@ export const JoinRoomDialog = () => {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className='flex-1 whitespace-nowrap'>
-                    <HousePlus className='size-5' /> Join room
+                <Button className='flex-1 whitespace-nowrap font-semibold text-xs md:text-sm'>
+                    <HousePlus className='size-4 md:size-5' /> Join room
                 </Button>
             </DialogTrigger>
             <DialogContent>

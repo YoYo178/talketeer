@@ -48,7 +48,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
                         return (
                             <a
                                 key={`part-${i}-${j}`}
-                                className={`text-[#3e85e0] visited:text-[#5f46ce] dark:text-[#5c59dd] dark:visited:text-[#714acc] hover:underline`}
+                                className={`text-[#3e85e0] visited:text-[#5f46ce] dark:text-[#5c59dd] dark:visited:text-[#714acc] hover:underline text-sm md:text-base`}
                                 href={part}
                                 target={protocolObj.openInNewTab ? "_blank" : ''}
                                 rel="noopener noreferrer"
@@ -59,7 +59,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
                     }
 
                     return (
-                        <span key={`part-${i}-${j}`}>{part}</span>
+                        <span key={`part-${i}-${j}`} className='text-sm md:text-base'>{part}</span>
                     )
                 })}
             </div>

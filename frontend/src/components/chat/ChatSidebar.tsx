@@ -36,8 +36,8 @@ export const ChatSidebar = () => {
                 className='flex rounded-xl bg-accent dark:bg-primary-foreground p-3'
             >
                 <TabsList className='w-full'>
-                    <TabsTrigger value='rooms' className='cursor-pointer'>Rooms</TabsTrigger>
-                    <TabsTrigger value='friends' className='cursor-pointer'>Friends</TabsTrigger>
+                    <TabsTrigger value='rooms' className='cursor-pointer text-xs'>Rooms</TabsTrigger>
+                    <TabsTrigger value='friends' className='cursor-pointer text-xs'>Friends</TabsTrigger>
                 </TabsList>
 
                 {/* Rooms list tab */}
@@ -48,6 +48,7 @@ export const ChatSidebar = () => {
                     </div>
 
                     <Input
+                        className='text-sm font-medium'
                         placeholder='Search rooms…'
                         autoComplete='off'
                         value={searchText}
