@@ -32,7 +32,7 @@ export const UserLayout = () => {
     const isMobile = useMediaQuery('(max-width: 767px)');
 
     return (
-        <div className="flex flex-col gap-3 h-[calc(100vh-1.5rem)] w-[calc(100vw - 1.5rem)] m-3">
+        <div className="flex flex-col gap-3 h-[calc(100svh-1.5rem)] w-[calc(100vw-1.5rem)] m-3">
             <NavBar />
 
             <div className="flex-1 flex flex-col md:flex-row gap-3 overflow-auto"> {/* this 'h-0' is very necessary, just don't ask why */}
