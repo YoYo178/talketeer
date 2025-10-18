@@ -3,6 +3,7 @@ import { getRoom, isUserInRoom, leaveRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import logger from "@src/utils/logger.utils";
+import mongoose from "mongoose";
 
 export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['banFromRoom'] => {
     return async (roomId, userId, bannedBy, duration, reason, ack) => {
@@ -44,9 +45,9 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
             // Even if we accidentally set up both isPermanent as true, and expiresAt to a value
             // MongoDB will automatically set expiresAt to null because of the pre-save function
             const ban = await banUser({
-                bannedBy,
-                roomId,
-                userId,
+                bannedBy: new mongoose.Types.ObjectId(bannedBy),
+                roomId: new mongoose.Types.ObjectId(roomId),
+                userId: new mongoose.Types.ObjectId(userId),
                 reason,
                 isPermanent: duration === -1,
                 expiresAt: new Date(Date.now() + duration)

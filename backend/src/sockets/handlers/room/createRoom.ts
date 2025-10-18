@@ -5,6 +5,7 @@ import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@s
 import { generateRoomCode } from "@src/utils";
 import { createRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
+import mongoose from "mongoose";
 
 export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
     return async (name, visibility, memberLimit, ack) => {
@@ -54,7 +55,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
                 members: [],
                 messages: [],
                 isSystemGenerated: false,
-                owner: userId,
+                owner: new mongoose.Types.ObjectId(userId),
                 visibility
             })
             const roomId = newRoom._id.toString();
