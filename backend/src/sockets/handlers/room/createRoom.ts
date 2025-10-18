@@ -62,7 +62,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             // Broadcast room creation to all users (they need to see new rooms)
             socket.broadcast.emit('roomCreated', newRoom);
 
-            await joinRoom(userId, roomId);
+            await joinRoom(userId, roomId, true);
 
             // Join the specified room for the client
             socket.join(roomId);

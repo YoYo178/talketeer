@@ -28,7 +28,7 @@ export async function deleteRoom(roomId: string) {
     return Room.findByIdAndDelete(roomId).lean().exec();
 }
 
-export async function addUserToRoom(roomId: string, userId: string) {
+export async function addUserToRoom(roomId: string, userId: string, isAdmin?: boolean) {
     return Room.findByIdAndUpdate(
         roomId,
         {
@@ -36,7 +36,7 @@ export async function addUserToRoom(roomId: string, userId: string) {
             $push: {
                 members: {
                     user: userId,
-                    roomRole: 'member',
+                    roomRole: isAdmin ? 'admin' : 'member',
                     joinTimestamp: Date.now(),
                 },
             },
@@ -69,7 +69,7 @@ export async function isUserRoomOwner(userId: string, roomId: string): Promise<b
     return !!room;
 }
 
-export async function joinRoom(userId: string, roomId: string) {
+export async function joinRoom(userId: string, roomId: string, isAdmin?: boolean) {
     const session = await mongoose.startSession();
 
     try {
@@ -85,7 +85,7 @@ export async function joinRoom(userId: string, roomId: string) {
             const isAlreadyMember = await isUserInRoom(roomId, userId);
 
             if (!isAlreadyMember) {
-                room = await addUserToRoom(roomId, userId);
+                room = await addUserToRoom(roomId, userId, isAdmin);
 
                 // Update user's current room
                 user = await updateUserRoom(userId, roomId);
