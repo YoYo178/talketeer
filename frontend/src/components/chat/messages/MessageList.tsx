@@ -27,7 +27,7 @@ const MessageListSkeleton = () => {
 }
 
 export const MessageList = () => {
-    const { dmRoomId, typingUsers } = useRoomsStore();
+    const { dmRoomId } = useRoomsStore();
     const chatEndRef = useRef<HTMLDivElement>(null);
     const isAtBottom = useRef(false);
     const hasScrolled = useRef(false);
@@ -62,10 +62,6 @@ export const MessageList = () => {
         () => pages.reverse(),
         [pages]
     )
-
-    useEffect(() => {
-        console.log(typingUsers)
-    }, [typingUsers])
 
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         const element = e.target as HTMLDivElement;
