@@ -59,7 +59,7 @@ export const MessageList = () => {
     const pages = (!!dmRoomId ? dmMessagesQuery.data?.pages : messagesQuery.data?.pages) || [];
 
     const messagePages = useMemo(
-        () => pages.reverse(),
+        () => [...pages].reverse(),
         [pages]
     )
 
