@@ -13,42 +13,43 @@ import { useEffect } from 'react'
 // TODO: Fix ChatSidebar for smaller screens!
 
 export const UserLayout = () => {
-    const { selectedRoomId, joinedRoomId, setJoinedRoomId } = useRoomsStore();
+    const { dmRoomId, selectedRoomId, joinedRoomId, setJoinedRoomId } = useRoomsStore()
+    const me = useMe()
+    const isMobile = useMediaQuery('(max-width: 767px)')
 
-    // Keep our room status updated!
-    const me = useMe();
-    const roomId = me?.room ?? null;
     useEffect(() => {
-        if (!me)
-            return;
+        if (me)
+            setJoinedRoomId(me.room ?? null)
+    }, [me?.room])
 
-        setJoinedRoomId(roomId)
-    }, [roomId]);
+    useSocketConnection()
 
-    // Initialize socket connection
-    useSocketConnection();
-
-    // Detect if we're below md breakpoint (768px)
-    const isMobile = useMediaQuery('(max-width: 767px)');
+    const showSidebar = !isMobile || (!selectedRoomId && !joinedRoomId && !dmRoomId)
+    const isDMActive = Boolean(dmRoomId)
+    const hasRoom = joinedRoomId || selectedRoomId || isDMActive
 
     return (
         <div className="flex flex-col gap-3 h-[calc(100svh-1.5rem)] w-[calc(100vw-1.5rem)] m-3">
             <NavBar />
 
-            <div className="flex-1 flex flex-col md:flex-row gap-3 overflow-auto"> {/* this 'h-0' is very necessary, just don't ask why */}
-                {
-                    (!isMobile || !selectedRoomId && !joinedRoomId) && (<ChatSidebar />)
-                }
-                {joinedRoomId || selectedRoomId
-                    ? (<ChatWindow />)
-                    : (
-                        <div className='flex-1 bg-background p-6 flex items-center justify-center'>
-                            <div className='text-center'>
-                                <div className='text-base md:text-lg font-semibold mb-1'>Join a room to get started!</div>
-                                <div className='text-xs md:text-sm text-muted-foreground'>Select a room {isMobile ? 'from above' : 'on the left'} or create a new one.</div>
+            <div className="flex-1 flex flex-col md:flex-row gap-3 overflow-auto">
+                {showSidebar && <ChatSidebar />}
+
+                <div className='flex-1 flex flex-col md:flex-row gap-3 overflow-auto relative'>
+                    {!hasRoom ? (
+                        <div className="flex-1 bg-background p-6 flex items-center justify-center">
+                            <div className="text-center">
+                                <div className="text-base md:text-lg font-semibold mb-1">
+                                    Join a room to get started!
+                                </div>
+                                <div className="text-xs md:text-sm text-muted-foreground">
+                                    Select a room {isMobile ? 'from above' : 'on the left'} or create a new one.
+                                </div>
                             </div>
                         </div>
-                    )}
+                    ) : (<ChatWindow />)}
+
+                </div>
             </div>
 
             <KickedDialog />

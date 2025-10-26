@@ -1,6 +1,6 @@
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ChatButton } from './utility/ChatButton'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type FC } from 'react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -9,9 +9,13 @@ import { useQueryClient } from '@tanstack/react-query';
 import { socket } from '@/socket';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 
-export const GIFButton = () => {
+interface GIFButtonProps {
+    disabled?: boolean;
+}
+
+export const GIFButton: FC<GIFButtonProps> = ({ disabled }) => {
     const queryClient = useQueryClient();
-    const { joinedRoomId } = useRoomsStore();
+    const { dmRoomId, joinedRoomId } = useRoomsStore();
 
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useState('');
@@ -50,7 +54,12 @@ export const GIFButton = () => {
     if (!joinedRoomId)
         return;
 
-    const handleSendGIF = (link: string) => socket.emit('sendMessage', joinedRoomId, link, ({ success }) => setIsOpen(!success))
+    const handleSendGIF = (link: string) => {
+        if (!!dmRoomId)
+            socket.emit('sendMessage', true, dmRoomId, link, ({ success }) => setIsOpen(!success))
+        else if (!!joinedRoomId)
+            socket.emit('sendMessage', false, joinedRoomId, link, ({ success }) => setIsOpen(!success))
+    }
 
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -60,7 +69,7 @@ export const GIFButton = () => {
                 </TooltipContent>
                 <PopoverTrigger asChild>
                     <TooltipTrigger asChild>
-                        <ChatButton>GIF</ChatButton>
+                        <ChatButton disabled={disabled}>GIF</ChatButton>
                     </TooltipTrigger>
                 </PopoverTrigger>
                 <PopoverContent

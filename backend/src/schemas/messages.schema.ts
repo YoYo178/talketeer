@@ -24,3 +24,22 @@ export const messageIdParamsSchema = z.object({
 })
 
 export type TMessageIdParams = z.infer<typeof messageIdParamsSchema>;
+
+// Get DM messages schema
+export const DmMessagesQuerySchema = z.object({
+    roomId: mongooseObjectId,
+    friendId: mongooseObjectId,
+    before: z.string().optional(),
+    after: z.string().optional()
+})
+
+export type TDmMessagesQuery = z.infer<typeof DmMessagesQuerySchema>;
+
+// Get DM message by ID schema
+export const DmMessageQuerySchema = z.object({
+    messageId: mongooseObjectId,
+    roomId: mongooseObjectId,
+    friendId: mongooseObjectId
+})
+
+export type TDmMessageQuery = z.infer<typeof DmMessageQuerySchema>;

@@ -2,6 +2,7 @@ import { useDialogStore } from "@/hooks/state/useDialogStore";
 import { useGlobalStore } from "@/hooks/state/useGlobalStore";
 import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 import type { APIResponse } from "@/types/api.types";
+import type { IMessage } from "@/types/message.types";
 import type { INotification } from "@/types/notification.types";
 import type { IRoom } from "@/types/room.types";
 import type { TalketeerSocket } from "@/types/socket.types";
@@ -67,7 +68,7 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
         queryClient?.invalidateQueries({ queryKey: ['rooms', roomId] });
     });
 
-    socket.on('notification', (notification) => {
+    socket.on('notification', (notification, data) => {
         console.log('Received new notification: ', notification);
 
         queryClient?.setQueryData(
@@ -78,8 +79,12 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
 
         useGlobalStore.getState().setHasNewNotifications(true);
 
-        if (['friend-request', 'friend-new', 'friend-delete'].includes(notification.type))
+        if (['friend-request', 'friend-new', 'friend-delete'].includes(notification.type)) {
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
+
+            if (['friend-new', 'friend-delete'].includes(notification.type) && data.dmRoomId)
+                queryClient?.invalidateQueries({ queryKey: ['dm-rooms', data.dmRoomId] })
+        }
     });
 
     socket.on('userOnline', (usersCount, userId) => {
@@ -92,6 +97,19 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
 
     socket.on('userUpdated', (userId) => {
         queryClient?.invalidateQueries({ queryKey: ['users', userId] })
+    })
+
+    socket.on('newDmMessage', (roomId, userId, message) => {
+        console.log(`Received new DM message from ${userId}: ${message.content}`);
+
+        const oldMessagePages = queryClient?.getQueryData<{ pages: { success: true, data: { messages: IMessage[], nextCursor: string | null } }[], pageParams: string[] }>(['dm-messages', roomId]);
+        if (!oldMessagePages)
+            return;
+
+        const newMessagePages = structuredClone(oldMessagePages);
+        newMessagePages.pages[0].data.messages.push(message);
+
+        queryClient?.setQueryData(['dm-messages', roomId], newMessagePages)
     })
 }
 
@@ -117,4 +135,7 @@ export function handleSocketDisconnection(socket: TalketeerSocket) {
     socket.off('newMessage');
     socket.off('messageEdited');
     socket.off('messageDeleted');
+
+    // DM events
+    socket.off('newDmMessage');
 }

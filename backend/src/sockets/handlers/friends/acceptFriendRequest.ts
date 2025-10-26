@@ -1,4 +1,5 @@
 import { saveNotification } from '@src/services/notification.service';
+import { checkDMRoom } from '@src/services/room.service';
 import { acceptUserFriendRequest, getUser } from '@src/services/user.service';
 import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
@@ -32,11 +33,17 @@ export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket
 
             await acceptUserFriendRequest(senderId, receiverId);
 
+            // Now we do have a reason to hold ack for this :]
+            const dmRoom = await checkDMRoom(senderId, receiverId);
+
+            if (!dmRoom)
+                throw new Error('An error occured while creating/reactivating DM room');
+
             // Save notification
             const notificationObj = await saveNotification(senderId, { content: `${receiver.username} has accepted your friend request.`, type: 'friend-new' });
 
             // Push notification to the sender
-            io.to(senderId).emit('notification', notificationObj)
+            io.to(senderId).emit('notification', notificationObj, { dmRoomId: dmRoom._id });
 
             ack({ success: true });
         } catch (err) {

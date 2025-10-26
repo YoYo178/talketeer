@@ -17,6 +17,7 @@ import { ChatMemberList } from './ChatMemberList';
 // TODO: Fix ChatMemberList for smaller screens!
 
 export const ChatWindow = () => {
+    const { dmRoomId } = useRoomsStore();
     const queryClient = useQueryClient();
     const [isJoining, setIsJoining] = useState(false);
     const [isInMemberList, setIsInMemberList] = useState(false);
@@ -137,7 +138,7 @@ export const ChatWindow = () => {
                         <ChatComposer />
                     </div>
 
-                    <ChatMemberList />
+                    {!dmRoomId && <ChatMemberList />}
                 </div>
             )}
         </div>

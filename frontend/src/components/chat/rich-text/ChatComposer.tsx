@@ -5,19 +5,38 @@ import { socket } from '@/socket';
 import { Textarea } from '@/components/ui/textarea';
 import { GIFButton } from './GIFButton';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
+import { Ellipsis } from 'lucide-react';
+import { useGetDmRoomByIdQuery } from '@/hooks/network/rooms/useGetDmRoomByIdQuery';
 
 export const ChatComposer = () => {
-    const { joinedRoomId } = useRoomsStore();
+    const { joinedRoomId, dmRoomId } = useRoomsStore();
     const [message, setMessage] = useState('');
 
-    const sendMessage = () => {
-        if (!joinedRoomId)
-            return;
+    const me = useMe();
 
-        socket.emit('sendMessage', joinedRoomId, message, ({ success }) => {
-            if (success)
-                setMessage('');
-        })
+    const { data } = useGetDmRoomByIdQuery({
+        queryKey: ['dm-rooms', dmRoomId!],
+        enabled: !!dmRoomId,
+        pathParams: { roomId: dmRoomId! }
+    })
+
+    const dmRoom = data?.data?.room;
+
+    const canSendMessage = !!dmRoomId ? (dmRoom && dmRoom.isActive) : true;
+
+    const sendMessage = () => {
+        if (!!dmRoomId) {
+            socket.emit('sendMessage', true, dmRoomId, message, ({ success }) => {
+                if (success)
+                    setMessage('');
+            })
+        } else if (!!joinedRoomId) {
+            socket.emit('sendMessage', false, joinedRoomId, message, ({ success }) => {
+                if (success)
+                    setMessage('');
+            })
+        }
     }
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -35,19 +54,24 @@ export const ChatComposer = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit} className='p-3 flex items-center gap-3'>
-            <AttachFileButton />
-            <Textarea
-                rows={1}
-                placeholder='Start typing...'
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary min-h-0 resize-none max-h-24 overflow-y-auto whitespace-pre-wrap wrap-anywhere text-sm'
-            />
-            <div className='flex'>
-                <GIFButton />
-                <SendButton />
+        <form onSubmit={handleSubmit} className='p-3 pt-2 flex items-center gap-3'>
+            <div className="w-full flex flex-col gap-2">
+                <div className="flex w-full">
+                    <AttachFileButton disabled={!canSendMessage} />
+                    <Textarea
+                        rows={1}
+                        placeholder='Start typing...'
+                        disabled={!canSendMessage}
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary min-h-0 resize-none max-h-24 overflow-y-auto whitespace-pre-wrap wrap-anywhere text-sm'
+                    />
+                    <div className='flex'>
+                        <GIFButton disabled={!canSendMessage} />
+                        <SendButton disabled={!canSendMessage} />
+                    </div>
+                </div>
             </div>
         </form>
     )

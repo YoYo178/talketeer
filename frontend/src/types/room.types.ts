@@ -1,5 +1,3 @@
-import type { IMessage } from "./message.types";
-
 export interface IRoomMember {
     user: string;
     roomRole: 'admin' | 'member';
@@ -22,7 +20,7 @@ export interface IRoom {
     members: IRoomMember[];
 
     /** Room messages array */
-    messages: IMessage[];
+    messages: string[];
 
     /** Number of members currently in the room */
     memberCount: number;
@@ -41,3 +39,19 @@ export interface IRoom {
 }
 
 export type IRoomPublicView = Omit<IRoom, 'code' | 'members' | 'messages'>;
+
+export interface IDMRoom {
+    _id: string;
+
+    /** Whether the room is active (users are friends) or not (users were friends but not anymore) */
+    isActive: boolean;
+
+    /** Room members array */
+    members: [string, string];
+
+    /** Room messages array */
+    messages: string[];
+
+    createdAt: number;
+    updatedAt: number;
+}

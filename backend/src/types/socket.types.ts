@@ -9,7 +9,7 @@ export interface ServerToClientEvents {
     roomUpdated: (roomId: string) => void;
     roomDeleted: (roomId: string, ownerId: string) => void;
 
-    notification: (notification: INotification) => void;
+    notification: (notification: INotification, data: any) => void;
 
     userOnline: (usersCount: number, userId: string) => void;
     userOffline: (usersCount: number, userId: string) => void;
@@ -24,6 +24,9 @@ export interface ServerToClientEvents {
     newMessage: (roomId: string, userId: string, message: IMessage) => void;
     messageEdited: (roomId: string, userId: string, oldMessage: string, newMessage: string) => void;
     messageDeleted: (roomId: string, userId: string, deletedBy: string, message: string) => void;
+
+    /** DM events, users are ALWAYS joined to DM rooms */
+    newDmMessage: (roomId: string, userId: string, message: IMessage) => void;
 }
 
 // This generic represents the data type that is to be sent with the ack, null by default
@@ -37,7 +40,7 @@ export interface ClientToServerEvents {
     leaveRoom: (roomId: string, ack: AckFunc) => void;
     deleteRoom: (roomId: string, ack: AckFunc) => void;
 
-    sendMessage: (roomId: string, message: string, ack: AckFunc) => void;
+    sendMessage: (isDM: boolean, roomId: string, message: string, ack: AckFunc) => void;
     editMessage: (roomId: string, messageId: string, newContent: string, ack: AckFunc) => void;
     deleteMessage: (roomId: string, messageId: string, ack: AckFunc) => void;
 

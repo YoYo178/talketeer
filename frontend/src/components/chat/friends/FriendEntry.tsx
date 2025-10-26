@@ -6,16 +6,25 @@ import type { IUserFriend } from '@/types/user.types'
 import { useQueryClient } from '@tanstack/react-query';
 import type { FC } from 'react'
 import { UserProfilePicture } from '../UserProfilePicture';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
+import { useGetDmRoomByFriendIdQuery } from '@/hooks/network/rooms/useGetDmRoomByFriendIdQuery';
 
 interface FriendEntryProps {
     friendObject: IUserFriend;
 }
 
 export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
+    const { dmRoomId, setDmRoomId } = useRoomsStore();
     const queryClient = useQueryClient();
 
     const me = useMe();
     const user = useGetUser(friendObject.userId);
+
+    const { data } = useGetDmRoomByFriendIdQuery({
+        queryKey: ['dm-rooms', 'friend', friendObject.userId],
+        pathParams: { friendId: friendObject.userId }
+    })
+    const dmRoom = data?.data?.room;
 
     if (!user || !me)
         return;
@@ -28,13 +37,31 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
 
     const refreshMeData = () => queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
 
-    const handleAcceptFriendRequest = () => socket.emit('acceptFriendRequest', user._id, ({ success }) => success && refreshMeData());
-    const handleDeclineFriendRequest = () => socket.emit('declineFriendRequest', user._id, ({ success }) => success && refreshMeData());
+    const successCallback = ({ success }: { success: boolean }) => success && refreshMeData();
 
-    const handleRevokeFriendRequest = () => socket.emit('revokeFriendRequest', user._id, ({ success }) => success && refreshMeData());
+    const handleAcceptFriendRequest = () => socket.emit('acceptFriendRequest', user._id, ({ success }) => {
+        successCallback({ success });
 
-    const handleRemoveFriend = () => socket.emit('removeFriend', user._id, ({ success }) => success && refreshMeData());
-    const handleSendMessage = () => { }; // TODO
+        if (!!dmRoomId)
+            queryClient.invalidateQueries({ queryKey: ['dm-rooms', dmRoomId] });
+    })
+
+    const handleDeclineFriendRequest = () => socket.emit('declineFriendRequest', user._id, successCallback);
+    const handleRevokeFriendRequest = () => socket.emit('revokeFriendRequest', user._id, successCallback);
+
+    const handleRemoveFriend = () => socket.emit('removeFriend', user._id, ({ success }) => {
+        successCallback({ success });
+
+        if (!!dmRoomId)
+            queryClient.invalidateQueries({ queryKey: ['dm-rooms', dmRoomId] });
+    });
+
+    const handleSendMessage = () => {
+        if (!dmRoom || dmRoomId === dmRoom._id)
+            return;
+
+        setDmRoomId(dmRoom._id)
+    };
 
     return (
         <div className="p-2 flex flex-col gap-2 rounded-xl hover:bg-[#dad8d8] dark:hover:bg-accent">

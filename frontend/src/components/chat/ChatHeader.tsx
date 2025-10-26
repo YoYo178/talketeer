@@ -13,8 +13,11 @@ import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
 import { DeleteRoomDialog } from './rooms/administration/DeleteRoomDialog';
 import { toast } from 'sonner';
 import type { IRoom } from '@/types/room.types';
+import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
+import { useDMRooms } from '@/hooks/network/rooms/useGetDmRoomsQuery';
 
 export const ChatHeader = () => {
+    const { dmRoomId, setDmRoomId } = useRoomsStore();
     const queryClient = useQueryClient();
 
     const [isLeaving, setIsLeaving] = useState(false);
@@ -26,12 +29,21 @@ export const ChatHeader = () => {
     const me = useMe();
     const room = useRoom<{ room: IRoom }>(joinedRoomId);
 
-    if (!room || !me)
+    const dmRoom = useDMRooms().find(room => room._id === dmRoomId);
+
+    const friend = useGetUser(dmRoom?.members?.find(userId => userId !== me?._id) || '') ?? null;
+
+    if ((!room && !dmRoom) || !me)
         return;
 
-    const isRoomOwner = room.owner === me._id;
+    const isRoomOwner = !dmRoomId ? room?.owner === me._id : false;
 
     const handleRoomLeave = () => {
+        if (!!dmRoomId) {
+            setDmRoomId(null);
+            return;
+        }
+
         if (!room || isLeaving)
             return;
 
@@ -47,7 +59,7 @@ export const ChatHeader = () => {
     }
 
     const handleCopyRoomCode = async () => {
-        if (didCopyCode) return;
+        if (didCopyCode || !room) return;
 
         try {
             await navigator.clipboard.writeText(room.code);
@@ -63,34 +75,36 @@ export const ChatHeader = () => {
     return (
         <div className='flex items-center p-4 justify-between'>
             <div className='flex gap-2 items-center'>
-                <p className='text-sm md:text-base lg:text-lg font-semibold'>{room.name}</p>
-                <div className='flex'>
-                    {/* Copy room code button */}
-                    {(room.visibility === 'public' || isRoomOwner) && (
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <ChatButton onClick={handleCopyRoomCode}>
-                                    <Copy className='size-4' />
-                                </ChatButton>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Copy room code</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    )}
+                <p className='text-sm md:text-base lg:text-lg font-semibold'>{dmRoomId ? `@${friend?.username}` : room!.name}</p>
+                {!dmRoomId && (
+                    <div className='flex'>
+                        {/* Copy room code button */}
+                        {(room!.visibility === 'public' || isRoomOwner) && (
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <ChatButton onClick={handleCopyRoomCode}>
+                                        <Copy className='size-4' />
+                                    </ChatButton>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>Copy room code</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        )}
 
-                    {isRoomOwner && (
-                        <>
-                            <EditRoomDialog />
-                            <DeleteRoomDialog />
-                        </>
-                    )}
-                </div>
+                        {!dmRoomId && isRoomOwner && (
+                            <>
+                                <EditRoomDialog />
+                                <DeleteRoomDialog />
+                            </>
+                        )}
+                    </div>
+                )}
             </div>
 
             <Button onClick={handleRoomLeave} >
                 <X className='size-4' />
-                <span className='text-xs sm:text-sm md:text-base font-bold'>Leave room</span>
+                <span className='text-xs sm:text-sm md:text-base font-bold'>{!!dmRoomId ? 'Close DM' : 'Leave room'}</span>
             </Button>
         </div>
     )

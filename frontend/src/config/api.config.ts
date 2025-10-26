@@ -72,7 +72,20 @@ export const APIEndpoints: Endpoints = {
         URL: '/rooms/:roomId'
     },
 
-    // Message routes
+    GET_ALL_DM_ROOMS: {
+        METHOD: 'GET',
+        URL: '/rooms/dm'
+    },
+    GET_DM_ROOM_BY_ID: {
+        METHOD: 'GET',
+        URL: '/rooms/dm/:roomId'
+    },
+    GET_DM_ROOM_BY_FRIEND_ID: {
+        METHOD: 'GET',
+        URL: '/rooms/dm/friend/:friendId'
+    },
+
+    // Notification routes
     GET_NOTIFICATIONS: {
         METHOD: 'GET',
         URL: '/notifications'
@@ -90,6 +103,14 @@ export const APIEndpoints: Endpoints = {
     GET_MESSAGE_BY_ID: {
         METHOD: 'GET',
         URL: '/messages/:messageId'
+    },
+    GET_DM_MESSAGES: {
+        METHOD: 'GET',
+        URL: '/messages/dm'
+    },
+    GET_DM_MESSAGE_BY_ID: {
+        METHOD: 'GET',
+        URL: '/messages/dm/:messageId'
     },
 
     // User routes

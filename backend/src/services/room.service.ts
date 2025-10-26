@@ -1,4 +1,4 @@
-import { Room } from '@src/models';
+import { DMRoom, Room } from '@src/models';
 import { IRoom } from '@src/types';
 import { getUser, updateUserRoom } from './user.service';
 import mongoose from 'mongoose';
@@ -129,4 +129,40 @@ export async function leaveRoom(userId: string, roomId: string) {
     } finally {
         await session.endSession();
     }
+}
+
+// this function re-activates a DM room if it exists, or creates a new one
+export async function checkDMRoom(userId: string, otherUserId: string) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const otherUserObjectId = new mongoose.Types.ObjectId(otherUserId);
+
+    const existingRoom = await DMRoom.findOne({ members: { $all: [userObjectId, otherUserObjectId] } }).lean().exec()
+
+    if (!!existingRoom) {
+        const updatedRoom = await DMRoom.findOneAndUpdate({ _id: existingRoom._id }, { isActive: true }, { lean: true, new: true }).exec()
+        return updatedRoom;
+    } else {
+        const room = await DMRoom.create({
+            members: [userObjectId, otherUserObjectId],
+            messages: [],
+            isActive: true
+        });
+
+        return room.toObject();
+    }
+}
+
+export async function deactivateDMRoom(userId: string, otherUserId: string) {
+    const userObjectId = new mongoose.Types.ObjectId(userId);
+    const otherUserObjectId = new mongoose.Types.ObjectId(otherUserId);
+
+    const room = await DMRoom.findOneAndUpdate(
+        { members: { $all: [userObjectId, otherUserObjectId] } },
+        {
+            $set: { isActive: false },
+        },
+        { new: true, upsert: true, lean: true }
+    ).exec()
+
+    return room;
 }

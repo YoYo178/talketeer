@@ -44,3 +44,19 @@ export interface IRoom {
 }
 
 export type IRoomPublicView = Omit<IRoom, 'code' | 'members' | 'messages'>;
+
+export interface IDMRoom {
+    _id: mongoose.Types.ObjectId;
+
+    /** Whether the room is active (users are friends) or not (users were friends but not anymore) */
+    isActive: boolean;
+
+    /** Room members array */
+    members: [DBRef<IUser>, DBRef<IUser>];
+
+    /** Room messages array */
+    messages: DBRef<IMessage>[];
+
+    createdAt: number;
+    updatedAt: number;
+}

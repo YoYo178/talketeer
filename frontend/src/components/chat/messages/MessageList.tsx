@@ -6,6 +6,10 @@ import React from 'react';
 import { useGetMessagesQuery } from '@/hooks/network/messages/useGetMessagesQuery';
 import { Separator } from '@/components/ui/separator';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
+import { useGetDmMessagesQuery } from '@/hooks/network/messages/useGetDmMessagesQuery';
+import { useGetDmRoomByIdQuery } from '@/hooks/network/rooms/useGetDmRoomByIdQuery';
+import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
+import { useMe } from '@/hooks/network/users/useGetMeQuery';
 
 const MessageListSkeleton = () => {
     const alignArr: ('start' | 'end')[] = ['start', 'end']
@@ -23,6 +27,7 @@ const MessageListSkeleton = () => {
 }
 
 export const MessageList = () => {
+    const { dmRoomId, typingUsers } = useRoomsStore();
     const chatEndRef = useRef<HTMLDivElement>(null);
     const isAtBottom = useRef(false);
     const hasScrolled = useRef(false);
@@ -30,31 +35,54 @@ export const MessageList = () => {
     const roomsStore = useRoomsStore();
     const { joinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string }
 
-    const { data, isLoading, fetchNextPage, hasNextPage } = useGetMessagesQuery({
+    const me = useMe();
+
+    const { data } = useGetDmRoomByIdQuery({
+        queryKey: ['dm-rooms', dmRoomId!],
+        enabled: !!dmRoomId && !!me,
+        pathParams: { roomId: dmRoomId! }
+    })
+    const dmRoom = data?.data?.room;
+
+    const friendUser = useGetUser(dmRoom?.members.find(mem => mem !== me?._id)!) ?? null;
+
+    const messagesQuery = useGetMessagesQuery({
         queryKey: ['messages', joinedRoomId],
         queryParams: { roomId: joinedRoomId }
     })
+    const dmMessagesQuery = useGetDmMessagesQuery({
+        queryKey: ['dm-messages', dmRoomId!],
+        queryParams: { roomId: dmRoomId! },
+        enabled: !!dmRoomId
+    })
+
+    const pages = (!!dmRoomId ? dmMessagesQuery.data?.pages : messagesQuery.data?.pages) || [];
+
     const messagePages = useMemo(
-        () => [...(data?.pages || [])].reverse(),
-        [data?.pages]
+        () => pages.reverse(),
+        [pages]
     )
+
+    useEffect(() => {
+        console.log(typingUsers)
+    }, [typingUsers])
 
     const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         const element = e.target as HTMLDivElement;
 
         isAtBottom.current = element.scrollHeight - element.scrollTop - element.clientHeight < 50;
 
-        if (element.scrollTop === 0 && hasNextPage) {
+        if (element.scrollTop === 0 && (!!dmRoomId ? dmMessagesQuery.hasNextPage : messagesQuery.hasNextPage)) {
             const prevHeight = element.scrollHeight;
 
-            fetchNextPage?.().then(() => {
+            (!!dmRoomId ? dmMessagesQuery.fetchNextPage?.() : messagesQuery.fetchNextPage?.()).then(() => {
                 requestAnimationFrame(() => {
                     const newHeight = element.scrollHeight;
                     element.scrollTop = newHeight - prevHeight;
                 })
             });
         }
-    }, [hasNextPage, fetchNextPage])
+    }, [dmRoomId, dmMessagesQuery.hasNextPage, messagesQuery.hasNextPage, dmMessagesQuery.fetchNextPage, messagesQuery.fetchNextPage])
 
     const messageElements = useMemo(() => {
         return messagePages.flatMap(page => {
@@ -110,13 +138,20 @@ export const MessageList = () => {
     if (!messageElements.length) {
         return (
             <div className='flex-1 flex items-center justify-center overflow-hidden m-6'>
-                {isLoading ? (
+                {(!!dmRoomId ? dmMessagesQuery.isLoading : messagesQuery.isLoading) ? (
                     <MessageListSkeleton />
                 ) : (
-                    <div className='text-center'>
-                        <p className='text-base text-muted-foreground md:text-xl'>This room currently has no messages.</p>
-                        <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
-                    </div>
+                    !!dmRoomId ? (
+                        <div className='text-center'>
+                            <p className='text-base text-muted-foreground md:text-xl'>This conversation is currently empty.</p>
+                            <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
+                        </div>
+                    ) : (
+                        <div className='text-center'>
+                            <p className='text-base text-muted-foreground md:text-xl'>This room currently has no messages.</p>
+                            <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
+                        </div>
+                    )
                 )}
             </div>
         )
@@ -125,11 +160,11 @@ export const MessageList = () => {
     return (
         <ScrollArea className='flex flex-col flex-1 p-4 pt-0 pb-0 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
             <div className="flex flex-col">
-                {messageElements.length > 0 && !hasNextPage && (
+                {messageElements.length > 0 && (!!dmRoomId ? !dmMessagesQuery.hasNextPage : !messagesQuery.hasNextPage) && (
                     <div className="flex items-center my-2">
                         <Separator className='flex-1' />
                         <span className="mx-2 bg-transparent text-center px-2 dark:text-muted-foreground text-sm md:text-base">
-                            You've reached the end of this chatroom!
+                            {!!dmRoomId ? `This is the beginning of your conversation with @${friendUser?.username}` : 'You\'ve reached the end of this chatroom!'}
                         </span>
                         <Separator className='flex-1' />
                     </div>

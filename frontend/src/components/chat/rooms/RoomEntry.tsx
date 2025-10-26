@@ -14,6 +14,7 @@ interface RoomEntryProps {
 }
 
 export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
+    const { dmRoomId, setDmRoomId } = useRoomsStore();
     const queryClient = useQueryClient();
     const { setData: setDialogData } = useDialogStore();
     const { joinedRoomId, selectedRoomId, setSelectedRoomId, setJoinedRoomId } = useRoomsStore();
@@ -38,6 +39,9 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     }
 
     const handleRoomJoin = async () => {
+        if (!!dmRoomId)
+            setDmRoomId(null);
+
         if (!selectedRoom || selectedRoomId === joinedRoomId || isJoining || !me)
             return;
 

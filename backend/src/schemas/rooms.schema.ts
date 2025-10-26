@@ -8,6 +8,13 @@ export const roomIdParamsSchema = z.object({
 
 export type TRoomIdParams = z.infer<typeof roomIdParamsSchema>
 
+// Friend ID schema
+export const friendIdParamsSchema = z.object({
+    friendId: mongooseObjectId
+})
+
+export type TFriendIdParams = z.infer<typeof friendIdParamsSchema>
+
 // Room ID + User ID schema
 export const roomMemberParamsSchema = z.object({
     roomId: mongooseObjectId,

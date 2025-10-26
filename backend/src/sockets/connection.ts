@@ -5,6 +5,23 @@ import { registerMessageHandlers } from "./handlers/message";
 import logger from "@src/utils/logger.utils";
 import { onlineMembers } from "@src/utils";
 import { registerFriendHandlers } from "./handlers/friends";
+import { DMRoom } from "@src/models";
+
+async function joinDMRooms(socket: TalketeerSocket) {
+    const rooms = await DMRoom.find({ members: socket.data.user.id }).select('_id isActive').lean().exec() || [];
+    let connectedRooms = 0;
+
+    if (rooms.length) {
+        rooms.forEach(room => {
+            if (room.isActive) {
+                socket.join(room._id.toString());
+                connectedRooms++;
+            }
+        });
+
+        logger.info(`User ${socket.data.user.username} connected to ${connectedRooms}/${rooms.length} DM rooms.`)
+    }
+}
 
 export function handleSocketConnection(io: TalketeerSocketServer, socket: TalketeerSocket) {
     if (!socket.data?.user) {
@@ -28,4 +45,6 @@ export function handleSocketConnection(io: TalketeerSocketServer, socket: Talket
     registerMessageHandlers(io, socket);
 
     io.emit('userOnline', onlineMembers.size, socket.data.user.id);
+
+    joinDMRooms(socket);
 }
