@@ -15,6 +15,9 @@ export interface ServerToClientEvents {
     userOffline: (usersCount: number, userId: string) => void;
     userUpdated: (userId: string) => void;
 
+    userTypingStart: (roomId: string, userId: string, username: string) => void;
+    userTypingEnd: (roomId: string, userId: string) => void;
+
     /** For users IN a room */
     memberJoined: (roomId: string, userId: string) => void;
     memberLeft: (roomId: string, userId: string) => void;
@@ -27,6 +30,9 @@ export interface ServerToClientEvents {
 
     /** DM events, users are ALWAYS joined to DM rooms */
     newDmMessage: (roomId: string, userId: string, message: IMessage) => void;
+
+    dmUserTypingStart: (roomId: string, userId: string, username: string) => void;
+    dmUserTypingEnd: (roomId: string, userId: string) => void;
 }
 
 export type AckOptions<T> = { success: boolean, data?: T, error?: string };
@@ -51,6 +57,12 @@ export interface ClientToServerEvents {
     acceptFriendRequest: (userId: string, ack: AckFunc) => void;
     declineFriendRequest: (userId: string, ack: AckFunc) => void;
     removeFriend: (userId: string, ack: AckFunc) => void;
+
+    startTyping: (userId: string, roomId: string, username: string, ack: AckFunc) => void;
+    stopTyping: (userId: string, roomId: string, ack: AckFunc) => void;
+
+    startDmTyping: (userId: string, roomId: string, username: string, ack: AckFunc) => void;
+    stopDmTyping: (userId: string, roomId: string, ack: AckFunc) => void;
 }
 
 export interface InterServerEvents {

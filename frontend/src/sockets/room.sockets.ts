@@ -5,6 +5,7 @@ import { useDialogStore } from "@/hooks/state/useDialogStore";
 import type { APIResponse } from "@/types/api.types";
 import type { IRoom } from "@/types/room.types";
 import type { TalketeerSocket } from "@/types/socket.types";
+import { useRoomsStore } from "@/hooks/state/useRoomsStore";
 
 export function startListeningRoomEvents(socket: TalketeerSocket, queryClient?: QueryClient) {
     stopListeningRoomEvents(socket);
@@ -70,6 +71,26 @@ export function startListeningRoomEvents(socket: TalketeerSocket, queryClient?: 
             })
         }
     });
+
+    socket.on('userTypingStart', (roomId, userId, username) => {
+        console.log(`User ${userId} started typing in room ${roomId}`)
+
+        useRoomsStore.getState().addTypingUser({
+            roomType: 'normal',
+            roomId,
+            userId,
+            username
+        })
+    })
+
+    socket.on('userTypingEnd', (roomId, userId) => {
+        console.log(`User ${userId} stopped typing in room ${roomId}`)
+        useRoomsStore.getState().removeTypingUser({
+            roomType: 'normal',
+            roomId,
+            userId
+        })
+    })
 
     startListeningMessageEvents(socket, queryClient);
 }

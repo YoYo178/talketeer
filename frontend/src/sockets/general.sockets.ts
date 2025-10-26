@@ -111,6 +111,25 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
 
         queryClient?.setQueryData(['dm-messages', roomId], newMessagePages)
     })
+
+    socket.on('dmUserTypingStart', (roomId, userId, username) => {
+        console.log(`User ${userId} started typing in DM room ${roomId}`)
+        useRoomsStore.getState().addTypingUser({
+            roomType: 'dm',
+            roomId,
+            userId,
+            username
+        })
+    })
+
+    socket.on('dmUserTypingEnd', (roomId, userId) => {
+        console.log(`User ${userId} stopped typing in DM room ${roomId}`)
+        useRoomsStore.getState().removeTypingUser({
+            roomType: 'dm',
+            roomId,
+            userId
+        })
+    })
 }
 
 export function handleSocketDisconnection(socket: TalketeerSocket) {

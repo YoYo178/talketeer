@@ -17,4 +17,13 @@ export function registerRoomHandlers(io: TalketeerSocketServer, socket: Talketee
 
     socket.on('kickFromRoom', getKickFromRoomEventCallback(io, socket));
     socket.on('banFromRoom', getBanFromRoomEventCallback(io, socket));
+
+    // Creating factory functions for below events would be overkill really, only downside is consistency
+    // Room Typing events
+    socket.on('startTyping', (userId, roomId, username, ack) => socket.broadcast.to(roomId).emit('userTypingStart', roomId, userId, username));
+    socket.on('stopTyping', (userId, roomId, ack) => socket.broadcast.to(roomId).emit('userTypingEnd', roomId, userId));
+
+    // DM Room Typing events
+    socket.on('startDmTyping', (userId, roomId, username, ack) => socket.broadcast.to(roomId).emit('dmUserTypingStart', roomId, userId, username));
+    socket.on('stopDmTyping', (userId, roomId, ack) => socket.broadcast.to(roomId).emit('dmUserTypingEnd', roomId, userId));
 }
