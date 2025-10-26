@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 import AuthRouter from "./auth.routes";
-import FilesRouter from "./files.router";
-import GIFRouter from "./gif.router";
+import FilesRouter from "./files.routes";
+import GIFRouter from "./gif.routes";
 import MessagesRouter from "./messages.routes";
 import NotificationsRouter from "./notifications.routes";
 import RoomsRouter from "./rooms.routes";
