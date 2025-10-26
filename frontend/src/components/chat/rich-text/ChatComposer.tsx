@@ -173,7 +173,7 @@ export const ChatComposer = () => {
         <form onSubmit={handleSubmit} className='p-3 pt-2 flex items-center gap-3'>
             <div className="w-full flex flex-col gap-2">
                 {!!dmRoomId ? buildTypingString(dmTypingUsers) : buildTypingString(roomTypingUsers)}
-                <div className="flex w-full">
+                <div className="flex w-full gap-2">
                     <AttachFileButton disabled={!canSendMessage} />
                     <Textarea
                         rows={1}
