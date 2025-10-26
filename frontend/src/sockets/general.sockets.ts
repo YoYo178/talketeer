@@ -87,11 +87,11 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
         }
     });
 
-    socket.on('userOnline', (usersCount, userId) => {
+    socket.on('userOnline', (usersCount) => {
         useGlobalStore.getState().setUsersOnline(usersCount);
     })
 
-    socket.on('userOffline', (usersCount, userId) => {
+    socket.on('userOffline', (usersCount) => {
         useGlobalStore.getState().setUsersOnline(usersCount);
     })
 
