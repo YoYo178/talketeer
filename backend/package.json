@@ -1,6 +1,16 @@
 {
-  "name": "backend",
-  "version": "0.0.0",
+  "name": "talketeer-backend",
+  "description": "A real-time chatting application (Talketeer) backend built using Express.js and Socket.io.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "-_YoYo178_-",
+    "url": "https://github.com/YoYo178"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YoYo178/talketeer"
+  },
   "scripts": {
     "build": "ts-node ./scripts/build.ts",
     "clean-install": "rm -rf ./node_modules && rm -r package-lock.json && pnpm i",
