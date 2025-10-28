@@ -8,7 +8,7 @@ export const getDisconnectingEventCallback = (io: TalketeerSocketServer, socket:
             return;
         }
 
-        logger.info(`${socket.data.user.username} disconnecting`, {
+        logger.info(`${socket.data.user.id} disconnecting`, {
             userId: socket.data.user.id,
             reason,
             description

@@ -78,7 +78,7 @@ export class SMTPClient {
         const isEthereal = this.provider.toLowerCase() === 'ethereal';
 
         if (isDebug) {
-            logger.info('New mail draft:');
+            logger.info('[Ethereal] New mail draft:');
             logger.info({ from: `'${this.appName}' <${this.email}>`, to, subject, text, html, attachments });
         }
 
@@ -92,11 +92,11 @@ export class SMTPClient {
         });
 
         if (isDebug) {
-            logger.info('Message sent:');
+            logger.info('[Ethereal] Message sent:');
             logger.info(info.messageId);
 
             if (isEthereal) {
-                logger.info('Preview URL:');
+                logger.info('[Ethereal] Preview URL:');
                 logger.info(nodemailer.getTestMessageUrl(info));
             }
         }

@@ -6,14 +6,14 @@ import mongoose from 'mongoose';
 
 export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['declineFriendRequest'] => {
     return async (userId: string, ack: AckFunc) => {
+        // Since we're the one 'declining' the friend request, we're also the receiver
+        const senderId = userId;
+        const receiverId = socket.data.user.id;
+
         try {
 
             if (!mongoose.isValidObjectId(userId))
                 throw new Error('Invalid user ID');
-
-            // Since we're the one 'declining' the friend request, we're also the receiver
-            const senderId = userId;
-            const receiverId = socket.data.user.id;
 
             const sender = await getUser(senderId);
             const receiver = (await getUser(receiverId))!; // Non-null assertion because if we sent this event then we exist (probably...)
@@ -29,8 +29,7 @@ export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socke
             if (existingFriendObj.direction === 'outgoing')
                 throw new Error('Only the other user can decline this friend request');
 
-            logger.info(`${receiver.username} declined '${sender.username}'s friend request.`, {
-                userId: socket.data.user.id,
+            logger.info(`'${receiver._id}' declined friend request from '${sender._id}'.`, {
                 senderId,
                 receiverId
             });
@@ -46,7 +45,8 @@ export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socke
             ack({ success: true });
         } catch (err) {
             logger.error('Error declining friend request', {
-                userId: socket.data.user.id,
+                senderId,
+                receiverId,
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });

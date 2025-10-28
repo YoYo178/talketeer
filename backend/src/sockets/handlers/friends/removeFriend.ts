@@ -7,13 +7,13 @@ import mongoose from 'mongoose';
 
 export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['removeFriend'] => {
     return async (userId: string, ack: AckFunc) => {
+        const selfUserId = socket.data.user.id;
+        const friendUserId = userId;
+
         try {
 
             if (!mongoose.isValidObjectId(userId))
                 throw new Error('Invalid user ID');
-
-            const selfUserId = socket.data.user.id;
-            const friendUserId = userId;
 
             const friendUser = await getUser(friendUserId);
             const selfUser = (await getUser(selfUserId))!;
@@ -27,8 +27,7 @@ export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: Talke
 
             await removeFriendObject(selfUserId, friendUserId);
 
-            logger.info(`${selfUser.username} removed '${friendUser.username} from their friend list.`, {
-                userId: socket.data.user.id,
+            logger.info(`${selfUser._id} removed '${friendUser._id} from their friend list.`, {
                 userIds: [selfUserId, friendUserId]
             });
 
@@ -47,7 +46,7 @@ export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: Talke
             ack({ success: true });
         } catch (err) {
             logger.error('Error removing friend', {
-                userId: socket.data.user.id,
+                userIds: [selfUserId, friendUserId],
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });

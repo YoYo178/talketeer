@@ -33,7 +33,7 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
             room.messages.push(message._id);
             await room.save();
 
-            logger.info(`${socket.data.user.username} sent message in ${isDM ? 'DM ' : ' '}room ${roomId}`, {
+            logger.info(`${socket.data.user.id} sent message in ${isDM ? 'DM ' : ' '}room ${roomId}`, {
                 userId: socket.data.user.id,
                 roomId,
                 messageLength: messageContent.length

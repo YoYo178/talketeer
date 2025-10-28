@@ -6,14 +6,13 @@ import mongoose from "mongoose";
 
 export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendFriendRequest'] => {
     return async (userId: string, ack: AckFunc) => {
+        const senderId = socket.data.user.id;
+        const receiverId = userId;
+
         try {
 
             if (!mongoose.isValidObjectId(userId))
                 throw new Error('Invalid user ID');
-
-            const senderId = socket.data.user.id;
-            const receiverId = userId;
-
             if (receiverId === senderId)
                 throw new Error('You cannot send friend requests to yourself');
 
@@ -34,8 +33,7 @@ export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: 
             if (existingFriendObj)
                 throw new Error('Your friend request is already pending');
 
-            logger.info(`${socket.data.user.username} sent a friend request to ${receiver.username}`, {
-                userId: socket.data.user.id,
+            logger.info(`${senderId} sent a friend request to ${receiverId}`, {
                 senderId,
                 receiverId
             });
@@ -51,7 +49,8 @@ export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: 
             ack({ success: true });
         } catch (err) {
             logger.error("Error sending friend request", {
-                userId: socket.data.user.id,
+                senderId,
+                receiverId,
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });

@@ -65,12 +65,10 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
             const targetSocket = (await io.in(userId).fetchSockets())[0]
             targetSocket.leave(roomId);
 
-            logger.info(`${admin.username} banned ${user.username} from ${room.name}`, {
+            logger.info(`${admin._id} banned ${user._id} from ${room._id}`, {
                 roomId,
                 bannedBy,
-                userId,
-                duration,
-                reason
+                userId
             })
 
             io.emit(
@@ -89,7 +87,9 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
             io.emit('roomUpdated', roomId);
         } catch (err) {
             logger.error("[NO ACK] Error banning member from room", {
-                userId: socket.data.user.id,
+                roomId,
+                userId,
+                bannedBy,
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });

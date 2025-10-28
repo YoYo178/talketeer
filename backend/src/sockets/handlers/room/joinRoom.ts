@@ -78,7 +78,7 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
 
             // Join the specified room for the client
             socket.join(roomId);
-            logger.info(`${socket.data.user.username} joined room ${roomId}`, {
+            logger.info(`${socket.data.user.username} joined room ${roomId} via method '${method}'`, {
                 userId: socket.data.user.id,
                 roomId,
                 method

@@ -32,7 +32,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
                     // Leave the specified room for the client
                     socket.leave(roomId);
-                    logger.info(`${socket.data.user.username} left room ${roomId} to create new room`, {
+                    logger.info(`${socket.data.user.id} left room ${roomId} to create new room`, {
                         userId: socket.data.user.id,
                         oldRoomId: roomId
                     });
@@ -64,12 +64,10 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
             // Join the specified room for the client
             socket.join(roomId);
-            logger.info(`${socket.data.user.username} created and joined room ${roomId}`, {
+            logger.info(`${socket.data.user.id} created and joined room ${roomId}`, {
                 userId: socket.data.user.id,
                 roomId,
-                roomName: name,
-                visibility,
-                memberLimit
+                roomData: { name, visibility, memberLimit }
             });
 
             // Broadcast the member join event to everyone in this room (except the joiner)
@@ -82,6 +80,7 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         } catch (err) {
             logger.error("Error creating room", {
                 userId: socket.data.user.id,
+                roomData: { name, visibility, memberLimit },
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });

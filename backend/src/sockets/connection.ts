@@ -19,7 +19,7 @@ async function joinDMRooms(socket: TalketeerSocket) {
             }
         });
 
-        logger.info(`User ${socket.data.user.username} connected to ${connectedRooms}/${rooms.length} DM rooms.`)
+        logger.info(`User ${socket.data.user.id} connected to ${connectedRooms}/${rooms.length} DM rooms.`)
     }
 }
 
@@ -29,7 +29,7 @@ export function handleSocketConnection(io: TalketeerSocketServer, socket: Talket
         return;
     }
 
-    logger.info(`Client connected: ${socket.data.user.username}`, {
+    logger.info(`Client connected: ${socket.data.user.id}`, {
         userId: socket.data.user.id,
         socketId: socket.id
     });

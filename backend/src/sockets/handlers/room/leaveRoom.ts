@@ -21,7 +21,7 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
 
             // Leave the specified room for the client
             socket.leave(roomId);
-            logger.info(`${socket.data.user.username} left room ${roomId}`, {
+            logger.info(`${socket.data.user.id} left room ${roomId}`, {
                 userId: socket.data.user.id,
                 roomId
             });

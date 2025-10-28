@@ -36,12 +36,12 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
             // Leave the specified room for the client
             socket.leave(roomId);
-            logger.info(`${socket.data.user.username} left room ${roomId} due to room deletion.`, {
+            logger.info(`${socket.data.user.id} left room ${roomId} due to room deletion.`, {
                 userId: socket.data.user.id,
                 roomId
             });
 
-            logger.info(`${socket.data.user.username} initiated room deletion, disconnecting ${io.sockets.adapter.rooms.get(roomId)?.size || 0} client(s) from this room...`, {
+            logger.info(`${socket.data.user.id} initiated room deletion, disconnecting ${io.sockets.adapter.rooms.get(roomId)?.size || 0} client(s) from this room...`, {
                 userId: socket.data.user.id,
                 roomId
             });
@@ -63,6 +63,7 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         } catch (err) {
             logger.error("Error deleting room", {
                 userId: socket.data.user.id,
+                roomId,
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });

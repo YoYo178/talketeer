@@ -33,7 +33,7 @@ export const getUpdateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
             // Broadcast room update to all users so they can refetch the latest details
             socket.broadcast.emit('roomUpdated', roomId);
 
-            logger.info(`${socket.data.user.username} updated room ${roomId}`, {
+            logger.info(`${socket.data.user.id} updated room ${roomId}`, {
                 userId: socket.data.user.id,
                 roomId,
                 oldRoomData: {
@@ -52,6 +52,11 @@ export const getUpdateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         } catch (err) {
             logger.error("Error updating room", {
                 userId: socket.data.user.id,
+                roomData: {
+                    name,
+                    visibility,
+                    memberLimit
+                },
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
             });
