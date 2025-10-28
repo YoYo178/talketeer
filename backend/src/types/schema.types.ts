@@ -1,4 +1,4 @@
-import { ZodType } from "zod";
+import { ZodType } from 'zod';
 
 export interface ValidationSchemas {
     body?: ZodType;

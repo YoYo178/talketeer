@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { validate } from "@src/middlewares";
-import { notificationIdParams } from "@src/schemas";
+import { validate } from '@src/middlewares';
+import { notificationIdParams } from '@src/schemas';
 
-import { getNotifications, getNotification } from '@src/controllers'
+import { getNotifications, getNotification } from '@src/controllers';
 
 const NotificationsRouter = Router();
 

@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
-import { DBRef } from "./db.types";
-import { IRoom } from "./room.types";
-import { INotification } from "./notification.types";
+import mongoose from 'mongoose';
+import { DBRef } from './db.types';
+import { IRoom } from './room.types';
+import { INotification } from './notification.types';
 
 export interface IUserFriend {
     userId: mongoose.Types.ObjectId;
@@ -66,4 +66,4 @@ export type IPublicUser = Omit<
     'updatedAt' |
     'isVerified' |
     'verifiedAt'
->
+>;

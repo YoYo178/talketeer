@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { validate } from "@src/middlewares";
-import { messagesQuerySchema, messageIdParamsSchema } from "@src/schemas";
+import { validate } from '@src/middlewares';
+import { messagesQuerySchema, messageIdParamsSchema } from '@src/schemas';
 
-import { getMessages, getMessageById, getDmMessages, getDmMessageById } from "@src/controllers";
+import { getMessages, getMessageById, getDmMessages, getDmMessageById } from '@src/controllers';
 
 const MessagesRouter = Router();
 

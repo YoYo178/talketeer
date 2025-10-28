@@ -1,7 +1,7 @@
-import { Server, Socket } from "socket.io";
-import { IMessage } from "./message.types";
-import { IRoom } from "./room.types";
-import { INotification } from "./notification.types";
+import { Server, Socket } from 'socket.io';
+import { IMessage } from './message.types';
+import { IRoom } from './room.types';
+import { INotification } from './notification.types';
 
 export interface ServerToClientEvents {
     /** For users NOT in a room */
@@ -37,7 +37,7 @@ export interface ServerToClientEvents {
 
 // This generic represents the data type that is to be sent with the ack, null by default
 export type AckFunc<T = null> = (options: AckOptions<T>) => void;
-export type AckOptions<T> = { success: boolean, data?: T, error?: string };
+export interface AckOptions<T> { success: boolean; data?: T; error?: string }
 
 export interface ClientToServerEvents {
     createRoom: (name: string, visibility: 'public' | 'private', memberLimit: number, ack: AckFunc<IRoom>) => void;

@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
-import { IUser } from "./user.types";
-import { IRoom } from "./room.types";
+import mongoose from 'mongoose';
+import { IUser } from './user.types';
+import { IRoom } from './room.types';
 
 export interface IBan {
     _id: mongoose.Types.ObjectId;

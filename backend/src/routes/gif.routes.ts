@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { validate } from "@src/middlewares";
-import { GIFSearchSchema } from "@src/schemas";
+import { validate } from '@src/middlewares';
+import { GIFSearchSchema } from '@src/schemas';
 
-import { getGIFs } from '@src/controllers'
+import { getGIFs } from '@src/controllers';
 
 const GIFRouter = Router();
 

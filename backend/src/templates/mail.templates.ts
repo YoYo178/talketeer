@@ -1,6 +1,6 @@
 export const verificationMailTemplate = {
-    subject: `Welcome to {appName} | Verify Your Email`,
-    body: `
+  subject: 'Welcome to {appName} | Verify Your Email',
+  body: `
         <div style="font-family: Arial, sans-serif; color: #111; line-height: 1.5;">
             <h2 style="margin-bottom: 0.5em;">Verify Your Account</h2>
             <p>Welcome to {appName}! Please verify your email to activate your account.</p>
@@ -27,12 +27,12 @@ export const verificationMailTemplate = {
                 If you did not create an account, you can safely ignore this email.
             </p>
         </div>
-    `
-}
+    `,
+};
 
 export const passwordResetMailTemplate = {
-    subject: `{appName} | Reset Your Password`,
-    body: `
+  subject: '{appName} | Reset Your Password',
+  body: `
         <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.5;">
             <h2 style="color: #111;">Reset Your Password</h2>
             <p>We received a request to reset the password for your {appName} account.</p>
@@ -55,5 +55,5 @@ export const passwordResetMailTemplate = {
                 If you didn't request a password reset, you can safely ignore this email.
             </p>
         </div>
-    `
-}
+    `,
+};

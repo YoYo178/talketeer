@@ -33,7 +33,7 @@ const ENV = jetEnv({
   /** SMTP */
   SmtpProvider: str,
   SmtpEmail: str,
-  SmtpPass: str
+  SmtpPass: str,
 });
 
 

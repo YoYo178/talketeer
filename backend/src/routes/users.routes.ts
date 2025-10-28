@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { validate } from "@src/middlewares";
-import { updateMeBodySchema, userIdParamsSchema } from "@src/schemas";
+import { validate } from '@src/middlewares';
+import { updateMeBodySchema, userIdParamsSchema } from '@src/schemas';
 
-import { getMe, getUser, updateMe } from "@src/controllers";
+import { getMe, getUser, updateMe } from '@src/controllers';
 
 const UsersRouter = Router();
 

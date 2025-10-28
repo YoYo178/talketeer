@@ -1,4 +1,4 @@
-import { TalketeerSocketServer } from "@src/types";
+import { TalketeerSocketServer } from '@src/types';
 
 declare global {
     namespace Express {

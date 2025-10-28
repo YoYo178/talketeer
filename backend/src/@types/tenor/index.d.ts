@@ -683,7 +683,7 @@ interface TenorGIFResponseObject {
     id: string;
 
     /** A dictionary with a content format as the key and a Media Object as the value. */
-    media_formats: { [K in TenorContentFormats]: TenorMediaObject };
+    media_formats: Record<TenorContentFormats, TenorMediaObject>;
 
     /** An array of tags for the post */
     tags: string[];
@@ -788,4 +788,4 @@ type TenorContentFormats =
     'nanowebp_transparent' |
     'gif_transparent' |
     'tinygif_transparent' |
-    'nanogif_transparent'
+    'nanogif_transparent';

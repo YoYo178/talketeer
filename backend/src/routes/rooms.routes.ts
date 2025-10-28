@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router } from 'express';
 
-import { validate } from "@src/middlewares";
-import { friendIdParamsSchema, roomIdParamsSchema } from "@src/schemas";
+import { validate } from '@src/middlewares';
+import { friendIdParamsSchema, roomIdParamsSchema } from '@src/schemas';
 
-import { getAllRooms, getRoomById, getAllDmRooms, getDmRoomById, getDmRoomByFriendId } from "@src/controllers";
+import { getAllRooms, getRoomById, getAllDmRooms, getDmRoomById, getDmRoomByFriendId } from '@src/controllers';
 
 const RoomsRouter = Router();
 

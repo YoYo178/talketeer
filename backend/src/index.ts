@@ -1,5 +1,5 @@
 /** Node packages */
-import fs from 'fs'
+import fs from 'fs';
 import path from 'path';
 
 /** Server packages */
@@ -34,13 +34,13 @@ import { setupSocket } from '@src/sockets/socket';
 import { ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData, TalketeerSocketServer } from '@src/types';
 
 /** Utilities */
-import { connectDB, populateRoomData, morganStream } from '@src/utils'
+import { connectDB, populateRoomData, morganStream } from '@src/utils';
 import logger from '@src/utils/logger.utils';
 
 // ==========================================================================================================
 
 // Connect to MongoDB
-connectDB()
+connectDB();
 
 // Create express app
 const app = express();
@@ -49,14 +49,14 @@ const app = express();
 const SSL_KEY_PATH = process.env.SSL_KEY_PATH;
 const SSL_CERT_PATH = process.env.SSL_CERT_PATH;
 
-const shouldUseHttps = ENV.NodeEnv === 'development' && (SSL_KEY_PATH && SSL_CERT_PATH)
+const shouldUseHttps = ENV.NodeEnv === 'development' && (SSL_KEY_PATH && SSL_CERT_PATH);
 
 const httpsOptions = shouldUseHttps
   ? {
     key: fs.readFileSync(path.resolve(SSL_KEY_PATH)),
-    cert: fs.readFileSync(path.resolve(SSL_CERT_PATH))
+    cert: fs.readFileSync(path.resolve(SSL_CERT_PATH)),
   }
-  : {}
+  : {};
 
 // Create server, use HTTPS if the environment is development
 const server = shouldUseHttps ? https.createServer(httpsOptions, app) : http.createServer(app);
@@ -64,17 +64,17 @@ const server = shouldUseHttps ? https.createServer(httpsOptions, app) : http.cre
 // Setup Socket.IO on the same server object
 const io: TalketeerSocketServer = new SocketIOServer<ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData>(server, {
   cors: CORSConfig,
-  serveClient: false
+  serveClient: false,
 });
 
 // Add socket event listeners
 setupSocket(io);
 
 // Attach middlewares
-app.use(cors(CORSConfig)) // CORS
+app.use(cors(CORSConfig)); // CORS
 app.use(express.json()); // JSON body parser
 app.use(express.urlencoded({ extended: true })); // URL-encoded body parser
-app.use(cookieParser()) // Cookie parser
+app.use(cookieParser()); // Cookie parser
 
 // Attach logger middleware
 if (ENV.NodeEnv === NodeEnvs.Dev) {
