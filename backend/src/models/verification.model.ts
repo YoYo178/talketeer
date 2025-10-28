@@ -1,5 +1,4 @@
 import { IVerification } from "@src/types";
-import { MongooseModel } from "@src/utils";
 import mongoose from "mongoose";
 
 const verificationSchema = new mongoose.Schema<IVerification>({
@@ -12,4 +11,4 @@ const verificationSchema = new mongoose.Schema<IVerification>({
     createdAt: { type: Date, expires: 600, default: Date.now },
 }, { timestamps: true });
 
-export const Verification = MongooseModel<IVerification>('Verification', verificationSchema);
+export const Verification = mongoose.model<IVerification>('Verification', verificationSchema);

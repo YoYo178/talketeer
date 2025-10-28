@@ -1,5 +1,4 @@
 import { IBan } from "@src/types";
-import { MongooseModel } from "@src/utils";
 import mongoose from "mongoose";
 
 const banSchema = new mongoose.Schema<IBan>({
@@ -27,4 +26,4 @@ banSchema.pre('save', function (next) {
     }
 })
 
-export const Ban = MongooseModel<IBan>('Ban', banSchema)
+export const Ban = mongoose.model<IBan>('Ban', banSchema)

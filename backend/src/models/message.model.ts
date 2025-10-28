@@ -1,5 +1,4 @@
 import { IMessage } from "@src/types";
-import { MongooseModel } from "@src/utils";
 import mongoose from "mongoose";
 
 const messageSchema = new mongoose.Schema<IMessage>({
@@ -8,4 +7,4 @@ const messageSchema = new mongoose.Schema<IMessage>({
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true }
 }, { timestamps: true })
 
-export const Message = MongooseModel<IMessage>('Message', messageSchema)
+export const Message = mongoose.model<IMessage>('Message', messageSchema)

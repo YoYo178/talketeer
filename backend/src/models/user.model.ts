@@ -1,5 +1,4 @@
 import { IUser, IUserFriend } from "@src/types";
-import { MongooseModel } from "@src/utils/mongoose.utils";
 import mongoose from "mongoose";
 
 const userFriendSchema = new mongoose.Schema<IUserFriend>({
@@ -43,4 +42,4 @@ userSchema.pre('save', function (next) {
     next();
 })
 
-export const User = MongooseModel<IUser>('User', userSchema)
+export const User = mongoose.model<IUser>('User', userSchema)
