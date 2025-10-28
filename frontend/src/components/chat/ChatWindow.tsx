@@ -13,6 +13,7 @@ import { startListeningRoomEvents, stopListeningRoomEvents } from '@/sockets/roo
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import type { IRoomPublicView } from '@/types/room.types';
 import { ChatMemberList } from './ChatMemberList';
+import { useMediaQuery } from '@/hooks/ui/useMediaQuery';
 
 // TODO: Fix ChatMemberList for smaller screens!
 
@@ -27,6 +28,8 @@ export const ChatWindow = () => {
     const { joinedRoomId, selectedRoomId, setJoinedRoomId, setSelectedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string };
 
     const me = useMe();
+
+    const isMobile = useMediaQuery('(max-width: 767px)')
 
     useLayoutEffect(() => {
         if (isInMemberList)
@@ -138,7 +141,7 @@ export const ChatWindow = () => {
                         <ChatComposer />
                     </div>
 
-                    {!dmRoomId && <ChatMemberList />}
+                    {!dmRoomId && !isMobile && <ChatMemberList />}
                 </div>
             )}
         </div>
