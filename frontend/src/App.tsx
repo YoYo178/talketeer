@@ -11,6 +11,7 @@ import { LandingPage, AuthPage, VerifyPage, ResetPage } from './pages/guest';
 import { Chat } from './pages/user';
 import { useSettingsStore } from './hooks/state/useSettingsStore.ts';
 import { useEffect } from 'react';
+import { NotFound } from './pages/NotFound.tsx';
 
 const queryClient = new QueryClient();
 
@@ -52,7 +53,7 @@ function App() {
               </Route>
             </Route>
 
-            <Route path="/*" element={<h1>TODO: Not found page</h1>} />
+            <Route path="/*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
