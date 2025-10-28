@@ -93,7 +93,7 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
                     )}
 
                     {(!isSelf && !isFriend) && (
-                        <div className='flex gap-2 pt-4 [&>*]:flex-1'>
+                        <div className='flex gap-2 pt-4 *:flex-1'>
 
                             {/* Not friends with user, show them 'Add friend' button */}
                             {(!isPending) && (

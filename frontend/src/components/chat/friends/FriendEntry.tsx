@@ -79,7 +79,7 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
                 )}
             </div>
 
-            <div className='w-full flex gap-2 flex-wrap [&>*]:flex-1'>
+            <div className='w-full flex gap-2 flex-wrap *:flex-1'>
 
                 {/* Is in our friend list already, show 'Remove' and 'Message' buttons */}
                 {isFriend && (

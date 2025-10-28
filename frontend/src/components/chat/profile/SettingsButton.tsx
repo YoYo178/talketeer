@@ -47,7 +47,7 @@ export const SettingsButton = () => {
                 align='end'
                 sideOffset={12}
                 alignOffset={20}
-                className='[&>*]:cursor-pointer'
+                className='*:cursor-pointer'
             >
                 {/* Exports a DropdownMenuItem at the 'surface level' */}
                 <ProfileDialog />
