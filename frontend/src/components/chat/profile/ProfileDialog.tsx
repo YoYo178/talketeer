@@ -183,7 +183,7 @@ export const ProfileDialog = () => {
                                         onChange={handleImageSelect}
                                     />
                                     <button
-                                        className='absolute rounded-full aspect-square w-full h-full flex items-center justify-center z-1 cursor-pointer hover:[&>*]:opacity-100 hover:bg-[#00000064]'
+                                        className='absolute rounded-full aspect-square w-full h-full flex items-center justify-center z-1 cursor-pointer hover:*:opacity-100 hover:bg-[#00000064]'
                                         onClick={(e) => { e.preventDefault(); inputRef.current?.click() }}
                                     >
                                         <Pencil className='opacity-0 transition-opacity duration-200 ease-out' />
