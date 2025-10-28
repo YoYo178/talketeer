@@ -13,7 +13,7 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
         try {
             // Validate input
             sendMessageSchema.parse({ isDM, roomId, message: messageContent });
-            
+
             const room = isDM ? await DMRoom.findById(roomId) : await Room.findById(roomId);
 
             if (!room)
@@ -30,8 +30,17 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
                 room: roomId
             })
 
-            room.messages.push(message._id);
-            await room.save();
+            if (isDM) {
+                await DMRoom.findOneAndUpdate(
+                    { _id: roomId },
+                    { $addToSet: { messages: message._id } }
+                )
+            } else {
+                await Room.findOneAndUpdate(
+                    { _id: roomId },
+                    { $addToSet: { messages: message._id } }
+                )
+            }
 
             logger.info(`${socket.data.user.id} sent message in ${isDM ? 'DM ' : ' '}room ${roomId}`, {
                 userId: socket.data.user.id,
