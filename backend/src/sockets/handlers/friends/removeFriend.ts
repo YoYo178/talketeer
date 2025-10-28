@@ -3,10 +3,15 @@ import { deactivateDMRoom } from '@src/services/room.service';
 import { getUser, removeFriendObject } from '@src/services/user.service';
 import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
+import mongoose from 'mongoose';
 
 export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['removeFriend'] => {
     return async (userId: string, ack: AckFunc) => {
         try {
+
+            if (!mongoose.isValidObjectId(userId))
+                throw new Error('Invalid user ID');
+
             const selfUserId = socket.data.user.id;
             const friendUserId = userId;
 
@@ -37,7 +42,7 @@ export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: Talke
             const notificationObj = await saveNotification(friendUserId, { content: `${selfUser.username} has removed you from their friend list.`, type: 'friend-delete' });
 
             // Push notification to the friend user
-            io.to(friendUserId).emit('notification', notificationObj, { dmRoomId: dmRoom._id });
+            io.to(friendUserId).emit('notification', notificationObj, { dmRoomId: dmRoom._id.toString() });
 
             ack({ success: true });
         } catch (err) {

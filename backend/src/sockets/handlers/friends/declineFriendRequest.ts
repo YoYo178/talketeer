@@ -2,10 +2,15 @@ import { saveNotification } from '@src/services/notification.service';
 import { removeFriendObject, getUser } from '@src/services/user.service';
 import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
+import mongoose from 'mongoose';
 
 export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['declineFriendRequest'] => {
     return async (userId: string, ack: AckFunc) => {
         try {
+
+            if (!mongoose.isValidObjectId(userId))
+                throw new Error('Invalid user ID');
+
             // Since we're the one 'declining' the friend request, we're also the receiver
             const senderId = userId;
             const receiverId = socket.data.user.id;

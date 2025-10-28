@@ -1,7 +1,7 @@
 import { leaveRoom } from "@src/services/room.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
-import { leaveRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
+import mongoose from "mongoose";
 
 export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {
     return async (roomId, ack) => {
@@ -11,11 +11,8 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
         }
 
         try {
-            // TODO: temporary!!
-            // Validate input
-            const validationResult = leaveRoomSchema.safeParse({ roomId });
-            if (!validationResult.success)
-                throw new Error('Invalid input data');
+            if (!mongoose.isValidObjectId(roomId))
+                throw new Error('Invalid room ID');
 
             const userId = socket.data.user.id;
 

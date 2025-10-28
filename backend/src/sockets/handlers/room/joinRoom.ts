@@ -12,11 +12,8 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
         }
 
         try {
-            // TODO: temporary!!
             // Validate input
-            const validationResult = joinRoomSchema.safeParse({ method, data });
-            if (!validationResult.success)
-                throw new Error('Invalid input data');
+            joinRoomSchema.safeParse({ method, data });
 
             const userId = socket.data.user.id;
             let roomId: string | null = null;

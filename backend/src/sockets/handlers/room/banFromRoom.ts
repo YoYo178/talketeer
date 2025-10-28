@@ -1,3 +1,4 @@
+import { banFromRoomSchema } from "@src/schemas";
 import { banUser, isUserBanned } from "@src/services/ban.service";
 import { getRoom, isUserInRoom, leaveRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
@@ -13,6 +14,9 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
         }
 
         try {
+            // Validate input
+            banFromRoomSchema.parse({ roomId, userId, bannedBy, duration, reason });
+
             const room = await getRoom(roomId);
 
             if (!room)

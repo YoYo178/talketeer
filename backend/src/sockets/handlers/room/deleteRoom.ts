@@ -1,8 +1,8 @@
 import { deleteRoom, leaveRoom, isUserRoomOwner, getRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
-import { roomIdParamsSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
+import mongoose from "mongoose";
 
 export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['deleteRoom'] => {
     return async (roomId, ack) => {
@@ -12,11 +12,8 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         }
 
         try {
-            // TODO: temporary!!
-            // Validate input
-            const validationResult = roomIdParamsSchema.safeParse({ roomId });
-            if (!validationResult.success)
-                throw new Error('Invalid input data');
+            if (!mongoose.isValidObjectId(roomId))
+                throw new Error('Invalid room ID');
 
             const room = await getRoom(roomId);
             if (!room)

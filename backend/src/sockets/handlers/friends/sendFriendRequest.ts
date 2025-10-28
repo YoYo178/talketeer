@@ -2,10 +2,15 @@ import { saveNotification } from "@src/services/notification.service";
 import { getUser, sendUserFriendRequest } from "@src/services/user.service";
 import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
 import logger from "@src/utils/logger.utils";
+import mongoose from "mongoose";
 
 export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendFriendRequest'] => {
     return async (userId: string, ack: AckFunc) => {
         try {
+
+            if (!mongoose.isValidObjectId(userId))
+                throw new Error('Invalid user ID');
+
             const senderId = socket.data.user.id;
             const receiverId = userId;
 

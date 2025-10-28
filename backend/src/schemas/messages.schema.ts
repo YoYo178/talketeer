@@ -3,6 +3,7 @@ import z from "zod"
 
 // Send message schema
 export const sendMessageSchema = z.object({
+    isDM: z.boolean(),
     roomId: mongooseObjectId,
     message: z.string().min(1).max(1000)
 })

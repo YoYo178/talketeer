@@ -1,3 +1,4 @@
+import { kickFromRoomSchema } from "@src/schemas";
 import { getRoom, isUserInRoom, leaveRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
@@ -11,6 +12,8 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
         }
 
         try {
+            kickFromRoomSchema.parse({ roomId, userId, kickedBy, reason })
+
             const room = await getRoom(roomId);
 
             if (!room)

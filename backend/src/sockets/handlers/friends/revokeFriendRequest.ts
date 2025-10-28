@@ -2,10 +2,15 @@ import { saveNotification } from '@src/services/notification.service';
 import { getUser, removeFriendObject } from '@src/services/user.service';
 import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
+import mongoose from 'mongoose';
 
 export const getRevokeFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['revokeFriendRequest'] => {
     return async (userId: string, ack: AckFunc) => {
         try {
+
+            if (!mongoose.isValidObjectId(userId))
+                throw new Error('Invalid user ID');
+
             // Since we're the one 'revoking' the friend request, we're also the sender
             const senderId = socket.data.user.id;
             const receiverId = userId;

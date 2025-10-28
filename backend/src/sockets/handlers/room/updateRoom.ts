@@ -1,7 +1,7 @@
 import { updateRoom, getRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
-import { createRoomSchema } from "@src/schemas";
+import { updateRoomSchema } from "@src/schemas";
 import logger from "@src/utils/logger.utils";
 
 export const getUpdateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['updateRoom'] => {
@@ -12,11 +12,8 @@ export const getUpdateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         }
 
         try {
-            // TODO: temporary!!
             // Validate input
-            const validationResult = createRoomSchema.safeParse({ name, visibility, memberLimit });
-            if (!validationResult.success)
-                throw new Error('Invalid input data');
+            updateRoomSchema.parse({ name, visibility, memberLimit });
 
             const userId = socket.data.user.id;
             const user = await getUser(userId);

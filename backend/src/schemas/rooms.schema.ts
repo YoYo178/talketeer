@@ -46,3 +46,32 @@ export const leaveRoomSchema = z.object({
 });
 
 export type TLeaveRoomBody = z.infer<typeof leaveRoomSchema>;
+
+
+export const banFromRoomSchema = z.object({
+    roomId: mongooseObjectId,
+    userId: mongooseObjectId,
+    bannedBy: mongooseObjectId,
+    duration: z.number(),
+    reason: z.string().optional()
+});
+
+export type TBanFromRoomPayload = z.infer<typeof banFromRoomSchema>;
+
+export const kickFromRoomSchema = z.object({
+    roomId: mongooseObjectId,
+    userId: mongooseObjectId,
+    kickedBy: mongooseObjectId,
+    reason: z.string().optional()
+});
+
+export type TKickFromRoomPayload = z.infer<typeof kickFromRoomSchema>;
+
+export const updateRoomSchema = z.object({
+    roomId: mongooseObjectId,
+    name: z.string().min(1).max(100),
+    visibility: z.enum(['public', 'private']),
+    memberLimit: z.number().min(2).max(10)
+});
+
+export type TUpdateRoomPayload = z.infer<typeof updateRoomSchema>;

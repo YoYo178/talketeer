@@ -3,10 +3,15 @@ import { checkDMRoom } from '@src/services/room.service';
 import { acceptUserFriendRequest, getUser } from '@src/services/user.service';
 import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
+import mongoose from 'mongoose';
 
 export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['acceptFriendRequest'] => {
     return async (userId: string, ack: AckFunc) => {
         try {
+
+            if (!mongoose.isValidObjectId(userId))
+                throw new Error('Invalid user ID');
+
             // Since we're the one 'accepting' the friend request, we're also the receiver
             const senderId = userId;
             const receiverId = socket.data.user.id;
@@ -43,7 +48,7 @@ export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket
             const notificationObj = await saveNotification(senderId, { content: `${receiver.username} has accepted your friend request.`, type: 'friend-new' });
 
             // Push notification to the sender
-            io.to(senderId).emit('notification', notificationObj, { dmRoomId: dmRoom._id });
+            io.to(senderId).emit('notification', notificationObj, { dmRoomId: dmRoom._id.toString() });
 
             ack({ success: true });
         } catch (err) {

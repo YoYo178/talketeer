@@ -9,7 +9,7 @@ export interface ServerToClientEvents {
     roomUpdated: (roomId: string) => void;
     roomDeleted: (roomId: string, ownerId: string) => void;
 
-    notification: (notification: INotification, data: any) => void;
+    notification: (notification: INotification, data?: { dmRoomId: string }) => void;
 
     userOnline: (usersCount: number, userId: string) => void;
     userOffline: (usersCount: number, userId: string) => void;

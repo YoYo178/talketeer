@@ -11,12 +11,9 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
         }
 
         try {
-            // TODO: temporary!!
             // Validate input
-            const validationResult = sendMessageSchema.safeParse({ roomId, message: messageContent });
-            if (!validationResult.success)
-                throw new Error('Invalid input data');
-
+            sendMessageSchema.parse({ isDM, roomId, message: messageContent });
+            
             const room = isDM ? await DMRoom.findById(roomId) : await Room.findById(roomId);
 
             if (!room)
