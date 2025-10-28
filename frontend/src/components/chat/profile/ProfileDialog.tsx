@@ -121,10 +121,12 @@ export const ProfileDialog = () => {
 
     useEffect(() => {
         if (!isOpen) {
-            reset(initialFormState, {
-                keepDirty: false,
-                keepValues: false,
-            })
+            if (formState.isDirty) {
+                reset(initialFormState, {
+                    keepDirty: false,
+                    keepValues: false,
+                })
+            }
             setErrors({});
             setSelectedAvatarImage('');
             setNewAvatar(null);
