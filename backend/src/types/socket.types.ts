@@ -50,8 +50,8 @@ export interface ClientToServerEvents {
     editMessage: (roomId: string, messageId: string, newContent: string, ack: AckFunc) => void;
     deleteMessage: (roomId: string, messageId: string, ack: AckFunc) => void;
 
-    kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string, ack: AckFunc) => void;
-    banFromRoom: (roomId: string, userId: string, bannedBy: string, duration: number, reason: string, ack: AckFunc) => void;
+    kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string) => void;
+    banFromRoom: (roomId: string, userId: string, bannedBy: string, duration: number, reason: string) => void;
 
     sendFriendRequest: (userId: string, ack: AckFunc) => void;
     revokeFriendRequest: (userId: string, ack: AckFunc) => void;
@@ -59,11 +59,11 @@ export interface ClientToServerEvents {
     declineFriendRequest: (userId: string, ack: AckFunc) => void;
     removeFriend: (userId: string, ack: AckFunc) => void;
 
-    startTyping: (userId: string, roomId: string, username: string, ack: AckFunc) => void;
-    stopTyping: (userId: string, roomId: string, ack: AckFunc) => void;
+    startTyping: (userId: string, roomId: string, username: string) => void;
+    stopTyping: (userId: string, roomId: string) => void;
 
-    startDmTyping: (userId: string, roomId: string, username: string, ack: AckFunc) => void;
-    stopDmTyping: (userId: string, roomId: string, ack: AckFunc) => void;
+    startDmTyping: (userId: string, roomId: string, username: string) => void;
+    stopDmTyping: (userId: string, roomId: string) => void;
 }
 
 export interface InterServerEvents {

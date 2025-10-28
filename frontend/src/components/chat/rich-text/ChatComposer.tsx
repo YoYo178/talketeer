@@ -87,7 +87,7 @@ export const ChatComposer = () => {
                     clearTimeout(typingTimer.current);
 
                 typingTimer.current = setTimeout(() => {
-                    socket.emit('stopDmTyping', me._id, dmRoomId, () => { })
+                    socket.emit('stopDmTyping', me._id, dmRoomId)
                     typingTimer.current = null;
                 }, 1000);
                 return;
@@ -97,10 +97,10 @@ export const ChatComposer = () => {
                 clearTimeout(typingTimer.current);
                 typingTimer.current = null;
             } else
-                socket.emit('startDmTyping', me._id, dmRoomId, me.username, () => { })
+                socket.emit('startDmTyping', me._id, dmRoomId, me.username)
 
             typingTimer.current = setTimeout(() => {
-                socket.emit('stopDmTyping', me._id, dmRoomId, () => { })
+                socket.emit('stopDmTyping', me._id, dmRoomId)
                 typingTimer.current = null;
             }, 3000);
         } else if (!!joinedRoomId) {
@@ -109,7 +109,7 @@ export const ChatComposer = () => {
                     clearTimeout(typingTimer.current);
 
                 typingTimer.current = setTimeout(() => {
-                    socket.emit('stopTyping', me._id, joinedRoomId, () => { })
+                    socket.emit('stopTyping', me._id, joinedRoomId)
                     typingTimer.current = null;
                 }, 1000);
                 return;
@@ -119,10 +119,10 @@ export const ChatComposer = () => {
                 clearTimeout(typingTimer.current);
                 typingTimer.current = null;
             } else
-                socket.emit('startTyping', me._id, joinedRoomId, me.username, () => { });
+                socket.emit('startTyping', me._id, joinedRoomId, me.username);
 
             typingTimer.current = setTimeout(() => {
-                socket.emit('stopTyping', me._id, joinedRoomId, () => { });
+                socket.emit('stopTyping', me._id, joinedRoomId);
                 typingTimer.current = null;
             }, 3000);
         }
@@ -149,9 +149,9 @@ export const ChatComposer = () => {
             typingTimer.current = null;
 
             if (!!dmRoomId)
-                socket.emit('stopDmTyping', me._id, dmRoomId, () => { });
+                socket.emit('stopDmTyping', me._id, dmRoomId);
             else if (!!joinedRoomId)
-                socket.emit('stopTyping', me._id, joinedRoomId, () => { });
+                socket.emit('stopTyping', me._id, joinedRoomId);
         }
     }
 

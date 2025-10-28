@@ -25,13 +25,7 @@ export const BanDialog: FC<BanDialogProps> = ({ admin, user, room }) => {
     const [duration, setDuration] = useState(getDurationValue(60 * 24));
 
     const handleBan = () => {
-        socket.emit('banFromRoom', room._id, user._id, admin._id, +duration, reason, ({ success }) => {
-            if (success) {
-                console.log('Banned member successfully');
-            } else {
-                console.error('An error occured while banning member');
-            }
-        })
+        socket.emit('banFromRoom', room._id, user._id, admin._id, +duration, reason)
     }
 
     const handleSubmit = (e: React.FormEvent) => {

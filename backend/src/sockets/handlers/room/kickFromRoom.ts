@@ -5,7 +5,7 @@ import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@s
 import logger from "@src/utils/logger.utils";
 
 export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['kickFromRoom'] => {
-    return async (roomId, userId, kickedBy, reason, ack) => {
+    return async (roomId, userId, kickedBy, reason) => {
         if (!socket.data?.user) {
             logger.warn('Unauthenticated user attempted to kick a member from a room');
             return;
@@ -52,17 +52,11 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
             io.emit('memberKicked', roomId, user._id.toString(), admin._id.toString(), reason)
 
             io.emit('roomUpdated', roomId);
-
-            ack({ success: true });
         } catch (err) {
-            logger.error("Error kicking member from room", {
+            logger.error("[NO ACK] Error kicking member from room", {
                 userId: socket.data.user.id,
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
-            });
-            ack({
-                success: false,
-                error: err?.message || 'Unknown error'
             });
         }
     }

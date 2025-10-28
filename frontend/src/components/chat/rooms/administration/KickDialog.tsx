@@ -22,13 +22,7 @@ export const KickDialog: FC<KickDialogProps> = ({ admin, user, room }) => {
     const [reason, setReason] = useState('');
 
     const handleKick = () => {
-        socket.emit('kickFromRoom', room._id, user._id, admin._id, reason, ({ success }) => {
-            if (success) {
-                console.log('Kicked member successfully');
-            } else {
-                console.error('An error occured while kicking member');
-            }
-        })
+        socket.emit('kickFromRoom', room._id, user._id, admin._id, reason)
     }
 
     const handleSubmit = (e: React.FormEvent) => {

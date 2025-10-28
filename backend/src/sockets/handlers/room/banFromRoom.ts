@@ -7,7 +7,7 @@ import logger from "@src/utils/logger.utils";
 import mongoose from "mongoose";
 
 export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['banFromRoom'] => {
-    return async (roomId, userId, bannedBy, duration, reason, ack) => {
+    return async (roomId, userId, bannedBy, duration, reason) => {
         if (!socket.data?.user) {
             logger.warn('Unauthenticated user attempted to ban a member from a room');
             return;
@@ -87,17 +87,11 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
             )
 
             io.emit('roomUpdated', roomId);
-
-            ack({ success: true });
         } catch (err) {
-            logger.error("Error banning member from room", {
+            logger.error("[NO ACK] Error banning member from room", {
                 userId: socket.data.user.id,
                 error: err?.message || 'Unknown error',
                 stack: err instanceof Error ? err.stack : undefined
-            });
-            ack({
-                success: false,
-                error: err?.message || 'Unknown error'
             });
         }
     }
