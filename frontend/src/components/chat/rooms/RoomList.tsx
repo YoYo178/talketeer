@@ -10,7 +10,7 @@ interface RoomListProps {
 export const RoomList: FC<RoomListProps> = ({ rooms }) => {
     return (
         <ScrollArea className='flex-1 rounded-md border border-border/40'>
-            <div className='flex min-h-[200px] h-full flex-col divide-y divide-border/40'>
+            <div className='flex max-h-[180px] h-full flex-col divide-y divide-border/40'>
                 {rooms.length <= 0 ? (
                     <p className='p-3 text-base font-medium text-muted-foreground m-auto'>No rooms found</p>
                 ) : (

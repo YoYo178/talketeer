@@ -51,7 +51,7 @@ export const ChatSidebar = () => {
                 </TabsList>
 
                 {/* Rooms list tab */}
-                <TabsContent value='rooms' className='min-h-[300px] flex flex-col gap-3 overflow-hidden'>
+                <TabsContent value='rooms' className='max-h-[300px] flex flex-col gap-3 overflow-hidden'>
                     <div className='flex gap-2'>
                         <CreateRoomDialog />
                         <JoinRoomDialog />
