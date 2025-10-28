@@ -24,6 +24,9 @@ export const ExpandableProfileCard = () => {
 
     const isMobile = useMediaQuery('(max-width: 530px)');
 
+    const nameArray = (me.displayName || me.username).split(' ');
+    const fallbackName = (nameArray.length > 1 ? [nameArray[0], nameArray[nameArray.length - 1]] : [nameArray[0]]).map(str => str[0].toUpperCase()).join('');
+
     return (
         <div
             className={
@@ -40,7 +43,7 @@ export const ExpandableProfileCard = () => {
                 onTransitionEnd={() => setHasCardTransitionFinished(true)}
             >
                 <AvatarImage src={getAvatarUrl(me.avatarURL)} />
-                <AvatarFallback>{(me.displayName || me.username).split(' ').map(str => str[0].toUpperCase()).join('')}</AvatarFallback>
+                <AvatarFallback>{fallbackName}</AvatarFallback>
             </Avatar>
 
             <div className={

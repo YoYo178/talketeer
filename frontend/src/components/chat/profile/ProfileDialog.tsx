@@ -141,6 +141,9 @@ export const ProfileDialog = () => {
         setSelectedAvatarImage(url);
     }
 
+    const nameArray = (me.displayName || me.username).split(' ');
+    const fallbackName = (nameArray.length > 1 ? [nameArray[0], nameArray[nameArray.length - 1]] : [nameArray[0]]).map(str => str[0].toUpperCase()).join('');
+
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
@@ -186,7 +189,7 @@ export const ProfileDialog = () => {
                                     <Avatar className='absolute rounded-full aspect-square size-full'>
                                         <AvatarImage src={newAvatarUrl || getAvatarUrl(me.avatarURL)} />
                                         <AvatarFallback className='text-primary text-4xl'>
-                                            {(me.displayName || me.username).split(' ').map(str => str[0].toUpperCase()).join('')}
+                                            {fallbackName}
                                         </AvatarFallback>
                                     </Avatar>
                                 </div>

@@ -46,6 +46,9 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
     const handleAcceptFriendRequest = () => socket.emit('acceptFriendRequest', user._id, ({ success }) => success && refreshMeData());
     const handleDeclineFriendRequest = () => socket.emit('declineFriendRequest', user._id, ({ success }) => success && refreshMeData());
 
+    const userNameArray = (user.displayName || user.username).split(' ');
+    const userFallbackName = (userNameArray.length > 1 ? [userNameArray[0], userNameArray[userNameArray.length - 1]] : [userNameArray[0]]).map(str => str[0].toUpperCase()).join('');
+
     return (
         <Popover>
             <PopoverTrigger asChild>
@@ -53,7 +56,7 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
                     <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
                         <AvatarImage src={getAvatarUrl(user.avatarURL)} />
                         <AvatarFallback className='text-primary'>
-                            {(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}
+                            {userFallbackName}
                         </AvatarFallback>
                     </Avatar>
                 </Button>
@@ -65,7 +68,7 @@ export const UserProfilePicture: FC<UserProfilePictureProps> = ({ user, popoverS
                         <Avatar className='rounded-full size-10 object-cover drop-shadow-sm'>
                             <AvatarImage src={getAvatarUrl(user.avatarURL)} />
                             <AvatarFallback>
-                                {(user.displayName || user.username).split(' ').map(str => str[0].toUpperCase()).join('')}
+                                {userFallbackName}
                             </AvatarFallback>
                         </Avatar>
                         <div className='flex flex-col'>
