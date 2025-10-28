@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { DBRef } from "./db.types";
 import { IUser } from "./user.types";
 import { IRoom } from "./room.types";
 
@@ -7,13 +6,13 @@ export interface IBan {
     _id: mongoose.Types.ObjectId;
 
     /** The user that was banned */
-    userId: DBRef<IUser>;
+    userId: mongoose.Types.ObjectId;
 
     /** The user who banned the other user */
-    bannedBy: DBRef<IUser>;
+    bannedBy: mongoose.Types.ObjectId;
 
     /** The room this user was banned in */
-    roomId: DBRef<IRoom>;
+    roomId: mongoose.Types.ObjectId;
 
     /** The reason for which this user was banned */
     reason?: string;

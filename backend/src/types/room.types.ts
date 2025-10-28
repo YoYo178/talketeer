@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
-import { IUser } from "./user.types";
-import { IMessage } from "./message.types";
-import { DBRef } from "./db.types";
 
 export interface IRoomMember {
-    user: DBRef<IUser>;
+    user: mongoose.Types.ObjectId;
     roomRole: 'admin' | 'member';
     joinTimestamp: number;
 }
@@ -19,13 +16,10 @@ export interface IRoom {
     code: string;
 
     /** Room owner */
-    owner: DBRef<IUser> | null;
+    owner: mongoose.Types.ObjectId | null;
 
     /** Room members array */
     members: IRoomMember[];
-
-    /** Room messages array */
-    messages: DBRef<IMessage>[];
 
     /** Number of members currently in the room */
     memberCount: number;
@@ -52,10 +46,7 @@ export interface IDMRoom {
     isActive: boolean;
 
     /** Room members array */
-    members: [DBRef<IUser>, DBRef<IUser>];
-
-    /** Room messages array */
-    messages: DBRef<IMessage>[];
+    members: [mongoose.Types.ObjectId, mongoose.Types.ObjectId];
 
     createdAt: number;
     updatedAt: number;

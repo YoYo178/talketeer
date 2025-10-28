@@ -1,5 +1,5 @@
 import { IDMRoom, IRoom, IRoomMember } from "@src/types";
-import { MongooseModel } from "@src/utils";
+import { MongooseModel } from "@src/utils/mongoose.utils";
 import mongoose from "mongoose";
 
 const roomMemberSchema = new mongoose.Schema<IRoomMember>({
@@ -14,7 +14,6 @@ const roomSchema = new mongoose.Schema<IRoom>({
     memberLimit: { type: Number, required: false, default: 10 },
     memberCount: { type: Number, required: false, default: 0 },
     members: { type: [roomMemberSchema], required: false, default: [] },
-    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message', required: true }],
     isSystemGenerated: { type: Boolean, required: true },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     visibility: { type: String, enum: ['public', 'private'], default: 'public' }
@@ -25,7 +24,6 @@ export const Room = MongooseModel<IRoom>('Room', roomSchema);
 const DMRoomSchema = new mongoose.Schema<IDMRoom>({
     isActive: { type: Boolean, required: true },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: 'IUser', required: true }],
-    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message', required: true }],
 }, { timestamps: true });
 
 export const DMRoom = MongooseModel<IDMRoom>('DM', DMRoomSchema);

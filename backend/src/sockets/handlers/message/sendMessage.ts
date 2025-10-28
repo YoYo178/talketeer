@@ -16,9 +16,6 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
 
             const room = isDM ? await DMRoom.findById(roomId) : await Room.findById(roomId);
 
-            if (!room)
-                throw new Error('Room not found');
-
             // just typescript being typescript
             // @ts-ignore
             if (isDM && !room.isActive)
@@ -29,18 +26,6 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
                 sender: socket.data.user.id,
                 room: roomId
             })
-
-            if (isDM) {
-                await DMRoom.findOneAndUpdate(
-                    { _id: roomId },
-                    { $addToSet: { messages: message._id } }
-                )
-            } else {
-                await Room.findOneAndUpdate(
-                    { _id: roomId },
-                    { $addToSet: { messages: message._id } }
-                )
-            }
 
             logger.info(`${socket.data.user.id} sent message in ${isDM ? 'DM ' : ' '}room ${roomId}`, {
                 userId: socket.data.user.id,

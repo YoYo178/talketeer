@@ -1,12 +1,8 @@
 import ENV from "@src/common/ENV"
-import { Room, User } from "@src/models";
-import mongoose, { Document, model, Model, Schema } from "mongoose"
+import { Room, User } from "@src/models/room.model";
+import { User } from "@src/models/user.model";
+import mongoose from "mongoose"
 import logger from "@src/utils/logger.utils";
-
-/** Returns a mongoose model typed to the provided generic type */
-export function MongooseModel<T>(docName: string, docSchema: Schema): Model<T & Document> {
-    return model<T & Document>(docName, docSchema);
-}
 
 async function clearStaleData() {
     try {

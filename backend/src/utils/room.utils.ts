@@ -1,5 +1,5 @@
 import { DEFAULT_SYSTEM_ROOM_CONFIG, MAX_SYSTEM_ROOMS } from "@src/config";
-import { Room } from "@src/models"
+import { Room } from "@src/models/room.model"
 import { IRoom, IRoomPublicView } from "@src/types";
 import logger from "./logger.utils";
 

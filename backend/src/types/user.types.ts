@@ -43,7 +43,7 @@ export interface IUser {
     friends: IUserFriend[];
 
     /** The room the user is currently in */
-    room: DBRef<IRoom> | null;
+    room: mongoose.Types.ObjectId | null;
 
     /** Whether the user is verified */
     isVerified: boolean;
