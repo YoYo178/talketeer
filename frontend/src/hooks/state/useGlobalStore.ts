@@ -9,6 +9,12 @@ interface GlobalState {
 
     isAvatarCardOpen: boolean;
     setIsAvatarCardOpen: (isAvatarCardOpen: boolean) => void;
+
+    isSidebarOpen: boolean;
+    setIsSidebarOpen: (isSidebarOpen: boolean) => void;
+
+    isMemberListOpen: boolean;
+    setIsMemberListOpen: (isMemberListOpen: boolean) => void;
 }
 
 export const useGlobalStore = create<GlobalState>(set => ({
@@ -19,5 +25,11 @@ export const useGlobalStore = create<GlobalState>(set => ({
     setHasNewNotifications: (hasNewNotifications: boolean) => set({ hasNewNotifications }),
 
     isAvatarCardOpen: false,
-    setIsAvatarCardOpen: (isAvatarCardOpen) => set({ isAvatarCardOpen })
+    setIsAvatarCardOpen: (isAvatarCardOpen) => set({ isAvatarCardOpen }),
+
+    isSidebarOpen: true,
+    setIsSidebarOpen: (isSidebarOpen: boolean) => set({ isSidebarOpen }),
+
+    isMemberListOpen: false,
+    setIsMemberListOpen: (isMemberListOpen: boolean) => set({ isMemberListOpen }),
 }))

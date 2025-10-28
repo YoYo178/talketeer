@@ -9,9 +9,10 @@ import { useMediaQuery } from '@/hooks/ui/useMediaQuery'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs'
 import { FriendList } from './friends/FriendList'
 import { useMe } from '@/hooks/network/users/useGetMeQuery'
+import { useGlobalStore } from '@/hooks/state/useGlobalStore'
 
 export const ChatSidebar = () => {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const { isSidebarOpen, setIsSidebarOpen, isMemberListOpen, setIsMemberListOpen } = useGlobalStore();
     const [isHoveringOnArrow, setIsHoveringOnArrow] = useState(false);
 
     const [searchText, setSearchText] = useState('')
@@ -27,6 +28,15 @@ export const ChatSidebar = () => {
 
     // Detect if we're below md breakpoint (768px)
     const isMobile = useMediaQuery('(max-width: 767px)');
+
+    const isLargeScreen = useMediaQuery('(min-width: 1180px)');
+
+    const handleSidebarToggle = () => {
+        if (!isLargeScreen && isMemberListOpen)
+            setIsMemberListOpen(false);
+
+        setIsSidebarOpen(!isSidebarOpen);
+    }
 
     // can't be bothered to add like hundreds of more conditionals to the main return block
     if (isMobile) {
@@ -67,15 +77,15 @@ export const ChatSidebar = () => {
     }
 
     return (
-        <div className={`flex rounded-xl bg-accent dark:bg-primary-foreground transition-[padding-inline] duration-300 ${isCollapsed ? '' : 'pl-3'}`}>
-            <Tabs defaultValue='rooms' className={`w-72 transition-[opacity,max-width] duration-300 ${isCollapsed ? 'opacity-0 max-w-0 invisible' : 'opacity-100 max-w-72 visible'}`}>
+        <div className={`flex rounded-xl bg-accent dark:bg-primary-foreground transition-[padding-inline] duration-300 ${isSidebarOpen ? 'pl-3' : ''}`}>
+            <Tabs defaultValue='rooms' className={`w-72 transition-[opacity,max-width] duration-300 ${isSidebarOpen ? 'opacity-100 max-w-72 visible' : 'opacity-0 max-w-0 invisible'}`}>
                 <TabsList className='w-full mb-2 mt-3'>
                     <TabsTrigger value='rooms' className='cursor-pointer'>Rooms</TabsTrigger>
                     <TabsTrigger value='friends' className='cursor-pointer'>Friends</TabsTrigger>
                 </TabsList>
 
                 {/* Rooms list tab */}
-                <TabsContent value='rooms' className={`flex flex-col mb-3 gap-3 overflow-hidden transition-[opacity,max-width] duration-300 ${isCollapsed ? 'opacity-0 max-w-0' : 'opacity-100 max-w-72'}`}>
+                <TabsContent value='rooms' className={`flex flex-col mb-3 gap-3 overflow-hidden transition-[opacity,max-width] duration-300 ${isSidebarOpen ? 'opacity-100 max-w-72' : 'opacity-0 max-w-0'}`}>
                     <div className='flex gap-2'>
                         <CreateRoomDialog />
                         <JoinRoomDialog />
@@ -92,7 +102,7 @@ export const ChatSidebar = () => {
                 </TabsContent>
 
                 {/* Friends list tab */}
-                <TabsContent value='friends' className={`flex flex-col mb-3 gap-3 overflow-hidden transition-[opacity,max-width] duration-300 ${isCollapsed ? 'opacity-0 max-w-0' : 'opacity-100 max-w-72'}`}>
+                <TabsContent value='friends' className={`flex flex-col mb-3 gap-3 overflow-hidden transition-[opacity,max-width] duration-300 ${isSidebarOpen ? 'opacity-100 max-w-72' : 'opacity-0 max-w-0'}`}>
                     <FriendList friends={me?.friends || []} />
                 </TabsContent>
             </Tabs>
@@ -101,9 +111,9 @@ export const ChatSidebar = () => {
                 className={`h-full w-0 px-1.5 cursor-pointer flex flex-col items-center justify-center transition-[padding-inline] ${isHoveringOnArrow ? 'px-3' : ''}`}
                 onMouseOver={() => setIsHoveringOnArrow(true)}
                 onMouseOut={() => setIsHoveringOnArrow(false)}
-                onClick={() => setIsCollapsed(!isCollapsed)}
+                onClick={handleSidebarToggle}
             >
-                {isCollapsed ? (
+                {isSidebarOpen ? (
                     <ArrowRightFromLine
                         className={`transition-[opacity] duration-100 text-muted-foreground size-4 ${isHoveringOnArrow ? 'opacity-100' : 'opacity-0'}`}
                     />
