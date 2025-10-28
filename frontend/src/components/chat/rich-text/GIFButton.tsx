@@ -51,7 +51,7 @@ export const GIFButton: FC<GIFButtonProps> = ({ disabled }) => {
             setQuery('');
     }, [isOpen])
 
-    if (!joinedRoomId)
+    if (!joinedRoomId && !dmRoomId)
         return;
 
     const handleSendGIF = (link: string) => {
