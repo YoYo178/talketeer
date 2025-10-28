@@ -1,3 +1,4 @@
+import { Message } from "@src/models";
 import { deleteRoom, leaveRoom, isUserRoomOwner, getRoom } from "@src/services/room.service";
 import { getUser } from "@src/services/user.service";
 import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from "@src/types";
@@ -57,7 +58,7 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
 
             await deleteRoom(roomId);
 
-            // TODO: delete all associated messages
+            await Message.deleteMany({ room: roomId });
 
             ack({ success: true });
         } catch (err) {
