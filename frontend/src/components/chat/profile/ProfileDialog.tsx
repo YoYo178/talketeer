@@ -165,7 +165,7 @@ export const ProfileDialog = () => {
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
                     <ScrollArea className='h-[50vh]'>
                         <div className='flex flex-col gap-4 mb-2 mx-4 pt-4'>
-                            <div className='flex-1 flex flex-wrap justify-center gap-4 w-full'>
+                            <div className='flex-1 flex flex-col md:flex-row items-center justify-center gap-4 w-full'>
                                 <div className='rounded-full aspect-square max-h-[175px] max-w-[175px] h-[175px] w-[175px] relative'>
                                     {selectedAvatarImage && (
                                         <AvatarCropper
