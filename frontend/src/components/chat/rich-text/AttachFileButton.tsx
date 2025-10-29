@@ -18,7 +18,7 @@ export const AttachFileButton: FC<AttachFileButtonProps> = ({ disabled }) => {
                 </ChatButton>
             </TooltipTrigger>
             <TooltipContent>
-                <p>Attach files</p>
+                <p>Attach files (TODO)</p>
             </TooltipContent>
         </Tooltip>
     )
