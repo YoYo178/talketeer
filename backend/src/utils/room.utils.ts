@@ -42,19 +42,12 @@ export function generateRoomCode(length: number): string {
 export function sanitizeRoomObj(room: IRoom, userID: string): IRoom | IRoomPublicView {
   const isUserInRoom = room.members.some(mem => mem.user.toString() === userID);
 
-  if (!isUserInRoom) {
+  if (!isUserInRoom)
     return {
       ...room,
       code: undefined,
       members: undefined,
-      messages: undefined,
     };
-  } else if (isUserInRoom) {
-    return {
-      ...room,
-      messages: undefined,
-    };
-  }
 
   return room;
 }

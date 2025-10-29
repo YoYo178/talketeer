@@ -8,7 +8,6 @@ export const DEFAULT_SYSTEM_ROOM_CONFIG: Omit<IRoom, '_id' | 'createdAt' | 'upda
   memberLimit: 10,
   memberCount: 0,
   members: [],
-  messages: [],
   name: 'Public Chat Room',
   visibility: 'public',
   owner: null,

@@ -144,7 +144,6 @@ export async function checkDMRoom(userId: string, otherUserId: string) {
   } else {
     const room = await DMRoom.create({
       members: [userObjectId, otherUserObjectId],
-      messages: [],
       isActive: true,
     });
 
