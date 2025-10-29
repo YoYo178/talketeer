@@ -1,7 +1,6 @@
 import { ValidationSchemas } from '@src/types';
-import logger from '@src/utils/logger.utils';
 import type { Request, Response, NextFunction } from 'express';
-import type { ZodError } from 'zod';
+import { z, type ZodError } from 'zod';
 
 export const validate = (schemas: ValidationSchemas) => {
   return (req: Request, res: Response, next: NextFunction) => {
@@ -31,7 +30,7 @@ export const validate = (schemas: ValidationSchemas) => {
       res.status(400).json({
         success: false,
         message: 'Validation failed',
-        errors: error.flatten().fieldErrors,
+        errors: z.treeifyError(error).errors,
       });
       return;
     }

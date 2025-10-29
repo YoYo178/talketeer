@@ -1,11 +1,11 @@
 import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import { TGIFSearchQuery } from '@src/schemas';
 import { TenorClient } from '@src/services/gif.service';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
 const tenorClient = TenorClient.getInstance();
 
-export const getGIFs = async (req: Request, res: Response, next: NextFunction) => {
+export const getGIFs = async (req: Request, res: Response) => {
   const { query } = req.query as TGIFSearchQuery;
 
   const resp = await tenorClient.search(query);

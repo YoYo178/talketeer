@@ -2,9 +2,9 @@ import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import { User } from '@src/models';
 import { TUpdateMeBody, TUserIdParams } from '@src/schemas';
 import { APIError } from '@src/utils';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
-export const getMe = async (req: Request, res: Response, next: NextFunction) => {
+export const getMe = async (req: Request, res: Response) => {
   const user = await User.findById(req.user.id).select('-passwordHash').lean().exec();
 
   if (!user)
@@ -13,7 +13,7 @@ export const getMe = async (req: Request, res: Response, next: NextFunction) => 
   res.status(HttpStatusCodes.OK).json({ success: true, data: { user } });
 };
 
-export const updateMe = async (req: Request, res: Response, next: NextFunction) => {
+export const updateMe = async (req: Request, res: Response) => {
   const { bio, displayName, name } = req.body as TUpdateMeBody;
 
   const user = await User.findById(req.user.id).select('-passwordHash').exec();
@@ -32,7 +32,7 @@ export const updateMe = async (req: Request, res: Response, next: NextFunction) 
   res.status(HttpStatusCodes.OK).json({ success: true, message: 'Updated user successfully', data: { user } });
 };
 
-export const getUser = async (req: Request, res: Response, next: NextFunction) => {
+export const getUser = async (req: Request, res: Response) => {
   const { userId } = req.params as TUserIdParams;
   const user = await User.findById(userId)
     .select(`

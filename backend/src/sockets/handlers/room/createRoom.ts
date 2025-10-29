@@ -7,7 +7,7 @@ import { createRoomSchema } from '@src/schemas';
 import logger from '@src/utils/logger.utils';
 import mongoose from 'mongoose';
 
-export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
+export const getCreateRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
   return async (name, visibility, memberLimit, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to create room');
@@ -50,7 +50,6 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         code: generateRoomCode(DEFAULT_ROOM_CODE_LENGTH),
         memberLimit,
         members: [],
-        messages: [],
         isSystemGenerated: false,
         owner: new mongoose.Types.ObjectId(userId),
         visibility,
@@ -81,12 +80,12 @@ export const getCreateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
       logger.error('Error creating room', {
         userId: socket.data.user.id,
         roomData: { name, visibility, memberLimit },
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

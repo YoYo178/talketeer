@@ -3,9 +3,9 @@ import { DMRoom, Room } from '@src/models';
 import { TFriendIdParams, TRoomIdParams } from '@src/schemas';
 import { IRoomPublicView, IRoom } from '@src/types';
 import { APIError, sanitizeRoomObj } from '@src/utils';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
-export const getAllRooms = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllRooms = async (req: Request, res: Response) => {
   const dbRooms = await Room.find({}).lean().exec();
 
   const rooms: (IRoom | IRoomPublicView)[] = dbRooms.map(room => sanitizeRoomObj(room, req.user.id));
@@ -13,7 +13,7 @@ export const getAllRooms = async (req: Request, res: Response, next: NextFunctio
   res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } });
 };
 
-export const getRoomById = async (req: Request, res: Response, next: NextFunction) => {
+export const getRoomById = async (req: Request, res: Response) => {
   const { roomId } = req.params as TRoomIdParams;
 
   const room = await Room.findById(roomId).lean().exec();
@@ -24,13 +24,13 @@ export const getRoomById = async (req: Request, res: Response, next: NextFunctio
   res.status(HttpStatusCodes.OK).json({ success: true, data: { room: sanitizeRoomObj(room, req.user.id) } });
 };
 
-export const getAllDmRooms = async (req: Request, res: Response, next: NextFunction) => {
+export const getAllDmRooms = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const rooms = await DMRoom.find({ members: userId }).lean().exec();
   res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } });
 };
 
-export const getDmRoomById = async (req: Request, res: Response, next: NextFunction) => {
+export const getDmRoomById = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const { roomId } = req.params as TRoomIdParams;
 
@@ -42,7 +42,7 @@ export const getDmRoomById = async (req: Request, res: Response, next: NextFunct
   res.status(HttpStatusCodes.OK).json({ success: true, data: { room } });
 };
 
-export const getDmRoomByFriendId = async (req: Request, res: Response, next: NextFunction) => {
+export const getDmRoomByFriendId = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const { friendId } = req.params as TFriendIdParams;
 

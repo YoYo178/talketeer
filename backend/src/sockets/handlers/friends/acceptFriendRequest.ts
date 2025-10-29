@@ -30,7 +30,7 @@ export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket
       if (existingFriendObj.direction === 'outgoing')
         throw new Error('Only the other user can accept this friend request');
 
-      logger.info(`'${receiver._id}' accepted friend request from '${sender._id}'.`, {
+      logger.info(`'${receiver._id.toString()}' accepted friend request from '${sender._id.toString()}'.`, {
         senderId,
         receiverId,
       });
@@ -44,7 +44,13 @@ export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket
         throw new Error('An error occured while creating/reactivating DM room');
 
       // Save notification
-      const notificationObj = await saveNotification(senderId, { content: `${receiver.username} has accepted your friend request.`, type: 'friend-new' });
+      const notificationObj = await saveNotification(
+        senderId,
+        {
+          content: `${receiver.username} has accepted your friend request.`,
+          type: 'friend-new',
+        },
+      );
 
       // Push notification to the sender
       io.to(senderId).emit('notification', notificationObj, { dmRoomId: dmRoom._id.toString() });
@@ -54,12 +60,12 @@ export const getAcceptFriendRequestCallback = (io: TalketeerSocketServer, socket
       logger.error('Error accepting friend request', {
         senderId,
         receiverId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

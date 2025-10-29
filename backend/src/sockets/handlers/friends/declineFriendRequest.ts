@@ -29,7 +29,7 @@ export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socke
       if (existingFriendObj.direction === 'outgoing')
         throw new Error('Only the other user can decline this friend request');
 
-      logger.info(`'${receiver._id}' declined friend request from '${sender._id}'.`, {
+      logger.info(`'${receiver._id.toString()}' declined friend request from '${sender._id.toString()}'.`, {
         senderId,
         receiverId,
       });
@@ -37,22 +37,28 @@ export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socke
       await removeFriendObject(senderId, receiverId);
 
       // Save notification
-      const notificationObj = await saveNotification(senderId, { content: `${receiver.username} has declined your friend request.`, type: 'friend-delete' }); // TODO: type: 'friend-declined'?
+      const notificationObj = await saveNotification(
+        senderId,
+        {
+          content: `${receiver.username} has declined your friend request.`,
+          type: 'friend-delete',
+        },
+      ); // TODO: type: 'friend-declined'?
 
       // Push notification to the sender
       io.to(senderId).emit('notification', notificationObj);
 
       ack({ success: true });
     } catch (err) {
-      logger.error('Error declining friend request', {
+      logger.error('Error accepting friend request', {
         senderId,
         receiverId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

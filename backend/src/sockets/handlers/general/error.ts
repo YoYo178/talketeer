@@ -1,8 +1,8 @@
 import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import logger from '@src/utils/logger.utils';
 
-export const getErrorEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {
-  return async (err: unknown) => {
+export const getErrorEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket) => {
+  return (err: unknown) => {
     logger.error(`Socket error for ${socket.id}`, {
       socketId: socket.id,
       userId: socket.data?.user?.id,

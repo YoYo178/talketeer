@@ -2,9 +2,9 @@ import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import { User } from '@src/models';
 import { TNotificationIdParams } from '@src/schemas';
 import { APIError } from '@src/utils';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
-export const getNotifications = async (req: Request, res: Response, next: NextFunction) => {
+export const getNotifications = async (req: Request, res: Response) => {
   const userId = req.user.id;
 
   const user = await User.findById(userId)
@@ -20,7 +20,7 @@ export const getNotifications = async (req: Request, res: Response, next: NextFu
   res.status(HttpStatusCodes.OK).json({ success: true, data: { notifications } });
 };
 
-export const getNotification = async (req: Request, res: Response, next: NextFunction) => {
+export const getNotification = async (req: Request, res: Response) => {
   const { notificationId } = req.params as TNotificationIdParams;
   const userId = req.user.id;
 

@@ -1,10 +1,10 @@
 import { getRoom, getRoomByCode, joinRoom } from '@src/services/room.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import { ClientToServerEvents, IRoom, TalketeerSocket, TalketeerSocketServer } from '@src/types';
 import { joinRoomSchema } from '@src/schemas';
 import logger from '@src/utils/logger.utils';
 import { getBan, isUserBanned } from '@src/services/ban.service';
 
-export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
+export const getJoinRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
   return async ({ method, data }, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to join room');
@@ -18,16 +18,19 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
       const userId = socket.data.user.id;
       let roomId: string | null = null;
 
+      let roomById: IRoom | null = null;
+      let roomByCode: IRoom | null = null;
+
       switch (method) {
       case 'id':
-        const roomById = await getRoom(data);
+        roomById = await getRoom(data);
         if (!roomById)
           throw new Error('Room not found');
         roomId = data;
         break;
 
       case 'code':
-        const roomByCode = await getRoomByCode(data);
+        roomByCode = await getRoomByCode(data);
         if (!roomByCode)
           throw new Error('Room not found');
         roomId = roomByCode._id.toString();
@@ -58,7 +61,7 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
             roomId,
             ban: {
               created: ban.createdAt.valueOf(),
-              expiry: ban.expiresAt?.valueOf() || null,
+              expiry: ban.expiresAt?.valueOf() ?? null,
               isPermanent: ban.isPermanent,
             },
           },
@@ -95,12 +98,12 @@ export const getJoinRoomEventCallback = (io: TalketeerSocketServer, socket: Talk
         userId: socket.data.user.id,
         method,
         data,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

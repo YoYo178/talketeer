@@ -37,7 +37,7 @@ const userSchema = new mongoose.Schema<IUser>({
 userSchema.pre('save', function (next) {
 
   if (!this.avatarURL?.length)
-    this.avatarURL = `assets/users/${this._id}/avatar.jpeg`;
+    this.avatarURL = `assets/users/${this._id.toString()}/avatar.jpeg`;
 
   next();
 });

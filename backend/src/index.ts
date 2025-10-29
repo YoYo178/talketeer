@@ -1,3 +1,5 @@
+/* eslint-disable n/no-process-env */
+
 /** Node packages */
 import fs from 'fs';
 import path from 'path';
@@ -85,7 +87,7 @@ if (ENV.NodeEnv === NodeEnvs.Dev) {
 
 // Attach security middleware, only in production!
 if (ENV.NodeEnv === NodeEnvs.Production) {
-  // eslint-disable-next-line n/no-process-env
+   
   if (!process.env.DISABLE_HELMET) {
     app.use(helmet());
   }

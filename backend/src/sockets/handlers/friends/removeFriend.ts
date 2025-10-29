@@ -27,7 +27,7 @@ export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: Talke
 
       await removeFriendObject(selfUserId, friendUserId);
 
-      logger.info(`${selfUser._id} removed '${friendUser._id} from their friend list.`, {
+      logger.info(`${selfUser._id.toString()} removed '${friendUser._id.toString()} from their friend list.`, {
         userIds: [selfUserId, friendUserId],
       });
 
@@ -38,21 +38,27 @@ export const getRemoveFriendCallback = (io: TalketeerSocketServer, socket: Talke
         throw new Error('An error occured while trying to deactivate the DM room');
 
       // Save notification
-      const notificationObj = await saveNotification(friendUserId, { content: `${selfUser.username} has removed you from their friend list.`, type: 'friend-delete' });
+      const notificationObj = await saveNotification(
+        friendUserId,
+        {
+          content: `${selfUser.username} has removed you from their friend list.`,
+          type: 'friend-delete',
+        },
+      );
 
       // Push notification to the friend user
       io.to(friendUserId).emit('notification', notificationObj, { dmRoomId: dmRoom._id.toString() });
 
       ack({ success: true });
-    } catch (err) {
+    } catch (err) {      
       logger.error('Error removing friend', {
         userIds: [selfUserId, friendUserId],
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

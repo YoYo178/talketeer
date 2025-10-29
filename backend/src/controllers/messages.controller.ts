@@ -2,14 +2,14 @@ import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import { DMRoom, Message } from '@src/models';
 import { TMessagesQuery, TMessageIdParams, TDmMessagesQuery, TDmMessageQuery } from '@src/schemas';
 import { APIError } from '@src/utils';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
 const MESSAGES_PER_PAGE = 20;
 
-export const getMessages = async (req: Request, res: Response, next: NextFunction) => {
+export const getMessages = async (req: Request, res: Response) => {
   const { roomId, before, after } = req.query as unknown as TMessagesQuery;
 
-  const query: any = { room: roomId };
+  const query: { _id?: { $lt: string } | { $gt: string }, room: string } = { room: roomId };
 
   if (before)
     query._id = { $lt: before };
@@ -36,7 +36,7 @@ export const getMessages = async (req: Request, res: Response, next: NextFunctio
   });
 };
 
-export const getMessageById = async (req: Request, res: Response, next: NextFunction) => {
+export const getMessageById = async (req: Request, res: Response) => {
   const { messageId } = req.params as TMessageIdParams;
 
   const message = await Message.findById(messageId);
@@ -47,7 +47,7 @@ export const getMessageById = async (req: Request, res: Response, next: NextFunc
   res.status(HttpStatusCodes.OK).json({ success: true, data: { message } });
 };
 
-export const getDmMessages = async (req: Request, res: Response, next: NextFunction) => {
+export const getDmMessages = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const { roomId, before, after } = req.query as unknown as TDmMessagesQuery;
 
@@ -64,7 +64,7 @@ export const getDmMessages = async (req: Request, res: Response, next: NextFunct
     return;
   }
 
-  const query: any = { room: roomId };
+  const query: { _id?: { $lt: string } | { $gt: string }, room: string } = { room: roomId };
 
   if (before)
     query._id = { $lt: before };
@@ -91,7 +91,7 @@ export const getDmMessages = async (req: Request, res: Response, next: NextFunct
   });
 };
 
-export const getDmMessageById = async (req: Request, res: Response, next: NextFunction) => {
+export const getDmMessageById = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const { messageId, roomId } = req.params as TDmMessageQuery;
 

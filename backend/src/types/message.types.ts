@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import { IUser } from './user.types';
-import { IRoom } from './room.types';
 
 export interface IMessage {
     _id: mongoose.Types.ObjectId;

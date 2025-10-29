@@ -4,7 +4,7 @@ import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@s
 import { updateRoomSchema } from '@src/schemas';
 import logger from '@src/utils/logger.utils';
 
-export const getUpdateRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['updateRoom'] => {
+export const getUpdateRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['updateRoom'] => {
   return async (roomId, name, visibility, memberLimit, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to update room');
@@ -57,12 +57,12 @@ export const getUpdateRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
           visibility,
           memberLimit,
         },
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

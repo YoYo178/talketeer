@@ -24,7 +24,7 @@ export class SMTPClient {
         private readonly provider: string,
   ) { }
 
-  static init(options: SMTPClientInitOptions) {
+  public static init(options: SMTPClientInitOptions) {
     if (!SMTPClient.instance) {
       if (!options.provider || !options.email || !options.password)
         throw new Error('[SMTPClient] SMTP credentials not set. Initialization failed.');
@@ -51,7 +51,7 @@ export class SMTPClient {
     return SMTPClient.getInstance();
   }
 
-  static getInstance(): SMTPClient {
+  public static getInstance(): SMTPClient {
     if (!SMTPClient.instance)
       throw new Error('[SMTPClient] getInstance() called before initialization!');
 
@@ -89,7 +89,7 @@ export class SMTPClient {
       text,
       html,
       attachments,
-    });
+    }) as SESTransport.SentMessageInfo | SMTPTransport.SentMessageInfo;
 
     if (isDebug) {
       logger.info('[Ethereal] Message sent:');

@@ -37,7 +37,13 @@ export const getRevokeFriendRequestCallback = (io: TalketeerSocketServer, socket
       await removeFriendObject(senderId, receiverId);
 
       // Save notification
-      const notificationObj = await saveNotification(receiverId, { content: `${sender.username} has revoked their friend request.`, type: 'friend-delete' }); // TODO: type: 'friend-revoked'?
+      const notificationObj = await saveNotification(
+        receiverId,
+        {
+          content: `${sender.username} has revoked their friend request.`,
+          type: 'friend-delete',
+        },
+      ); // TODO: type: 'friend-revoked'?
 
       // Push notification to the sender
       io.to(receiverId).emit('notification', notificationObj);
@@ -47,12 +53,12 @@ export const getRevokeFriendRequestCallback = (io: TalketeerSocketServer, socket
       logger.error('Error revoking friend request', {
         senderId,
         receiverId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

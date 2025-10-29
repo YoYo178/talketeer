@@ -16,8 +16,7 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
 
       const room = isDM ? await DMRoom.findById(roomId) : await Room.findById(roomId);
 
-      // just typescript being typescript
-      // @ts-ignore
+      // @ts-expect-error because typescript being typescript
       if (isDM && !room.isActive)
         throw new Error('This person is not on your friend list.');
 
@@ -44,12 +43,12 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
       logger.error('Error sending message', {
         userId: socket.data.user.id,
         roomId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

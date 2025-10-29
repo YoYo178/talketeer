@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import type { Request, Response, NextFunction } from 'express';
+import type { Request, Response } from 'express';
 
 import HttpStatusCodes from '@src/common/HttpStatusCodes';
 
@@ -11,7 +11,7 @@ import { cleanupVerification, generateVerificationObject, getVerificationObject 
 import { APIError, sendVerificationMail } from '@src/utils';
 import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
 
-export const verifyEmail = async (req: Request, res: Response, next: NextFunction) => {
+export const verifyEmail = async (req: Request, res: Response) => {
   const { userId, method, data } = req.body as TEmailVerificationBody;
 
   const verificationObj = await getVerificationObject(userId);
@@ -35,9 +35,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
     await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
     break;
   case 'token':
-    const doesMatch = await bcrypt.compare(data, verificationObj.token);
-
-    if (!doesMatch)
+    if (!await bcrypt.compare(data, verificationObj.token))
       throw new APIError('Invalid token, make sure the link is correct!', HttpStatusCodes.BAD_REQUEST);
 
     await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
@@ -64,7 +62,7 @@ export const verifyEmail = async (req: Request, res: Response, next: NextFunctio
   res.status(HttpStatusCodes.OK).json({ success: true, message: 'User verified successfully!', data: { user } });
 };
 
-export const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
+export const checkEmail = async (req: Request, res: Response) => {
   // Enforce types
   const { email } = req.body as TEmailBody;
 
@@ -96,7 +94,7 @@ export const checkEmail = async (req: Request, res: Response, next: NextFunction
   });
 };
 
-export const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body as TLoginBody;
 
   const user = await User.findOne({ email }).lean().exec();
@@ -107,7 +105,7 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
   if (!user.isVerified)
     throw new APIError('User is not verified, please verify to continue', HttpStatusCodes.UNAUTHORIZED);
 
-  const passwordMatches = !!await bcrypt.compare(password, user.passwordHash);
+  const passwordMatches = await bcrypt.compare(password, user.passwordHash);
 
   if (!passwordMatches)
     throw new APIError('Invalid password', HttpStatusCodes.BAD_REQUEST);
@@ -125,12 +123,35 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     maxAge: tokenConfig.refreshToken.expiry,
   });
 
-  const { passwordHash, ...rest } = user;
-
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Logged in successfully!', data: { user: rest } });
+  // the pain to exclude a SINGLE field from an object while keeping both typescript and eslint happy...
+  res.status(HttpStatusCodes.OK).json(
+    { 
+      success: true,
+      message: 'Logged in successfully!',
+      data: {
+        user: {
+          _id: user._id.toString(),
+          name: user.name,
+          displayName: user.displayName,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          bio: user.bio,
+          avatarURL: user.avatarURL,
+          notifications: user.notifications,
+          friends: user.friends,
+          room: user.room,
+          isVerified: user.isVerified,
+          verifiedAt: user.verifiedAt,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        },
+      },
+    },
+  );
 };
 
-export const logout = (req: Request, res: Response, next: NextFunction) => {
+export const logout = (_: Request, res: Response) => {
   res.clearCookie('accessToken', {
     ...cookieConfig,
     maxAge: tokenConfig.accessToken.expiry,
@@ -144,7 +165,7 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
   res.status(HttpStatusCodes.OK).json({ success: true, message: 'Logged out successfully!' });
 };
 
-export const signup = async (req: Request, res: Response, next: NextFunction) => {
+export const signup = async (req: Request, res: Response) => {
   const { username, name, displayName, email, password } = req.body as TSignUpBody;
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -175,7 +196,7 @@ export const signup = async (req: Request, res: Response, next: NextFunction) =>
   });
 };
 
-export const resendVerification = async (req: Request, res: Response, next: NextFunction) => {
+export const resendVerification = async (req: Request, res: Response) => {
   const { userId } = req.body as TResendVerificationBody;
 
   const user = await getUser(userId);
@@ -192,7 +213,7 @@ export const resendVerification = async (req: Request, res: Response, next: Next
   res.status(HttpStatusCodes.OK).json({ success: true, message: 'Resent verification email successfully' });
 };
 
-export const requestPasswordReset = async (req: Request, res: Response, next: NextFunction) => {
+export const requestPasswordReset = async (req: Request, res: Response) => {
   const { email } = req.body as TEmailBody;
 
   const user = await getUserByEmail(email);
@@ -210,7 +231,7 @@ export const requestPasswordReset = async (req: Request, res: Response, next: Ne
   res.status(HttpStatusCodes.OK).json({ success: true, message: 'Sent password reset mail successfully' });
 };
 
-export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const resetPassword = async (req: Request, res: Response) => {
   const { userId, password, token } = req.body as TResetPasswordBody;
 
   const user = await getUser(userId);
@@ -223,7 +244,7 @@ export const resetPassword = async (req: Request, res: Response, next: NextFunct
   if (!verificationObj)
     throw new APIError('Invalid or expired request', HttpStatusCodes.NOT_FOUND);
 
-  const tokenMatches = !!await bcrypt.compare(token, verificationObj.token);
+  const tokenMatches = await bcrypt.compare(token, verificationObj.token);
 
   if (!tokenMatches)
     throw new APIError('Invalid token', HttpStatusCodes.BAD_REQUEST);

@@ -2,7 +2,7 @@ import { User } from '@src/models';
 import { IUser, IUserFriend } from '@src/types';
 import mongoose from 'mongoose';
 
-const sensitiveUserFields: (keyof IUser)[] = [
+const sensitiveUserFields = [
   'passwordHash',
   'name',
   'email',
@@ -110,7 +110,9 @@ export async function removeFriendObject(userOneId: string, userTwoId: string) {
 }
 
 export function getPublicUser(user: IUser) {
-  const publicUser = { ...user };
-  sensitiveUserFields.forEach(field => delete publicUser[field]);
+  const publicUser = Object.fromEntries(
+    Object.entries(user).filter(([key]) => !sensitiveUserFields.includes(key)),
+  ) as Omit<IUser, typeof sensitiveUserFields[number]>;
+
   return publicUser;
 }

@@ -1,3 +1,6 @@
+/* eslint-disable n/no-unsupported-features/node-builtins */
+/* eslint-disable max-len */
+
 /**
  * @note This file contains parts of Tenor's official V2 API documentation.
  * @see https://developers.google.com/tenor/guides/quickstart
@@ -13,12 +16,12 @@ export class TenorClient {
   private static instance: TenorClient;
 
   private constructor(
-        private readonly apiKey: string,
-        private readonly baseUrl: string,
-        private readonly clientKey?: string,
+    private readonly apiKey: string,
+    private readonly baseUrl: string,
+    private readonly clientKey?: string,
   ) { }
 
-  static init(apiKey: string, baseUrl: string, clientKey?: string): TenorClient {
+  public static init(apiKey: string, baseUrl: string, clientKey?: string): TenorClient {
     if (!TenorClient.instance) {
       TenorClient.instance = new TenorClient(apiKey, baseUrl, clientKey);
       Object.freeze(TenorClient.instance);
@@ -29,7 +32,7 @@ export class TenorClient {
     return TenorClient.getInstance();
   }
 
-  static getInstance(): TenorClient {
+  public static getInstance(): TenorClient {
     if (!TenorClient.instance)
       throw new Error('[TenorClient] getInstance() called before initialization!');
 
@@ -40,7 +43,7 @@ export class TenorClient {
      * PType - Parameters type
      * RType - Response type
      */
-  private async fetch<PType extends {}, RType>(url: URL, params: PType): Promise<RType> {
+  private async fetch<PType extends Record<string, unknown>, RType>(url: URL, params: PType): Promise<RType> {
     url.searchParams.append('key', this.apiKey);
 
     if (this.clientKey)
@@ -64,7 +67,7 @@ export class TenorClient {
      * 
      * @see https://developers.google.com/tenor/guides/endpoints#search
      */
-  async search(
+  public async search(
     q: string,
     options: Omit<Obs<TenorSearchParameters>, 'q'> = {
       country: 'US',
@@ -76,11 +79,7 @@ export class TenorClient {
     const reqURL = new URL(this.baseUrl + 'search');
     reqURL.searchParams.append('q', q);
 
-    return this.fetch
-            <
-                Omit<Obs<TenorSearchParameters>, 'q'>,
-                TenorSearchResponse
-            >(reqURL, options);
+    return this.fetch<Omit<Obs<TenorSearchParameters>, 'q'>, TenorSearchResponse>(reqURL, options);
   }
 
   /**
@@ -95,18 +94,14 @@ export class TenorClient {
      * 
      * @see https://developers.google.com/tenor/guides/endpoints#featured
      */
-  async getFeatured(options: Obs<TenorFeaturedParameters> = {
+  public async getFeatured(options: Obs<TenorFeaturedParameters> = {
     country: 'US',
     locale: 'en_US',
     contentfilter: 'off',
     limit: 20,
   }): Promise<TenorFeaturedResponse> {
     const reqURL = new URL(this.baseUrl + 'featured');
-    return this.fetch
-            <
-                Obs<TenorFeaturedParameters>,
-                TenorFeaturedResponse
-            >(reqURL, options);
+    return this.fetch<Obs<TenorFeaturedParameters>, TenorFeaturedResponse>(reqURL, options);
   }
 
   /**
@@ -118,7 +113,7 @@ export class TenorClient {
      * 
      * @see https://developers.google.com/tenor/guides/endpoints#categories
      */
-  async getCategories(options: Obs<TenorCategoriesParameters> = {
+  public async getCategories(options: Obs<TenorCategoriesParameters> = {
     country: 'US',
     locale: 'en_US',
     contentfilter: 'off',
@@ -126,10 +121,7 @@ export class TenorClient {
   }): Promise<TenorCategoriesResponse> {
     const reqURL = new URL(this.baseUrl + 'categories');
 
-    return this.fetch<
-            Obs<TenorCategoriesParameters>,
-            TenorCategoriesResponse
-        >(reqURL, options);
+    return this.fetch<Obs<TenorCategoriesParameters>, TenorCategoriesResponse>(reqURL, options);
   }
 
   /**
@@ -143,7 +135,7 @@ export class TenorClient {
      * 
      * @see https://developers.google.com/tenor/guides/endpoints#search-suggestions
      */
-  async getSearchSuggestions(q: string, options: Omit<Obs<TenorSearchSuggestionsParameters>, 'q'> = {
+  public async getSearchSuggestions(q: string, options: Omit<Obs<TenorSearchSuggestionsParameters>, 'q'> = {
     country: 'US',
     locale: 'en_US',
     limit: 20,
@@ -151,11 +143,7 @@ export class TenorClient {
     const reqURL = new URL(this.baseUrl + 'search_suggestions');
     reqURL.searchParams.append('q', q);
 
-    return this.fetch
-            <
-                Omit<Obs<TenorSearchSuggestionsParameters>, 'q'>,
-                TenorSearchSuggestionsResponse
-            >(reqURL, options);
+    return this.fetch<Omit<Obs<TenorSearchSuggestionsParameters>, 'q'>, TenorSearchSuggestionsResponse>(reqURL, options);
   }
 
   /**
@@ -167,7 +155,7 @@ export class TenorClient {
      * 
      * @see https://developers.google.com/tenor/guides/endpoints#autocomplete
      */
-  async getAutocomplete(q: string, options: Omit<Obs<TenorSearchSuggestionsParameters>, 'q'> = {
+  public async getAutocomplete(q: string, options: Omit<Obs<TenorSearchSuggestionsParameters>, 'q'> = {
     country: 'US',
     locale: 'en_US',
     limit: 20,
@@ -175,11 +163,7 @@ export class TenorClient {
     const reqURL = new URL(this.baseUrl + 'autocomplete');
     reqURL.searchParams.append('q', q);
 
-    return this.fetch
-            <
-                Omit<Obs<TenorAutocompleteParameters>, 'q'>,
-                TenorAutocompleteResponse
-            >(reqURL, options);
+    return this.fetch<Omit<Obs<TenorAutocompleteParameters>, 'q'>, TenorAutocompleteResponse>(reqURL, options);
   }
 
   /**
@@ -189,18 +173,14 @@ export class TenorClient {
      * 
      * @see https://developers.google.com/tenor/guides/endpoints#trending-search
      */
-  async getTrendingSearchTerms(options: Obs<TenorTrendingSearchTermsParameters> = {
+  public async getTrendingSearchTerms(options: Obs<TenorTrendingSearchTermsParameters> = {
     country: 'US',
     locale: 'en_US',
     limit: 20,
   }): Promise<TenorAutocompleteResponse> {
     const reqURL = new URL(this.baseUrl + 'trending_terms');
 
-    return this.fetch
-            <
-                Omit<Obs<TenorSearchSuggestionsParameters>, 'q'>,
-                TenorSearchSuggestionsResponse
-            >(reqURL, options);
+    return this.fetch<Omit<Obs<TenorSearchSuggestionsParameters>, 'q'>, TenorSearchSuggestionsResponse>(reqURL, options);
   }
 
   // TODO: Add register share endpoint and posts endpoint methods

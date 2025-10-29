@@ -13,7 +13,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
   const returnObj: TVerifyAuthReturn = { success: false, isMaliciousUser: false, data: { user: null } };
 
   // Verify refresh token
-  const decodedRefreshToken = verifyRefreshToken(refreshToken || '');
+  const decodedRefreshToken = verifyRefreshToken(refreshToken ?? '');
 
   // Invalid refresh token, prompt the user to log in again
   if (!decodedRefreshToken.valid) {
@@ -85,7 +85,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
 };
 
 export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
-  const { accessToken, refreshToken } = req.cookies;
+  const { accessToken, refreshToken }: {accessToken?: string, refreshToken?: string} = req.cookies;
 
   const authDetails = await verifyAuth(refreshToken, accessToken);
 

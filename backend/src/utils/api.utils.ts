@@ -2,12 +2,12 @@ import HttpStatusCodes from '@src/common/HttpStatusCodes';
 
 export class APIError extends Error {
   public statusCode: HttpStatusCodes | null = null;
-  public data: Record<any, any> = {};
+  public data: Record<string, unknown> = {};
 
-  constructor(message: string, statusCode: HttpStatusCodes, data?: Record<any, any>) {
+  public constructor(message: string, statusCode: HttpStatusCodes, data?: Record<string, unknown>) {
     super(message);
     this.statusCode = statusCode;
-    this.data = data || {};
+    this.data = data ?? {};
 
     Error.captureStackTrace(this, this.constructor);
   }

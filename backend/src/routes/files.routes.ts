@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router, Request, Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
@@ -12,7 +12,7 @@ import { ASSETS_PATH } from '@src/config';
 const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
+  destination: (req, _file, callback) => {
     const userId = req.user.id;
     const uploadPath = path.join(ASSETS_PATH, 'users', userId);
 
@@ -20,12 +20,12 @@ const storage = multer.diskStorage({
 
     callback(null, uploadPath);
   },
-  filename: (req, file, callback) => {
+  filename: (_req, _file, callback) => {
     callback(null, 'avatar.jpeg');
   },
 });
 
-const fileFilter: multer.Options['fileFilter'] = (req, file, callback) => {
+const fileFilter: multer.Options['fileFilter'] = (_, file, callback) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     callback(null, true);
   } else {
@@ -41,7 +41,7 @@ const upload = multer({ storage, fileFilter, limits });
 
 const FilesRouter = Router();
 
-FilesRouter.post('/avatar', upload.single('avatar'), (req: Request, res: Response, next: NextFunction) => {
+FilesRouter.post('/avatar', upload.single('avatar'), (_: Request, res: Response) => {
   res.status(HttpStatusCodes.OK).json({ success: true, message: 'Updated avatar successfully!' });
 });
 

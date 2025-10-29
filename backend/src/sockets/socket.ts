@@ -1,8 +1,8 @@
-import { Socket, Server } from 'socket.io';
 import { handleSocketConnection } from './connection';
 import { requireSocketAuth } from '@src/middlewares';
+import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
 
-export function setupSocket(io: Server) {
+export function setupSocket(io: TalketeerSocketServer) {
   io.use(requireSocketAuth);
-  io.on('connection', (socket: Socket) => handleSocketConnection(io, socket));
+  io.on('connection', (socket: TalketeerSocket) => handleSocketConnection(io, socket));
 }

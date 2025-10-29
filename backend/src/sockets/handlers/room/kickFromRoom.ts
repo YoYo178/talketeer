@@ -42,7 +42,7 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
       const targetSocket = (await io.in(user._id.toString()).fetchSockets())[0];
       targetSocket.leave(roomId);
 
-      logger.info(`${admin._id} kicked ${user._id} from ${room._id}`, {
+      logger.info(`${admin._id.toString()} kicked ${user._id.toString()} from ${room._id.toString()}`, {
         roomId,
         kickedBy,
         userId,
@@ -56,7 +56,7 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
         roomId,
         kickedBy,
         userId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
     }

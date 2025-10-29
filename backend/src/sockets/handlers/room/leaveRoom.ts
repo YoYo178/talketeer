@@ -3,7 +3,7 @@ import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@s
 import logger from '@src/utils/logger.utils';
 import mongoose from 'mongoose';
 
-export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {
+export const getLeaveRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {
   return async (roomId, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to leave room');
@@ -37,12 +37,12 @@ export const getLeaveRoomEventCallback = (io: TalketeerSocketServer, socket: Tal
       logger.error('Error leaving room', {
         userId: socket.data.user.id,
         roomId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

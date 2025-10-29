@@ -41,7 +41,13 @@ export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: 
       await sendUserFriendRequest(senderId, receiverId);
 
       // Save notification
-      const notificationObj = await saveNotification(receiverId, { content: `${sender.username} has sent you a friend request.`, type: 'friend-request' });
+      const notificationObj = await saveNotification(
+        receiverId,
+        {
+          content: `${sender.username} has sent you a friend request.`,
+          type: 'friend-request',
+        },
+      );
 
       // Push notification to the receiver
       io.to(receiverId).emit('notification', notificationObj);
@@ -51,12 +57,12 @@ export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: 
       logger.error('Error sending friend request', {
         senderId,
         receiverId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };

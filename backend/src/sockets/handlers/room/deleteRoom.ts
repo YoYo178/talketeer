@@ -42,7 +42,8 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
         roomId,
       });
 
-      logger.info(`${socket.data.user.id} initiated room deletion, disconnecting ${io.sockets.adapter.rooms.get(roomId)?.size || 0} client(s) from this room...`, {
+      const memberCount = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
+      logger.info(`${socket.data.user.id} initiated room deletion, disconnecting ${memberCount} client(s) from this room...`, {
         userId: socket.data.user.id,
         roomId,
       });
@@ -65,12 +66,12 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
       logger.error('Error deleting room', {
         userId: socket.data.user.id,
         roomId,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
         stack: err instanceof Error ? err.stack : undefined,
       });
       ack({
         success: false,
-        error: err?.message || 'Unknown error',
+        error: err instanceof Error ? err.message : 'Unknown error',
       });
     }
   };
