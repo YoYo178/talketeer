@@ -95,6 +95,11 @@ if (ENV.NodeEnv === NodeEnvs.Production) {
 
 app.use('/assets', express.static(path.join(ASSETS_PATH)));
 
+// Handle missing static files
+app.use('/assets', (_, res) => {
+  res.status(404).json({ success: false, message: 'Not found' });
+});
+
 // Attach IO instance via express middleware
 app.use((req: Request, _res: Response, next: NextFunction) => { req.io = io; next(); });
 
