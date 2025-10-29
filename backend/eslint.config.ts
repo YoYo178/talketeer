@@ -11,6 +11,7 @@ export default defineConfig(
   ...tseslint.configs.stylisticTypeChecked,
   {
     ignores: [
+      'src/@types/**/*',
       '**/node_modules/*',
       '**/*.mjs',
       '**/*.js',
