@@ -29,4 +29,3 @@ Each subdirectory includes its own README with setup and development instruction
 
 ## 🧑‍💻 Author
 [-\_YoYo178\_-](https://github.com/YoYo178)
-Licensed under the MIT License.

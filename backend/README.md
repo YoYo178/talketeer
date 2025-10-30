@@ -78,4 +78,3 @@ pnpm start
 
 ## 🧑‍💻 Author
 [-\_YoYo178\_-](https://github.com/YoYo178)
-Licensed under the MIT License.
