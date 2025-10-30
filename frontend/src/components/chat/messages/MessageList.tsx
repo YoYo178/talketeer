@@ -137,17 +137,10 @@ export const MessageList = () => {
                 {(!!dmRoomId ? dmMessagesQuery.isLoading : messagesQuery.isLoading) ? (
                     <MessageListSkeleton />
                 ) : (
-                    !!dmRoomId ? (
-                        <div className='text-center'>
-                            <p className='text-base text-muted-foreground md:text-xl'>This conversation is currently empty.</p>
-                            <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
-                        </div>
-                    ) : (
-                        <div className='text-center'>
-                            <p className='text-base text-muted-foreground md:text-xl'>This room currently has no messages.</p>
-                            <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
-                        </div>
-                    )
+                    <div className='text-center'>
+                        <p className='text-base text-muted-foreground md:text-xl'>{!!dmRoomId ? 'This conversation is currently empty.' : 'This room currently has no messages.'}</p>
+                        <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
+                    </div>
                 )}
             </div>
         )
