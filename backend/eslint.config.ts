@@ -46,7 +46,13 @@ export default defineConfig(
       '@typescript-eslint/restrict-plus-operands': [
         'warn', { allowNumberAndString: true },
       ],
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
       '@typescript-eslint/no-unsafe-enum-comparison': 0,
       '@typescript-eslint/no-unnecessary-type-parameters': 0,
       '@stylistic/no-extra-semi': 'warn',
