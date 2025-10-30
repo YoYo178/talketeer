@@ -1,4 +1,4 @@
-# ⚛️ Talketeer Frontend
+# 🗨️ Talketeer Frontend
 - Click [here](https://github.com/YoYo178/talketeer) to visit application's main repository.
 
 ## 🧩 Tech Stack
