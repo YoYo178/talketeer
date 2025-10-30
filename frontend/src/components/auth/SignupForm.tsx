@@ -8,6 +8,7 @@ import { AxiosError } from 'axios'
 import { useSignupMutation } from '@/hooks/network/auth/useSignupMutation'
 import { useForm, type SubmitHandler } from 'react-hook-form'
 import { useAuthStore } from '@/hooks/state/useAuthStore'
+import { getFooter } from '@/utils/misc.utils'
 
 interface SignupFormProps {
     onActionSuccess: (userId: string) => void;
@@ -201,8 +202,7 @@ export const SignupForm: FC<SignupFormProps> = ({ onActionSuccess }) => {
             </div>
 
             <div className='text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4'>
-                By registering, you agree to our <a href='#'>Terms of Service</a>{' '}
-                and <a href='#'>Privacy Policy</a>.
+                {getFooter()}
             </div>
         </div>
     )

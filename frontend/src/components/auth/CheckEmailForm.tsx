@@ -9,6 +9,7 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useAuthStore } from '@/hooks/state/useAuthStore';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { getFooter } from '@/utils/misc.utils';
 
 interface CheckEmailFormProps {
     onActionSuccess: (userExists: boolean, isVerified: boolean, userId?: string) => void;
@@ -129,9 +130,8 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
 
             </div>
 
-            <div className='text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4'>
-                By using this application, you agree to our <a href='#'>Terms of Service</a>{' '}
-                and <a href='#'>Privacy Policy</a>.
+            <div className='flex flex-col gap-1 text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4'>
+                {getFooter()}
             </div>
         </div>
     )

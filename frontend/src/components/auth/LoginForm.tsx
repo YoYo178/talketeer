@@ -7,6 +7,7 @@ import { useLoginMutation } from '@/hooks/network/auth/useLoginMutation'
 import { AxiosError } from 'axios'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/hooks/state/useAuthStore'
+import { getFooter } from '@/utils/misc.utils'
 
 interface LoginFormProps {
     onActionSuccess: (isVerified: boolean) => void;
@@ -124,8 +125,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onActionSuccess }) => {
             </div>
 
             <div className='text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4'>
-                By using this application, you agree to our <a href='#'>Terms of Service</a>{' '}
-                and <a href='#'>Privacy Policy</a>.
+                {getFooter()}
             </div>
         </div>
     )

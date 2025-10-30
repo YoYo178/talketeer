@@ -22,6 +22,7 @@ import { useAuthStore } from '@/hooks/state/useAuthStore'
 import { REGEXP_ONLY_DIGITS } from 'input-otp'
 import { AxiosError } from 'axios'
 import { useQueryClient } from '@tanstack/react-query'
+import { getFooter } from '@/utils/misc.utils'
 
 export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
     const { email } = useAuthStore();
@@ -268,8 +269,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
                                 </FieldGroup>
                             </form>
                             <FieldDescription className='px-6 text-center'>
-                                By clicking Verify, you agree to our <a href='#'>Terms of Service</a>{' '}
-                                and <a href='#'>Privacy Policy</a>.
+                                {getFooter()}
                             </FieldDescription>
                         </div>
                     ) : (
