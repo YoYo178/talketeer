@@ -21,17 +21,10 @@
 | `pnpm run preview` | Preview the built app locally |
 | `pnpm run lint` | Run ESLint checks |
 
+
 ## ⚙️ Environment Variables
-
-Create a `.env.<environment>` file in the `frontend/` directory:
-  - `<environment>` corresponds to the environment configuration the application is launched in.
-
-```bash
-VITE_SERVER_URL=https://your-backend-domain.com
-VITE_DEV_SERVER_URL=http://localhost:3000
-```
-These values tell the frontend where to reach your backend API and Socket.io server.
-  - Note: These server URLs are modified before usage, see `api.config.ts`.
+Rename `.env.example` to `.env` or `.env.<environment>` and add values accordingly.
+  - Note: The server URLs are modified before usage, see `api.config.ts`.
 
 ## 📁 Project Structure
 ```bash
