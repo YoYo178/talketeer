@@ -1,65 +1,81 @@
-## About
+# 🧠 Talketeer Backend
+- Click [here](https://github.com/YoYo178/talketeer) to visit application's main repository.
 
-This project was created with [express-generator-typescript](https://github.com/seanpmaxwell/express-generator-typescript).
+## 🚀 Tech Stack
 
-**IMPORTANT** for demo purposes I had to disable `helmet` in production. In any real world app you should change these 3 lines of code in `src/server.ts`:
-```ts
-// eslint-disable-next-line n/no-process-env
-if (!process.env.DISABLE_HELMET) {
-  app.use(helmet());
-}
+- **Framework:** Express.js (with TypeScript)
+- **Database & ODM:** MongoDB + Mongoose
+- **Real-Time Communication:** Socket.io
+- **Authentication:** JWT (Access & Refresh Tokens)
+- **Email Service:** Nodemailer
+- **Validation:** Zod
+- **Security:** Bcrypt.js (password hashing)
+- **Environment Management:** dotenv
+- **Architecture:** Modular service-based structure (Controllers, Services, Routes, Models)
+
+## 📁 Folder Structure
+
+```bash
+backend/
+├── config/
+│ ├── .env                # General env file (Loaded first)
+│ └── .env.<environment>  # Environment specific env file (Overrides general env variables)
+│
+├── scripts/
+│ └── build.ts            # Build script
+│
+├── src/
+│ ├── @types/             # Custom TypeScript type definitions
+│ ├── common/             # Common constants
+│ ├── config/             # API, DB, Token, Room, etc configuration files
+│ ├── controllers/        # Route logic
+│ ├── middlewares/        # Auth, validation, and error handlers
+│ ├── models/             # Mongoose schemas
+│ ├── routes/             # Express route definitions
+│ ├── schemas/            # Zod schemas
+│ ├── services/           # Centralized logic shared across routes and controllers
+│ ├── sockets/            # Socket.io event handlers
+│ ├── types/              # TypeScript definitions
+│ └── utils/              # Utility helpers
+│
+├── config.ts             # Environment variables handler
+├── eslint.config.js      # ESLint configuration
+└── vitest.config.mts     # Vitest configuration (unfortunately, currently unused)
 ```
 
-To just this:
-```ts
-app.use(helmet());
+## ⚙️ Environment Variables
+Rename `.env.example` to `.env` or `.env.<environment>` found in the `backend/config` directory and add values accordingly.
+
+## 🧠 Development
+
+Run the backend in development mode with:
+
+```bash
+pnpm run dev
 ```
 
+To build and run the production version:
 
-## Available Scripts
+```bash
+pnpm run build
+pnpm start
+```
 
-### `pnpm run clean-install`
+## 🧰 Scripts
+| Command	| Description |
+|---------|-------------|
+| pnpm run dev	| Run in watch mode using ts-node-dev |
+| pnpm run build	| Compile TypeScript to JavaScript |
+| pnpm start |	Start compiled server |
+| pnpm run lint | Run ESLint checks |
 
-Remove the existing `node_modules/` folder, `package-lock.json`, and reinstall all library modules.
+## 🧱 Design Decisions
+- Service-based architecture to keep controllers clean
+- Typed Socket events using TypeScript generics
+- Access/Refresh token system for secure, scalable authentication
+- Centralized error handling with consistent response structure
+- Event-driven socket logic for real-time synchronization
 
-
-### `pnpm run dev` or `pnpm run dev:hot` (hot reloading)
-
-Run the server in development mode.<br/>
-
-**IMPORTANT** development mode uses `swc` for performance reasons which DOES NOT check for typescript errors. Run `pnpm run type-check` to check for type errors. NOTE: you should use your IDE to prevent most type errors.
-
-
-### `pnpm test` or `pnpm run test:hot` (hot reloading)
-
-Run all unit-tests.
-
-
-### `pnpm test -- "name of test file" (i.e. users).`
-
-Run a single unit-test.
-
-
-### `pnpm run lint`
-
-Check for linting errors.
-
-
-### `pnpm run build`
-
-Build the project for production.
-
-
-### `pnpm start`
-
-Run the production build (Must be built first).
-
-
-### `pnpm run type-check`
-
-Check for typescript errors.
-
-
-## Additional Notes
-
-- If `pnpm run dev` gives you issues with bcrypt on MacOS you may need to run: `pnpm rebuild bcrypt --build-from-source`. 
+## 🧑‍💻 Author
+[-\_YoYo178\_-](https://github.com/YoYo178)
+Licensed under the MIT License.

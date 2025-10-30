@@ -1,69 +1,77 @@
-# React + TypeScript + Vite
+# ⚛️ Talketeer Frontend
+- Click [here](https://github.com/YoYo178/talketeer) to visit application's main repository.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🧩 Tech Stack
 
-Currently, two official plugins are available:
+- **Framework:** React.js (Vite + TypeScript)
+- **Styling:** TailwindCSS + shadcn/ui (Radix UI primitives)
+- **State Management:** Zustand
+- **Networking:** Axios + React Query
+- **Real-Time:** Socket.io Client
+- **Forms & Validation:** React Hook Form + Zod
+- **Routing:** React Router v7
+- **UI Enhancements:** Lucide Icons, shadcn/ui (Sonner, Next Themes)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Scripts
 
-## Expanding the ESLint configuration
+| Command | Description |
+|----------|-------------|
+| `pnpm run dev` | Start the development server |
+| `pnpm run build` | Build the production bundle |
+| `pnpm run preview` | Preview the built app locally |
+| `pnpm run lint` | Run ESLint checks |
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## ⚙️ Environment Variables
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Create a `.env.<environment>` file in the `frontend/` directory:
+  - `<environment>` corresponds to the environment configuration the application is launched in.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+```bash
+VITE_SERVER_URL=https://your-backend-domain.com
+VITE_DEV_SERVER_URL=http://localhost:3000
+```
+These values tell the frontend where to reach your backend API and Socket.io server.
+  - Note: These server URLs are modified before usage, see `api.config.ts`.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 📁 Project Structure
+```bash
+/
+├── src/
+│   ├── @types/           # Custom TypeScript type definitions
+│   ├── components/       # Reusable UI components
+│   ├── config/           # Configuration files
+│   ├── hooks/            # Custom hooks (network, socket, state, UI, etc.)
+│   ├── layouts/          # Page layouts based on authentication state
+│   ├── lib/              # Managed by shadcn/ui
+│   ├── pages/            # Page-level views and routes
+│   ├── sockets/          # Socket handlers (only for events emitted by server)
+│   ├── types/            # TypeScript definitions
+│   ├── utils/            # Utility helpers
+│   ├── App.tsx           # Root component
+│   └── main.tsx          # Application entry point
+│
+├── components.json       # shadcn/ui configuration
+├── eslint.config.js      # ESLint configuration
+├── index.html            # Base HTML file
+├── tsconfig.json         # TypeScript configuration
+└── vite.config.ts        # Vite configuration
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧠 Features
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- 🔐 Authenticated routes and JWT handling
+- 💬 Real-time room and message synchronization
+- ⚡ Typing indicators and live presence updates
+- ⭐ Interactive UI with modals, menus, and transitions
+- 📱 Responsive layout with dark/light themes
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ⚙️ Things that might be added in future
+
+- 🔐 Google OAuth2 login
+- ⭐ Rich text (Markdown, Attachments)
+- 💬 Ability to edit and delete messages
+- 🌐 Activity messages in chat (System announcements, user joined, user left, etc)
+
+## 🧑‍💻 Author
+[-\_YoYo178\_-](https://github.com/YoYo178)
+Licensed under the MIT License.
