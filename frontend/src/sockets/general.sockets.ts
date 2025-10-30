@@ -82,7 +82,7 @@ export function handleSocketConnection(socket: TalketeerSocket, queryClient?: Qu
         if (['friend-request', 'friend-new', 'friend-delete'].includes(notification.type)) {
             queryClient?.invalidateQueries({ queryKey: ['users', 'me'] });
 
-            if (['friend-new', 'friend-delete'].includes(notification.type) && data.dmRoomId)
+            if (['friend-new', 'friend-delete'].includes(notification.type) && data?.dmRoomId)
                 queryClient?.invalidateQueries({ queryKey: ['dm-rooms', data.dmRoomId] })
         }
     });
