@@ -1,0 +1,55 @@
+name: Deploy frontend to GitHub Pages
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths: 
+    - 'frontend/**'
+    - '.github/workflows/**'
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Setup Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: latest
+
+      # Enable Corepack
+      - name: Enable Corepack
+        run: corepack enable
+
+      # Install latest version of PNPM
+      - name: Install PNPM
+        run: |
+          corepack prepare pnpm@latest --activate
+          pnpm --version
+
+      # Install Dependencies
+      - name: Install dependencies
+        run: pnpm install
+
+      # Build project
+      - name: Build project
+        run: pnpm build
+
+      # Create 404.html
+      - name: Create 404.html
+        run: cp ./dist/index.html ./dist/404.html
+
+      # Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: frontend/dist

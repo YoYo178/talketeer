@@ -1,0 +1,78 @@
+import { Message } from '@src/models';
+import { deleteRoom, leaveRoom, isUserRoomOwner, getRoom } from '@src/services/room.service';
+import { getUser } from '@src/services/user.service';
+import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import logger from '@src/utils/logger.utils';
+import mongoose from 'mongoose';
+
+export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['deleteRoom'] => {
+  return async (roomId, ack) => {
+    if (!socket.data?.user) {
+      logger.warn('Unauthenticated user attempted to delete room');
+      return;
+    }
+
+    try {
+      if (!mongoose.isValidObjectId(roomId))
+        throw new Error('Invalid room ID');
+
+      const room = await getRoom(roomId);
+      if (!room)
+        throw new Error('Room not found');
+
+      if (room.isSystemGenerated)
+        throw new Error('System rooms cannot be deleted');
+
+      const userId = socket.data.user.id;
+      const user = await getUser(userId);
+      if (!user)
+        throw new Error('User not found');
+
+      const isOwner = isUserRoomOwner(userId, roomId);
+      if (!isOwner)
+        throw new Error('You are not the owner of this room');
+
+      // Leave room for admin
+      await leaveRoom(userId, roomId);
+
+      // Leave the specified room for the client
+      socket.leave(roomId);
+      logger.info(`${socket.data.user.id} left room ${roomId} due to room deletion.`, {
+        userId: socket.data.user.id,
+        roomId,
+      });
+
+      const memberCount = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
+      logger.info(`${socket.data.user.id} initiated room deletion, disconnecting ${memberCount} client(s) from this room...`, {
+        userId: socket.data.user.id,
+        roomId,
+      });
+
+      // Leave room for everyone else
+      await Promise.all(room.members.map(mem => leaveRoom(mem.user.toString(), roomId)));
+
+      // Emit event before kicking clients
+      io.emit('roomDeleted', roomId, user._id.toString());
+
+      // Kick all clients
+      io.in(roomId).socketsLeave(roomId);
+
+      await deleteRoom(roomId);
+
+      await Message.deleteMany({ room: roomId });
+
+      ack({ success: true });
+    } catch (err) {
+      logger.error('Error deleting room', {
+        userId: socket.data.user.id,
+        roomId,
+        error: err instanceof Error ? err.message : 'Unknown error',
+        stack: err instanceof Error ? err.stack : undefined,
+      });
+      ack({
+        success: false,
+        error: err instanceof Error ? err.message : 'Unknown error',
+      });
+    }
+  };
+};
