@@ -8,6 +8,7 @@ import type { FC } from 'react'
 import { UserProfilePicture } from '../UserProfilePicture';
 import { useRoomsStore } from '@/hooks/state/useRoomsStore';
 import { useGetDmRoomByFriendIdQuery } from '@/hooks/network/rooms/useGetDmRoomByFriendIdQuery';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 interface FriendEntryProps {
     friendObject: IUserFriend;
@@ -84,7 +85,27 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
                 {/* Is in our friend list already, show 'Remove' and 'Message' buttons */}
                 {isFriend && (
                     <>
-                        <Button onClick={handleRemoveFriend}>Remove Friend</Button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button>Remove Friend</Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription asChild>
+                                        <p>You are about to remove <span className='font-bold'>@{user.displayName}</span> from your friend list.</p>
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel asChild>
+                                        <Button className='text-primary' variant='outline'>Cancel</Button>
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction asChild>
+                                        <Button className='text-primary bg-red-600 hover:bg-red-500' onClick={handleRemoveFriend}>Remove</Button>
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                         <Button onClick={handleSendMessage}>Send Message</Button>
                     </>
                 )}
