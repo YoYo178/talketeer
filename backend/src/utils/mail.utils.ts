@@ -1,11 +1,21 @@
 import Mail from 'nodemailer/lib/mailer';
+import dns from 'dns/promises';
 
 import ENV from '@src/common/ENV';
+import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import { SMTPClient } from '@src/services/mail.service';
 
 import { passwordResetMailTemplate, verificationMailTemplate } from '@src/templates/mail.templates';
+import { APIError } from './api.utils';
 
 const SmtpClient = SMTPClient.getInstance();
+
+export async function validateEmailMx(email: string) {
+  const domain = email.split('@')[1];
+
+  const mxRecords = await dns.resolveMx(domain).catch(() => []);
+  if (!mxRecords.length) throw new APIError('Invalid email address', HttpStatusCodes.BAD_REQUEST);
+}
 
 export function obfuscateEmail(email: string) {
   const [user, domain] = email.split('@');

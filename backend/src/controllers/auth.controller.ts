@@ -6,7 +6,7 @@ import HttpStatusCodes from '@src/common/HttpStatusCodes';
 import { User } from '@src/models';
 import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody, TResetPasswordBody } from '@src/schemas';
 import { cookieConfig, tokenConfig } from '@src/config';
-import { generateAccessToken, generateRefreshToken, sendPasswordResetMail } from '@src/utils';
+import { generateAccessToken, generateRefreshToken, sendPasswordResetMail, validateEmailMx } from '@src/utils';
 import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
 import { APIError, sendVerificationMail } from '@src/utils';
 import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
@@ -65,6 +65,8 @@ export const verifyEmail = async (req: Request, res: Response) => {
 export const checkEmail = async (req: Request, res: Response) => {
   // Enforce types
   const { email } = req.body as TEmailBody;
+
+  await validateEmailMx(email);
 
   // Fetch the user with the given email
   const user = await getUserByEmail(email);
@@ -125,7 +127,7 @@ export const login = async (req: Request, res: Response) => {
 
   // the pain to exclude a SINGLE field from an object while keeping both typescript and eslint happy...
   res.status(HttpStatusCodes.OK).json(
-    { 
+    {
       success: true,
       message: 'Logged in successfully!',
       data: {
