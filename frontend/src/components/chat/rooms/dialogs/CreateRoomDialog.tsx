@@ -121,7 +121,7 @@ export const CreateRoomDialog = () => {
                     </div>
                     <Slider
                         id='member-limit-1'
-                        min={1}
+                        min={2}
                         max={10}
                         step={1}
                         onValueChange={setMemberLimit}
