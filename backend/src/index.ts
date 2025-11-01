@@ -87,13 +87,19 @@ if (ENV.NodeEnv === NodeEnvs.Dev) {
 
 // Attach security middleware, only in production!
 if (ENV.NodeEnv === NodeEnvs.Production) {
-   
   if (!process.env.DISABLE_HELMET) {
     app.use(helmet());
   }
 }
 
-app.use('/assets', express.static(path.join(ASSETS_PATH)));
+app.use(
+  '/assets',
+  (_: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  },
+  express.static(path.join(ASSETS_PATH)),
+);
 
 // Handle missing static files
 app.use('/assets', (_, res) => {
