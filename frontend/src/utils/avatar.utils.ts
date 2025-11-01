@@ -1,7 +1,8 @@
-import { SERVER_URL } from "@/config/api.config";
+import { API_URL } from "@/config/api.config";
 import type { Area } from "react-easy-crop";
 
-export const getAvatarUrl = (avatarPath: string) => `${SERVER_URL}/${avatarPath}`;
+// a little hackish solution by using .replace()
+export const getAvatarUrl = (avatarPath: string) => `${API_URL.replace('api', avatarPath)}/${avatarPath}`;
 
 export async function getCroppedImage(imageSrc: string, crop: Area): Promise<File> {
     const image = await createImage(imageSrc);
