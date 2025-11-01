@@ -36,7 +36,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
     const [resendText, setResendText] = useState('Resend');
     const [isVerified, setIsVerified] = useState(false);
 
-    const intervalRef = useRef<number | null>(null);
+    const intervalRef = useRef<NodeJS.Timeout | null>(null);
     const count = useRef(60);
 
     const userId = useMemo(() => searchParams.get('userId'), [searchParams]);
@@ -78,7 +78,7 @@ export function OTPForm({ className, ...props }: React.ComponentProps<'div'>) {
     }, [userId, token]);
 
     useEffect(() => {
-        let timer: number | null = null;
+        let timer: NodeJS.Timeout | null = null;
 
         if (isVerified)
             timer = setTimeout(() => {
