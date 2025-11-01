@@ -36,7 +36,7 @@ export const LoginForm: FC<LoginFormProps> = ({ onActionSuccess }) => {
             }
 
             await loginMutation.mutateAsync({
-                payload: { email, password }
+                payload: { email: email.trim(), password: password.trim() }
             })
 
             onActionSuccess(true);

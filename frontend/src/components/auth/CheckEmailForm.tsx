@@ -30,12 +30,12 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
         setError('')
 
         try {
-            const validatedData = emailSchema.safeParse({ email })
+            const validatedData = emailSchema.safeParse({ email: email.trim() })
 
             // Check if user exists
             if (validatedData.success) {
                 await checkEmailMutation.mutateAsync({
-                    payload: { email: validatedData.data.email }
+                    payload: { ...validatedData.data }
                 })
 
                 onActionSuccess(true, true)

@@ -79,7 +79,12 @@ export const ProfileDialog = () => {
             setErrors({})
 
             try {
-                const validatedData = profileFormSchema.parse({ ...data })
+                const validatedData = profileFormSchema.parse({
+                    firstName: data.firstName.trim(),
+                    lastName: data.lastName.trim(),
+                    displayName: data.displayName.trim(),
+                    bio: data.bio.trim()
+                })
 
                 const response = await updateMeMutation.mutateAsync({
                     payload: { ...validatedData, name: validatedData.firstName + ' ' + validatedData.lastName }

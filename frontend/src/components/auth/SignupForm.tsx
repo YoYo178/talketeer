@@ -42,11 +42,11 @@ export const SignupForm: FC<SignupFormProps> = ({ onActionSuccess }) => {
         try {
             const res = await signupMutation.mutateAsync({
                 payload: {
-                    name: `${data.firstName} ${data.lastName}`,
-                    displayName: data.displayName,
-                    username: data.username,
-                    email: data.email,
-                    password: data.password
+                    name: `${data.firstName.trim()} ${data.lastName.trim()}`,
+                    displayName: data.displayName.trim(),
+                    username: data.username.trim(),
+                    email: data.email.trim(),
+                    password: data.password.trim()
                 }
             })
 
