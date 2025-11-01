@@ -11,7 +11,7 @@ export const Loading = () => {
                 </div>
 
                 <div className='text-center'>
-                    <LoaderCircle className='size-10 animate-double-spin' />
+                    <LoaderCircle className='size-10 animate-spin' />
                 </div>
             </div>
         </div>
