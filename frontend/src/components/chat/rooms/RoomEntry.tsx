@@ -8,6 +8,7 @@ import { stopListeningRoomEvents, startListeningRoomEvents } from '@/sockets/roo
 import { useQueryClient } from '@tanstack/react-query';
 import { useDialogStore } from '@/hooks/state/useDialogStore';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
+import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
 
 interface RoomEntryProps {
     room: IRoomPublicView;
@@ -25,6 +26,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     const selectedRoom = useRoom<{ room: IRoomPublicView }>(selectedRoomId);
 
     const me = useMe();
+    const owner = useGetUser(room?.owner)
 
     if (!room)
         return;
@@ -121,6 +123,9 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
                     <span className='text-[8px] md:text-[10px] px-1.5 py-0.5 rounded-md bg-secondary-foreground text-primary-foreground font-bold'>SYSTEM</span>
                 )}
             </div>
+            {!room.isSystemGenerated && (
+                <span className='text-xs text-muted-foreground'>Created by: <span className='font-semibold'>{`@${owner?.username}`}</span></span>
+            )}
             <div className='text-xs text-muted-foreground'>Members: {room.memberCount}/{room.memberLimit}</div>
         </button>
     )
