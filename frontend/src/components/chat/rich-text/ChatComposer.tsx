@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SendButton } from './SendButton';
 import { AttachFileButton } from './AttachFileButton';
 import { socket } from '@/socket';
@@ -62,6 +62,12 @@ export const ChatComposer = () => {
     const roomTypingUsers = !!joinedRoomId ? typingUsers.filter(usr => usr.roomType === 'normal' && usr.roomId === joinedRoomId) : [];
 
     const typingTimer = useRef<NodeJS.Timeout>(null);
+    const inputElement = useRef<HTMLTextAreaElement>(null);
+
+    const focusChat = () => {
+        if(inputElement.current)
+            inputElement.current.focus();
+    }
 
     const me = useMe();
 
@@ -72,8 +78,22 @@ export const ChatComposer = () => {
     })
 
     const dmRoom = data?.data?.room;
-
     const canSendMessage = !!dmRoomId ? (dmRoom && dmRoom.isActive) : true;
+
+    // Autofocus chat on visiblity change
+    useEffect(() => {
+        const handleVisibilityChange = () => focusChat()
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        }
+    }, []);
+
+    // Autofocus chat on room id change
+    useEffect(() => {
+        focusChat()
+    }, [joinedRoomId, dmRoomId])
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (!me)
@@ -176,6 +196,7 @@ export const ChatComposer = () => {
                 <div className="flex w-full gap-2">
                     <AttachFileButton disabled={!canSendMessage} />
                     <Textarea
+                        ref={inputElement}
                         rows={1}
                         placeholder='Start typing...'
                         disabled={!canSendMessage}
@@ -183,6 +204,7 @@ export const ChatComposer = () => {
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
                         className='shadow-sm bg-background/90 border border-secondary focus-within:ring-2 focus-within:ring-primary min-h-0 resize-none max-h-24 overflow-y-auto whitespace-pre-wrap wrap-anywhere text-sm'
+                        autoFocus
                     />
                     <div className='flex'>
                         <GIFButton disabled={!canSendMessage} />
