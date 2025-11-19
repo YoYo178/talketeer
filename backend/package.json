@@ -13,16 +13,17 @@
   },
   "scripts": {
     "build": "ts-node ./scripts/build.ts",
-    "clean-install": "rm -rf ./node_modules && rm -r package-lock.json && pnpm i",
-    "dev": "cross-env NODE_ENV=development ts-node ./src",
+    "clean-install": "rm -rf ./node_modules && rm -r pnpm-lock.yaml && pnpm install",
+    "dev": "cross-env NODE_ENV=development node --env-file=./config/.env.development -r ts-node/register ./src",
     "dev:hot": "nodemon --exec \"pnpm run dev\" --watch ./src --ext .ts",
     "lint": "eslint .",
-    "start": "cross-env NODE_ENV=production node -r ./config.js ./dist",
+    "start": "cross-env NODE_ENV=production node --env-file=./config/.env.production -r module-alias/register ./dist",
+    "phantom-start": "cross-env NODE_ENV=production node -r module-alias/register ./dist",
     "test": "cross-env NODE_ENV=test vitest",
     "type-check": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.6.0"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
@@ -30,7 +31,6 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dayjs": "^1.11.19",
-    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
@@ -82,5 +82,8 @@
     "typescript-eslint": "^8.46.3",
     "vitest": "^4.0.7"
   },
-  "packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd"
+  "packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd",
+  "_moduleAliases": {
+    "@src": "dist"
+  }
 }
