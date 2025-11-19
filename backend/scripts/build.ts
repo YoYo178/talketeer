@@ -13,7 +13,6 @@ import childProcess from 'child_process';
     await exec('pnpm run lint', './');
     await exec('tsc --build tsconfig.prod.json', './');
     // Copy
-    await copy('./temp/config.js', './config.js');
     await copy('./temp/src', './dist');
     await remove('./temp/');
   } catch (err) {
