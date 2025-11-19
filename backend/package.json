@@ -12,7 +12,7 @@
     "url": "https://github.com/YoYo178/talketeer"
   },
   "scripts": {
-    "build": "ts-node ./scripts/build.ts",
+    "build": "pnpm run lint && tsc --build tsconfig.prod.json",
     "clean-install": "rm -rf ./node_modules && rm -r pnpm-lock.yaml && pnpm install",
     "dev": "cross-env NODE_ENV=development node --env-file=./config/.env.development -r ts-node/register ./src",
     "dev:hot": "nodemon --exec \"pnpm run dev\" --watch ./src --ext .ts",

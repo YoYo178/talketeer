@@ -21,9 +21,6 @@ backend/
 │ ├── .env                # General env file (Loaded first)
 │ └── .env.<environment>  # Environment specific env file (Overrides general env variables)
 │
-├── scripts/
-│ └── build.ts            # Build script
-│
 ├── src/
 │ ├── @types/             # Custom TypeScript type definitions
 │ ├── common/             # Common constants
@@ -38,7 +35,6 @@ backend/
 │ ├── types/              # TypeScript definitions
 │ └── utils/              # Utility helpers
 │
-├── config.ts             # Environment variables handler
 ├── eslint.config.js      # ESLint configuration
 └── vitest.config.mts     # Vitest configuration (unfortunately, currently unused)
 ```
