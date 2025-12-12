@@ -14,15 +14,12 @@ const banSchema = new mongoose.Schema<IBan>({
 }, { timestamps: true });
 
 // Enforce consistency for isPermanent and expiresAt fields
-banSchema.pre('save', function (next) {
+banSchema.pre('save', function () {
   if (this.isPermanent) {
     this.expiresAt = null;
-    next();
   } else {
     if (!this.expiresAt)
-      return next(new Error('Timed bans must include the expiresAt field!'));
-        
-    next();
+      throw new Error('Timed bans must include the expiresAt field!');
   }
 });
 

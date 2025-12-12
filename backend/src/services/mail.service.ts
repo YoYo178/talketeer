@@ -74,7 +74,7 @@ export class SMTPClient {
     if (!this.transporter)
       return;
 
-    const isDebug = [NODE_ENVS.Dev, NODE_ENVS.Test].includes(ENV.NodeEnv);
+    const isDebug = ENV.NodeEnv === NODE_ENVS.Dev || ENV.NodeEnv === NODE_ENVS.Test;
     const isEthereal = this.provider.toLowerCase() === 'ethereal';
 
     if (isDebug) {

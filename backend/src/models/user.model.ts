@@ -34,12 +34,9 @@ const userSchema = new mongoose.Schema<IUser>({
 //
 // This could've been done using the 'default' property in the schema as well
 // but in order to get the document ID, we need this pre-save function
-userSchema.pre('save', function (next) {
-
+userSchema.pre('save', function () {
   if (!this.avatarURL?.length)
     this.avatarURL = `assets/users/${this._id.toString()}/avatar.jpeg`;
-
-  next();
 });
 
 export const User = mongoose.model<IUser>('User', userSchema);
