@@ -18,7 +18,7 @@ import helmet from 'helmet';
 
 /** Constants and Environment variables */
 import ENV from '@src/common/ENV';
-import { NodeEnvs } from '@src/common/constants';
+import { NODE_ENVS } from '@src/common/constants';
 
 /** Configuration objects */
 import { ASSETS_PATH, CORSConfig } from '@src/config';
@@ -79,14 +79,14 @@ app.use(express.urlencoded({ extended: true })); // URL-encoded body parser
 app.use(cookieParser()); // Cookie parser
 
 // Attach logger middleware
-if (ENV.NodeEnv === NodeEnvs.Dev) {
+if (ENV.NodeEnv === NODE_ENVS.Dev) {
   app.use(morgan('dev'));
 } else {
   app.use(morgan('combined', { stream: morganStream }));
 }
 
 // Attach security middleware, only in production!
-if (ENV.NodeEnv === NodeEnvs.Production) {
+if (ENV.NodeEnv === NODE_ENVS.Production) {
   if (!process.env.DISABLE_HELMET) {
     app.use(helmet());
   }

@@ -2,7 +2,7 @@ import Mail from 'nodemailer/lib/mailer';
 import dns from 'dns/promises';
 
 import ENV from '@src/common/ENV';
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 import { SMTPClient } from '@src/services/mail.service';
 
 import { passwordResetMailTemplate, verificationMailTemplate } from '@src/templates/mail.templates';
@@ -14,7 +14,7 @@ export async function validateEmailMx(email: string) {
   const domain = email.split('@')[1];
 
   const mxRecords = await dns.resolveMx(domain).catch(() => []);
-  if (!mxRecords.length) throw new APIError('Invalid email address', HttpStatusCodes.BAD_REQUEST);
+  if (!mxRecords.length) throw new APIError('Invalid email address', HTTP_STATUS_CODES.BadRequest);
 }
 
 export function obfuscateEmail(email: string) {

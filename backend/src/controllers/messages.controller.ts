@@ -1,4 +1,4 @@
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 import { DMRoom, Message } from '@src/models';
 import { TMessagesQuery, TMessageIdParams, TDmMessagesQuery, TDmMessageQuery } from '@src/schemas';
 import { APIError } from '@src/utils';
@@ -42,9 +42,9 @@ export const getMessageById = async (req: Request, res: Response) => {
   const message = await Message.findById(messageId);
 
   if (!message)
-    throw new APIError('Message not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('Message not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { message } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { message } });
 };
 
 export const getDmMessages = async (req: Request, res: Response) => {
@@ -98,15 +98,15 @@ export const getDmMessageById = async (req: Request, res: Response) => {
   const room = await DMRoom.findOne({ _id: roomId, members: userId });
 
   if (!room)
-    throw new APIError('Room not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('Room not found', HTTP_STATUS_CODES.NotFound);
 
   if (!room.isActive)
-    throw new APIError('The person is not on your friend list.', HttpStatusCodes.BAD_REQUEST);
+    throw new APIError('The person is not on your friend list.', HTTP_STATUS_CODES.BadRequest);
 
   const message = await Message.findById(messageId);
 
   if (!message)
-    throw new APIError('Message not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('Message not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { message } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { message } });
 };

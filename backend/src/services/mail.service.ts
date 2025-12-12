@@ -1,4 +1,4 @@
-import { NodeEnvs } from '@src/common/constants';
+import { NODE_ENVS } from '@src/common/constants';
 import ENV from '@src/common/ENV';
 import logger from '@src/utils/logger.utils';
 import nodemailer, { Transporter } from 'nodemailer';
@@ -74,7 +74,7 @@ export class SMTPClient {
     if (!this.transporter)
       return;
 
-    const isDebug = [NodeEnvs.Dev, NodeEnvs.Test].includes(ENV.NodeEnv);
+    const isDebug = [NODE_ENVS.Dev, NODE_ENVS.Test].includes(ENV.NodeEnv);
     const isEthereal = this.provider.toLowerCase() === 'ethereal';
 
     if (isDebug) {

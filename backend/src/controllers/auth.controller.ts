@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 
 import { User } from '@src/models';
 import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody, TResetPasswordBody } from '@src/schemas';
@@ -17,31 +17,31 @@ export const verifyEmail = async (req: Request, res: Response) => {
   const verificationObj = await getVerificationObject(userId);
 
   if (!verificationObj || verificationObj.purpose === 'reset-password')
-    throw new APIError('Invalid or expired request', HttpStatusCodes.BAD_REQUEST);
+    throw new APIError('Invalid or expired request', HTTP_STATUS_CODES.BadRequest);
 
   const user = await getUser(userId);
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   if (user.isVerified)
-    throw new APIError('User is already verified', HttpStatusCodes.FORBIDDEN);
+    throw new APIError('User is already verified', HTTP_STATUS_CODES.Forbidden);
 
   switch (method) {
   case 'code':
     if (data !== verificationObj.code)
-      throw new APIError('Invalid code', HttpStatusCodes.BAD_REQUEST);
+      throw new APIError('Invalid code', HTTP_STATUS_CODES.BadRequest);
 
     await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
     break;
   case 'token':
     if (!await bcrypt.compare(data, verificationObj.token))
-      throw new APIError('Invalid token, make sure the link is correct!', HttpStatusCodes.BAD_REQUEST);
+      throw new APIError('Invalid token, make sure the link is correct!', HTTP_STATUS_CODES.BadRequest);
 
     await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
     break;
   default:
-    throw new APIError('Unknown method', HttpStatusCodes.BAD_REQUEST);
+    throw new APIError('Unknown method', HTTP_STATUS_CODES.BadRequest);
   }
 
   await cleanupVerification(userId);
@@ -59,7 +59,7 @@ export const verifyEmail = async (req: Request, res: Response) => {
     maxAge: tokenConfig.refreshToken.expiry,
   });
 
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'User verified successfully!', data: { user } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'User verified successfully!', data: { user } });
 };
 
 export const checkEmail = async (req: Request, res: Response) => {
@@ -73,7 +73,7 @@ export const checkEmail = async (req: Request, res: Response) => {
 
   // If the user does not exist, respond with a 404 Not Found
   if (!user)
-    throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('No user exists with the specified email.', HTTP_STATUS_CODES.NotFound);
 
   if (!user.isVerified) {
     const existingObj = await getVerificationObject(user._id.toString());
@@ -83,11 +83,11 @@ export const checkEmail = async (req: Request, res: Response) => {
       await sendVerificationMail(user.email, user._id.toString(), code, token);
     }
 
-    throw new APIError('User is not verified, please verify to continue', HttpStatusCodes.UNAUTHORIZED, { user: { _id: user._id.toString() } });
+    throw new APIError('User is not verified, please verify to continue', HTTP_STATUS_CODES.Unauthorized, { user: { _id: user._id.toString() } });
   }
 
   // If the user does exist, respond with a 200 OK
-  res.status(HttpStatusCodes.OK).json({
+  res.status(HTTP_STATUS_CODES.Ok).json({
     success: true,
     message: 'User exists',
     data: {
@@ -102,15 +102,15 @@ export const login = async (req: Request, res: Response) => {
   const user = await User.findOne({ email }).lean().exec();
 
   if (!user)
-    throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('No user exists with the specified email.', HTTP_STATUS_CODES.NotFound);
 
   if (!user.isVerified)
-    throw new APIError('User is not verified, please verify to continue', HttpStatusCodes.UNAUTHORIZED);
+    throw new APIError('User is not verified, please verify to continue', HTTP_STATUS_CODES.Unauthorized);
 
   const passwordMatches = await bcrypt.compare(password, user.passwordHash);
 
   if (!passwordMatches)
-    throw new APIError('Invalid password', HttpStatusCodes.BAD_REQUEST);
+    throw new APIError('Invalid password', HTTP_STATUS_CODES.BadRequest);
 
   const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
   const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
@@ -126,7 +126,7 @@ export const login = async (req: Request, res: Response) => {
   });
 
   // the pain to exclude a SINGLE field from an object while keeping both typescript and eslint happy...
-  res.status(HttpStatusCodes.OK).json(
+  res.status(HTTP_STATUS_CODES.Ok).json(
     {
       success: true,
       message: 'Logged in successfully!',
@@ -164,7 +164,7 @@ export const logout = (_: Request, res: Response) => {
     maxAge: tokenConfig.refreshToken.expiry,
   });
 
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Logged out successfully!' });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Logged out successfully!' });
 };
 
 export const signup = async (req: Request, res: Response) => {
@@ -175,19 +175,19 @@ export const signup = async (req: Request, res: Response) => {
   const emailExists = !!await getUserByEmail(email);
 
   if (emailExists)
-    throw new APIError('An account already exists with this email!', HttpStatusCodes.CONFLICT);
+    throw new APIError('An account already exists with this email!', HTTP_STATUS_CODES.Conflict);
 
   const usernameExists = !!await User.findOne({ username }).select('-passwordHash').lean().exec();
 
   if (usernameExists)
-    throw new APIError('This username is already taken, try another.', HttpStatusCodes.CONFLICT);
+    throw new APIError('This username is already taken, try another.', HTTP_STATUS_CODES.Conflict);
 
   const user = await createUser({ username, name, displayName, email, passwordHash: hashedPassword });
 
   const [token, code] = await generateVerificationObject(user._id.toString(), 'email-verification');
   await sendVerificationMail(user.email, user._id.toString(), code, token);
 
-  res.status(HttpStatusCodes.OK).json({
+  res.status(HTTP_STATUS_CODES.Ok).json({
     success: true,
     message: 'User successfully registered, Please verify email to continue',
     data: {
@@ -204,15 +204,15 @@ export const resendVerification = async (req: Request, res: Response) => {
   const user = await getUser(userId);
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   if (user.isVerified)
-    throw new APIError('User is already verified', HttpStatusCodes.BAD_REQUEST);
+    throw new APIError('User is already verified', HTTP_STATUS_CODES.BadRequest);
 
   const [token, code] = await generateVerificationObject(userId, 'email-verification');
   await sendVerificationMail(user.email, userId, code, token);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Resent verification email successfully' });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Resent verification email successfully' });
 };
 
 export const requestPasswordReset = async (req: Request, res: Response) => {
@@ -221,7 +221,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
   const user = await getUserByEmail(email);
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   const existingObj = await getVerificationObject(user._id.toString());
 
@@ -230,7 +230,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     await sendPasswordResetMail(user.email, user._id.toString(), token);
   }
 
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Sent password reset mail successfully' });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Sent password reset mail successfully' });
 };
 
 export const resetPassword = async (req: Request, res: Response) => {
@@ -239,22 +239,22 @@ export const resetPassword = async (req: Request, res: Response) => {
   const user = await getUser(userId);
 
   if (!user)
-    throw new APIError('No user exists with the specified email.', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('No user exists with the specified email.', HTTP_STATUS_CODES.NotFound);
 
   const verificationObj = await getVerificationObject(user._id.toString());
 
   if (!verificationObj)
-    throw new APIError('Invalid or expired request', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('Invalid or expired request', HTTP_STATUS_CODES.NotFound);
 
   const tokenMatches = await bcrypt.compare(token, verificationObj.token);
 
   if (!tokenMatches)
-    throw new APIError('Invalid token', HttpStatusCodes.BAD_REQUEST);
+    throw new APIError('Invalid token', HTTP_STATUS_CODES.BadRequest);
 
   const hashedPassword = await bcrypt.hash(password, 10);
   await updateUser(userId, { passwordHash: hashedPassword });
 
   await cleanupVerification(userId);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Password successfully reset, please login to continue' });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Password successfully reset, please login to continue' });
 };

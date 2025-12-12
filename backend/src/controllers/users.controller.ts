@@ -1,4 +1,4 @@
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 import { User } from '@src/models';
 import { TUpdateMeBody, TUserIdParams } from '@src/schemas';
 import { APIError } from '@src/utils';
@@ -8,9 +8,9 @@ export const getMe = async (req: Request, res: Response) => {
   const user = await User.findById(req.user.id).select('-passwordHash').lean().exec();
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { user } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { user } });
 };
 
 export const updateMe = async (req: Request, res: Response) => {
@@ -19,7 +19,7 @@ export const updateMe = async (req: Request, res: Response) => {
   const user = await User.findById(req.user.id).select('-passwordHash').exec();
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   user.name = name ?? user.name;
   user.displayName = displayName ?? user.displayName;
@@ -29,7 +29,7 @@ export const updateMe = async (req: Request, res: Response) => {
 
   req.io.emit('userUpdated', req.user.id);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Updated user successfully', data: { user } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Updated user successfully', data: { user } });
 };
 
 export const getUser = async (req: Request, res: Response) => {
@@ -50,7 +50,7 @@ export const getUser = async (req: Request, res: Response) => {
     .exec();
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { user } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { user } });
 };

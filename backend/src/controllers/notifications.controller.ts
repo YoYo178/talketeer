@@ -1,4 +1,4 @@
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 import { User } from '@src/models';
 import { TNotificationIdParams } from '@src/schemas';
 import { APIError } from '@src/utils';
@@ -13,11 +13,11 @@ export const getNotifications = async (req: Request, res: Response) => {
     .exec();
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   const notifications = user.notifications || [];
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { notifications } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { notifications } });
 };
 
 export const getNotification = async (req: Request, res: Response) => {
@@ -30,12 +30,12 @@ export const getNotification = async (req: Request, res: Response) => {
     .exec();
 
   if (!user)
-    throw new APIError('User not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   const notification = (user.notifications || []).find(notificationObj => notificationObj._id.toString() === notificationId);
 
   if (!notification)
-    throw new APIError('No associated notification object found for this ID', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('No associated notification object found for this ID', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { notification } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { notification } });
 };

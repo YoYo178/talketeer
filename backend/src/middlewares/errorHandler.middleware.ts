@@ -1,4 +1,4 @@
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 import type { NextFunction, Request, Response } from 'express';
 
 import { APIError } from '@src/utils';
@@ -17,7 +17,7 @@ export const errorHandler = (err: unknown, req: Request, res: Response, _next: N
       userAgent: req.get('User-Agent'),
     });
 
-    res.status(err.statusCode ?? HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
+    res.status(err.statusCode ?? HTTP_STATUS_CODES.InternalServerError).json({
       success: false,
       message: err.message,
       ...(Object.keys(err.data).length > 0 ? { data: err.data } : {}),
@@ -35,7 +35,7 @@ export const errorHandler = (err: unknown, req: Request, res: Response, _next: N
     userAgent: req.get('User-Agent'),
   });
 
-  res.status(HttpStatusCodes.INTERNAL_SERVER_ERROR).json({
+  res.status(HTTP_STATUS_CODES.InternalServerError).json({
     success: false,
     message: 'An error occurred in the server. Please try again.',
   });

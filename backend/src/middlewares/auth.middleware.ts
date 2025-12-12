@@ -2,7 +2,7 @@ import type { ExtendedError } from 'socket.io';
 import type { Request, Response, NextFunction } from 'express';
 import * as cookie from 'cookie';
 
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 
 import { cookieConfig, tokenConfig } from '@src/config';
 import { User } from '@src/models';
@@ -19,7 +19,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
   if (!decodedRefreshToken.valid) {
     returnObj.error = {
       message: 'Invalid token, please log in again.',
-      code: HttpStatusCodes.UNAUTHORIZED,
+      code: HTTP_STATUS_CODES.Unauthorized,
     };
     return returnObj;
   }
@@ -28,7 +28,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
   if (decodedRefreshToken.expired) {
     returnObj.error = {
       message: 'Token expired, please log in again.',
-      code: HttpStatusCodes.UNAUTHORIZED,
+      code: HTTP_STATUS_CODES.Unauthorized,
     };
     return returnObj;
   }
@@ -47,7 +47,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
     if (!decodedAccessToken.valid) {
       returnObj.error = {
         message: 'Invalid token, please log in again.',
-        code: HttpStatusCodes.UNAUTHORIZED,
+        code: HTTP_STATUS_CODES.Unauthorized,
       };
       return returnObj;
     }
@@ -68,7 +68,7 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
   if (!user) {
     returnObj.error = {
       message: 'User not found!',
-      code: HttpStatusCodes.NOT_FOUND,
+      code: HTTP_STATUS_CODES.NotFound,
     };
     return returnObj;
   }
@@ -96,7 +96,7 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
 
   // TODO: Blacklist by IP
   if (authDetails.isMaliciousUser)
-    throw new APIError('Malicious activity detected, you have been added to the blacklist.', HttpStatusCodes.FORBIDDEN);
+    throw new APIError('Malicious activity detected, you have been added to the blacklist.', HTTP_STATUS_CODES.Forbidden);
 
   // Handle silent access token refresh
   if (authDetails.data.accessToken)
@@ -115,7 +115,7 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
     return;
   }
 
-  throw new APIError('Authentication failed', HttpStatusCodes.INTERNAL_SERVER_ERROR);
+  throw new APIError('Authentication failed', HTTP_STATUS_CODES.InternalServerError);
 };
 
 export const requireSocketAuth = async (socket: TalketeerSocket, next: (err?: ExtendedError) => void) => {

@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 
 import { APIError } from '@src/utils';
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 
 import { ASSETS_PATH } from '@src/config';
 
@@ -29,7 +29,7 @@ const fileFilter: multer.Options['fileFilter'] = (_, file, callback) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     callback(null, true);
   } else {
-    callback(new APIError('Only JPEG, PNG, and WEBP images are allowed!', HttpStatusCodes.BAD_REQUEST));
+    callback(new APIError('Only JPEG, PNG, and WEBP images are allowed!', HTTP_STATUS_CODES.BadRequest));
   }
 };
 
@@ -42,7 +42,7 @@ const upload = multer({ storage, fileFilter, limits });
 const FilesRouter = Router();
 
 FilesRouter.post('/avatar', upload.single('avatar'), (_: Request, res: Response) => {
-  res.status(HttpStatusCodes.OK).json({ success: true, message: 'Updated avatar successfully!' });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Updated avatar successfully!' });
 });
 
 export default FilesRouter;

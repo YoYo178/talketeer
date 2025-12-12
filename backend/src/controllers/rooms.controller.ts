@@ -1,4 +1,4 @@
-import HttpStatusCodes from '@src/common/HttpStatusCodes';
+import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
 import { DMRoom, Room } from '@src/models';
 import { TFriendIdParams, TRoomIdParams } from '@src/schemas';
 import { IRoomPublicView, IRoom } from '@src/types';
@@ -10,7 +10,7 @@ export const getAllRooms = async (req: Request, res: Response) => {
 
   const rooms: (IRoom | IRoomPublicView)[] = dbRooms.map(room => sanitizeRoomObj(room, req.user.id));
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { rooms } });
 };
 
 export const getRoomById = async (req: Request, res: Response) => {
@@ -19,15 +19,15 @@ export const getRoomById = async (req: Request, res: Response) => {
   const room = await Room.findById(roomId).lean().exec();
 
   if (!room)
-    throw new APIError('Room not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('Room not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { room: sanitizeRoomObj(room, req.user.id) } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { room: sanitizeRoomObj(room, req.user.id) } });
 };
 
 export const getAllDmRooms = async (req: Request, res: Response) => {
   const userId = req.user.id;
   const rooms = await DMRoom.find({ members: userId }).lean().exec();
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { rooms } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { rooms } });
 };
 
 export const getDmRoomById = async (req: Request, res: Response) => {
@@ -37,9 +37,9 @@ export const getDmRoomById = async (req: Request, res: Response) => {
   const room = await DMRoom.findOne({ _id: roomId, members: userId }).lean().exec();
 
   if (!room)
-    throw new APIError('DM Room not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('DM Room not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { room } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { room } });
 };
 
 export const getDmRoomByFriendId = async (req: Request, res: Response) => {
@@ -49,7 +49,7 @@ export const getDmRoomByFriendId = async (req: Request, res: Response) => {
   const room = await DMRoom.findOne({ members: { $all: [userId, friendId] } }).lean().exec();
 
   if (!room)
-    throw new APIError('DM Room not found', HttpStatusCodes.NOT_FOUND);
+    throw new APIError('DM Room not found', HTTP_STATUS_CODES.NotFound);
 
-  res.status(HttpStatusCodes.OK).json({ success: true, data: { room } });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { room } });
 };
