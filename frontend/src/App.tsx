@@ -41,9 +41,9 @@ function App() {
               <Route path='/chat' element={<Chat />} />
             </Route>
 
-            <Route element={<GuestRoute />}>
-              <Route element={<GuestLayout />}>
-                <Route index element={<LandingPage />} />
+            <Route element={<GuestLayout />}>
+              <Route index element={<LandingPage />} />
+              <Route element={<GuestRoute />}>
                 <Route path='/auth' element={<AuthPage />}>
                   <Route path='login' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
                   <Route path='signup' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
