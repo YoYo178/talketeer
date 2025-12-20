@@ -1,6 +1,6 @@
 /**
  * @title Tenor API V2 typings
- * @author -_YoYo178_- (Sumit)
+ * @author Sumit Chaurasiya (-_YoYo178_-)
  * @date 21st September 2025
  * 
  * @disclaimer These typings are **UNOFFICIAL** and are entirely

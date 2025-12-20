@@ -63,4 +63,4 @@ talketeer/
 Each subdirectory includes its own README with setup and development instructions.
 
 ## 🧑‍💻 Author
-[-\_YoYo178\_-](https://github.com/YoYo178)
+Made with ♥️ by [Sumit Chaurasiya](https://github.com/YoYo178).
