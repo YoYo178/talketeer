@@ -1,0 +1,27 @@
+name: 🧰 Feature Proposal
+description: Propose a small, scoped feature (approval required)
+title: "[Feature]: "
+labels: ["proposal"]
+body:
+  - type: textarea
+    attributes:
+      label: Feature Description
+      description: Clearly describe the proposed feature
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Why is this needed and what problem does it solve?
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Scope Confirmation
+      options:
+        - label: This is a small, well-scoped change
+        - label: This does not require architectural changes
+        - label: I understand this requires maintainer approval before implementation
+    validations:
+      required: true

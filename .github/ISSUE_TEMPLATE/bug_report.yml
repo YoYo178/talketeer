@@ -1,0 +1,45 @@
+name: 🐛 Bug Report
+description: Report a reproducible bug in Talketeer
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: What went wrong?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Environment
+      placeholder: "Browser, OS, device"
+
+  - type: input
+    attributes:
+      label: Any other relevant information
+      placeholder: "Additional context, logs, screenshots, etc."
