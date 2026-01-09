@@ -59,6 +59,20 @@ export const ProfileDialog = () => {
         setIsOpen(true);
     }
 
+    const handleClose = () => {
+        const hasUnsavedChanges = formState.isDirty || !!newAvatar;
+
+        if (hasUnsavedChanges) {
+            const confirmClose = window.confirm(
+                'You have unsaved changes. Discard them and close?'
+            );
+
+            if (!confirmClose) return;
+        }
+
+        setIsOpen(false);
+    };
+
     const onSubmit: SubmitHandler<ProfileFormFields> = async (data: ProfileFormFields) => {
         // Avatar changed
         if (newAvatar) {
@@ -152,7 +166,17 @@ export const ProfileDialog = () => {
     const fallbackName = (nameArray.length > 1 ? [nameArray[0], nameArray[nameArray.length - 1]] : [nameArray[0]]).map(str => str[0].toUpperCase()).join('');
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) {
+                    handleClose();   // intercept close
+                } else {
+                    setIsOpen(true);
+                }
+            }}
+        >
+
             <DialogTrigger asChild>
                 <DropdownMenuItem onClick={handleProfileClick}>
                     <CircleUserRound />
@@ -245,11 +269,15 @@ export const ProfileDialog = () => {
 
                     <DialogFooter>
                         {errors.general && (<p className='mr-auto text-sm text-red-500 self-center text-center'>{errors.general}</p>)}
-                        <DialogClose asChild>
-                            <Button type='button' variant='outline'>
-                                Close
-                            </Button>
-                        </DialogClose>
+                        
+                        <Button
+                            type='button'
+                            variant='outline'
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button>
+                        
                         {(formState.isDirty || newAvatar) && (<Button type='submit'>Save</Button>)}
                     </DialogFooter>
                 </form>
