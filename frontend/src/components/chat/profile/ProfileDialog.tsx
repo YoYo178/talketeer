@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,6 +17,7 @@ import { AvatarCropper } from './AvatarCropper';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUpdateAvatarMutation } from '@/hooks/network/files/useUpdateAvatarMutation';
 import { getAvatarUrl } from '@/utils/avatar.utils';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle} from '@/components/ui/alert-dialog';
 
 const profileFormSchema = z.object({
     firstName: z.string().nonempty('First name is required'),
@@ -41,6 +42,7 @@ export const ProfileDialog = () => {
     const [selectedAvatarImage, setSelectedAvatarImage] = useState<string>('');
     const [newAvatar, setNewAvatar] = useState<Blob | null>(null);
     const newAvatarUrl = useMemo(() => newAvatar ? URL.createObjectURL(newAvatar) : '', [newAvatar])
+    const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -58,6 +60,17 @@ export const ProfileDialog = () => {
         e.preventDefault();
         setIsOpen(true);
     }
+
+    const handleClose = () => {
+    const hasUnsavedChanges = formState.isDirty || !!newAvatar;
+
+    if (hasUnsavedChanges) {
+        setShowDiscardConfirm(true);
+        return;
+    }
+
+    setIsOpen(false);
+};
 
     const onSubmit: SubmitHandler<ProfileFormFields> = async (data: ProfileFormFields) => {
         // Avatar changed
@@ -152,7 +165,18 @@ export const ProfileDialog = () => {
     const fallbackName = (nameArray.length > 1 ? [nameArray[0], nameArray[nameArray.length - 1]] : [nameArray[0]]).map(str => str[0].toUpperCase()).join('');
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) {
+                    handleClose();   // intercept close
+                } else {
+                    setIsOpen(true);
+                }
+            }}
+        >
+
             <DialogTrigger asChild>
                 <DropdownMenuItem onClick={handleProfileClick}>
                     <CircleUserRound />
@@ -245,17 +269,47 @@ export const ProfileDialog = () => {
 
                     <DialogFooter>
                         {errors.general && (<p className='mr-auto text-sm text-red-500 self-center text-center'>{errors.general}</p>)}
-                        <DialogClose asChild>
-                            <Button type='button' variant='outline'>
-                                Close
-                            </Button>
-                        </DialogClose>
+                        
+                        <Button
+                            type='button'
+                            variant='outline'
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button>
+                        
                         {(formState.isDirty || newAvatar) && (<Button type='submit'>Save</Button>)}
                     </DialogFooter>
                 </form>
 
             </DialogContent>
-
+        
         </Dialog>
+        
+        <AlertDialog open={showDiscardConfirm} onOpenChange={setShowDiscardConfirm}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                    <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+                    <AlertDialogDescription>
+                        You have unsaved changes. Closing now will discard them.
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
+
+                <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                    <AlertDialogAction
+                        onClick={() => {
+                            setShowDiscardConfirm(false);
+                            setIsOpen(false);
+                        }}
+                    >
+                        Discard
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+        </>
+    
     )
 }
