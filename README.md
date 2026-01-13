@@ -1,66 +1,100 @@
 # 🗨️ Talketeer
 
-**Talketeer** is a full-stack, real-time chat application built with the **MERN** stack and **Socket.io**.  
-It delivers an intuitive chatting experience with real-time messaging, room creation, typing indicators, and message persistence — all wrapped in a modern and responsive interface.
+**Talketeer** is a full‑stack, real‑time chat application built with the **MERN stack** and **Socket.IO**. It delivers a fast, intuitive chatting experience with room‑based conversations, typing indicators, and persistent message history — all wrapped in a clean, modern, and responsive interface.
 
-> 💬 The design takes _some_ inspiration from [Discord](https://github.com/discord), because I use it a lot!
+> 💬 **Design note:** The UI takes inspiration from **Discord** (because I use it a lot!), focusing on clarity, speed, and usability.
+
+---
 
 ## ✨ Overview
 
-Talketeer focuses on providing a smooth and reliable real-time communication system with:
-- 🔐 Email-based registration & login
-- 🔄 Tokenized password reset flow
-- 💬 Public & private chat rooms
-- ⚡ Real-time messaging and typing indicators
-- 🕓 Message history and recent chat fetching
-- 👥 Room management (owner kick/ban controls)
-- 🪟 Tenor integration
-- 🎨 Clean, minimal UI built for responsiveness
+Talketeer focuses on providing a smooth and reliable real‑time communication system with:
+
+* 🔐 **Email‑based registration & login**
+* 🔄 **Tokenized password reset flow**
+* 💬 **Public & private chat rooms**
+* ⚡ **Real‑time messaging & typing indicators**
+* 🕓 **Message history & recent chat fetching**
+* 👥 **Room management** (owner kick/ban controls)
+* 🪟 **Tenor GIF integration**
+* 🎨 **Clean, minimal UI** built for responsiveness
+
+---
 
 ## 🖼️ Screenshots
-### Unauthorized (not logged in) pages:
-  - Landing page
-  <img width="1556" height="742" alt="0" src="https://github.com/user-attachments/assets/66d2a175-578a-4bbe-95ca-c39b3c13c30c" />
 
-  - Login/Register page
-  <img width="1556" height="742" alt="0 5" src="https://github.com/user-attachments/assets/78ede18a-6125-4c43-ac0c-3bdfdd6e9a36" />
+### Unauthorized (Not Logged In)
 
-### Authorized (logged in) pages:
-  - Chat page
-    - Not in a room
-    <img width="1556" height="744" alt="1" src="https://github.com/user-attachments/assets/eb1f36ac-8b69-4790-a30e-cf4046f0cca9" />
+* **Landing Page**
+![Landing Page](./assests/landing.png)
 
-    - Not in a room, notifications dialog open
-    <img width="1556" height="744" alt="5" src="https://github.com/user-attachments/assets/5073722f-a96b-4d1b-8c41-6e2c85165c15" />
+* **Login / Register Page**
+![Login Page](./assests/login.png)
 
-    - In a room
-    <img width="1556" height="744" alt="2" src="https://github.com/user-attachments/assets/f2a7bfb1-42a9-457e-85c8-1e4c5e163076" />
+### Authorized (Logged In)
 
-    - In a room, member list and room list expanded
-    <img width="1556" height="744" alt="3" src="https://github.com/user-attachments/assets/10d1af4a-6780-45fb-a317-692c62b11d0f" />
+* **Chat page (Not in a room)**
+![Chat Page](./assests/chat_empty.png)
+* **Notifications dialog open**
+![Notifications Page](./assests/notifications.png)
+* **Inside a room**
+![Room Page](./assests/chat_room.png)
+* **Room & member list expanded**
+![Memlist Page](./assests/memberlist.png)
+* **Room & member list collapsed**
+![listcollapsed Page](./assests/roomlist.png)
+---
 
-    - In a room, member list and room list collapsed
-    <img width="1556" height="744" alt="4" src="https://github.com/user-attachments/assets/64131047-7aa4-4914-8d92-fae325edcc49" />
 
-## Other pages:
-  - Loading page (Animated spinner)
-  <img width="1544" height="734" alt="image" src="https://github.com/user-attachments/assets/b35836af-0fa6-47b3-8a42-638fb41e5095" />
-
-  - Not found page
-  <img width="1548" height="737" alt="image" src="https://github.com/user-attachments/assets/135cf76a-5028-43d0-80bd-731e4999b42c" />
-
-  - Error page
-  <img width="1545" height="736" alt="image" src="https://github.com/user-attachments/assets/25d1ce86-d5e2-4279-8e85-1bebcd52d3e9" />
 
 ## 📂 Project Structure
 
-```bash
-talketeer/
-├── backend/      # Express + TypeScript + Socket.io server
-├── frontend/     # React + Vite + TypeScript client
-└── README.md     # (You’re here!)
 ```
-Each subdirectory includes its own README with setup and development instructions.
+talketeer/
+├── backend/      # Express + TypeScript + Socket.IO server
+├── frontend/     # React + Vite + TypeScript client
+└── README.md     # You are here
+```
+
+Each subdirectory contains its own **README** with detailed setup and development instructions.
+
+---
+
+## 🚀 Live Demo
+
+🌐 **[https://sumitchaurasiya.me/talketeer/](https://sumitchaurasiya.me/talketeer/)**
+
+---
 
 ## 🧑‍💻 Author
-Made with ♥️ by [Sumit Chaurasiya](https://github.com/YoYo178).
+
+Made with ♥️ by **Sumit Chaurasiya**.
+
+* Portfolio / Demo: [https://sumitchaurasiya.me/talketeer/](https://sumitchaurasiya.me/talketeer/)
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! 🎉
+
+* Please check the **Contributing Guidelines** before submitting a PR
+* Follow the **Code of Conduct** to keep the community respectful
+
+---
+
+## 📝 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## ⭐ Support
+
+If you like this project:
+
+* ⭐ Star the repository
+* 🍴 Fork it
+* 🗣️ Share it with others
+
+Your support helps a lot! 🙌
