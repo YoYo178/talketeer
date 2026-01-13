@@ -36,13 +36,13 @@ Talketeer focuses on providing a smooth and reliable real‑time communication s
 * **Chat page (Not in a room)**
 ![Chat Page](https://github.com/user-attachments/assets/82d9461a-1d8b-4c28-86b2-8bf8f252f1ba)
 * **Notifications dialog open**
-![Notifications Page](https://github.com/user-attachments/assets/982b1b0a-47ab-47d0-9bf6-1b6b675a3c2e)
+![Notifications Page](https://github.com/user-attachments/assets/5b68a4b1-6e5d-4191-bc99-01ba3e215cf0)
 * **Inside a room**
 ![Room Page](https://github.com/user-attachments/assets/0fe2e3e8-ce02-46a4-91ec-f482a04b526d)
 * **Room & member list expanded**
 ![Memlist Page](https://github.com/user-attachments/assets/9e465605-c10e-4c76-9570-d2943a63c3ea)
 * **Room & member list collapsed**
-![listcollapsed Page](https://github.com/user-attachments/assets/5495106c-5b55-426d-b6f9-8e46b401a3a5)
+![listcollapsed Page](https://github.com/user-attachments/assets/0f70be82-5830-479f-86a5-418345fa7dc4)
 ---
 
 
