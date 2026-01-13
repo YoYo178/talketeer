@@ -1,9 +1,15 @@
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
-import { memo, type FC } from 'react'
+import { memo, useState, type FC } from 'react'
 import { UserProfilePicture, UserProfilePictureSkeleton } from '../UserProfilePicture';
 import { MessageText, MessageTextSkeleton } from './MessageText';
 import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
 import type { IMessage } from '@/types/message.types';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { MoreVertical, Pencil, Trash2 } from 'lucide-react';
+import { socket } from '@/socket';
+import { useRoomsStore } from '@/hooks/state/useRoomsStore';
+import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
+import type { IRoom } from '@/types/room.types';
 
 interface MessageBlockSkeletonProps {
     align: 'start' | 'end';
@@ -39,8 +45,110 @@ interface MessageBlockProps {
 export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId }) => {
     const me = useMe();
     const user = useGetUser(senderId);
+    const { joinedRoomId } = useRoomsStore();
+    const room = useRoom<{ room: IRoom }>(joinedRoomId);
+
+    const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+    const [editContent, setEditContent] = useState('');
 
     const isSelfMessage = senderId === me?._id;
+    const isRoomOwner = room?.owner === me?._id;
+
+    const handleEdit = (message: IMessage) => {
+        setEditingMessageId(message._id);
+        setEditContent(message.content);
+    };
+
+    const handleSaveEdit = (messageId: string) => {
+        if (!joinedRoomId || !editContent.trim()) return;
+
+        socket.emit('editMessage', joinedRoomId, messageId, editContent.trim(), (response) => {
+            if (response.success) {
+                setEditingMessageId(null);
+                setEditContent('');
+            }
+        });
+    };
+
+    const handleCancelEdit = () => {
+        setEditingMessageId(null);
+        setEditContent('');
+    };
+
+    const handleDelete = (messageId: string) => {
+        if (!joinedRoomId) return;
+
+        socket.emit('deleteMessage', joinedRoomId, messageId, (response) => {
+            // Message will be updated via socket event
+        });
+    };
+
+    const renderMessage = (message: IMessage) => {
+        if (message.isDeleted) {
+            return (
+                <div key={message._id} className="text-muted-foreground italic text-sm">
+                    This message has been deleted
+                </div>
+            );
+        }
+
+        if (editingMessageId === message._id) {
+            return (
+                <div key={message._id} className="flex flex-col gap-2">
+                    <input
+                        type="text"
+                        value={editContent}
+                        onChange={(e) => setEditContent(e.target.value)}
+                        className="bg-background border rounded px-2 py-1 text-sm"
+                        autoFocus
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleSaveEdit(message._id);
+                            if (e.key === 'Escape') handleCancelEdit();
+                        }}
+                    />
+                    <div className="flex gap-2 text-xs">
+                        <button onClick={() => handleSaveEdit(message._id)} className="text-primary hover:underline">Save</button>
+                        <button onClick={handleCancelEdit} className="text-muted-foreground hover:underline">Cancel</button>
+                    </div>
+                </div>
+            );
+        }
+
+        const canEdit = isSelfMessage;
+        const canDelete = isSelfMessage || isRoomOwner;
+
+        return (
+            <div key={message._id} className="group flex items-start gap-2">
+                <div className="flex-1">
+                    <MessageText content={message.content} isSelfMessage={isSelfMessage} />
+                    {message.isEdited && (
+                        <span className="text-xs text-muted-foreground ml-1">(edited)</span>
+                    )}
+                </div>
+                {(canEdit || canDelete) && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger className="opacity-0 group-hover:opacity-100 transition-opacity">
+                            <MoreVertical className="h-4 w-4 text-muted-foreground" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            {canEdit && (
+                                <DropdownMenuItem onClick={() => handleEdit(message)}>
+                                    <Pencil className="h-4 w-4 mr-2" />
+                                    Edit
+                                </DropdownMenuItem>
+                            )}
+                            {canDelete && (
+                                <DropdownMenuItem onClick={() => handleDelete(message._id)} className="text-destructive">
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete
+                                </DropdownMenuItem>
+                            )}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
+            </div>
+        );
+    };
 
     return (
         <div className={
@@ -55,7 +163,7 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                             <span className='text-[#383838] dark:text-[#696969] text-sm font-extrabold ml-2 mr-2'>——</span>
                             <span className='font-semibold'>You</span>
                         </p>
-                        {messages.map(message => <MessageText key={message._id} content={message.content} isSelfMessage />)}
+                        {messages.map(renderMessage)}
                     </div>
                     <UserProfilePicture user={me} popoverSide='left' />
                 </>
@@ -68,10 +176,11 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                             <span className='text-[#383838] dark:text-[#696969] text-sm font-extrabold ml-2 mr-2'>——</span>
                             <span className='text-xs'>{new Date(messages[0].createdAt).toLocaleString()}</span>
                         </p>
-                        {messages.map(message => <MessageText key={message._id} content={message.content} />)}
+                        {messages.map(renderMessage)}
                     </div>
                 </>
             )}
         </div>
     )
 })
+

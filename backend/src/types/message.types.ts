@@ -12,6 +12,15 @@ export interface IMessage {
     /** The room the message was sent in */
     room: mongoose.Types.ObjectId;
 
+    /** Whether the message has been edited */
+    isEdited: boolean;
+
+    /** When the message was last edited */
+    editedAt: Date | null;
+
+    /** Whether the message has been deleted (soft delete) */
+    isDeleted: boolean;
+
     updatedAt: number;
     createdAt: number;
 }

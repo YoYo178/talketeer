@@ -20,13 +20,19 @@ export function startListeningMessageEvents(socket: TalketeerSocket, queryClient
 
     socket.on('messageEdited', (roomId, userId, oldMessage, newMessage) => {
         console.log(`${userId} edited their message in room ${roomId} from '${oldMessage}' to '${newMessage}'`);
+
+        // Invalidate the messages query to refetch updated data
+        queryClient?.invalidateQueries({ queryKey: ['messages', roomId] });
     });
 
-    socket.on('messageDeleted', (roomId, userId, deletedBy, message) => {
+    socket.on('messageDeleted', (roomId, userId, deletedBy, messageId) => {
         if (userId === deletedBy)
-            return console.log(`${deletedBy} has deleted their message from room ${roomId}: ${message}`)
+            console.log(`${deletedBy} has deleted their message from room ${roomId}: ${messageId}`)
+        else
+            console.log(`${deletedBy} has deleted ${userId}'s message: ${messageId}`);
 
-        console.log(`${deletedBy} has deleted ${userId}'s message: ${message}`);
+        // Invalidate the messages query to refetch updated data
+        queryClient?.invalidateQueries({ queryKey: ['messages', roomId] });
     });
 }
 
