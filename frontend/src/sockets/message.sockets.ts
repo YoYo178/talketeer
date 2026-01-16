@@ -31,8 +31,19 @@ export function startListeningMessageEvents(socket: TalketeerSocket, queryClient
         else
             console.log(`${deletedBy} has deleted ${userId}'s message: ${messageId}`);
 
-        // Invalidate the messages query to refetch updated data
-        queryClient?.invalidateQueries({ queryKey: ['messages', roomId] });
+        // Remove the deleted message from the cache
+        const oldMessagePages = queryClient?.getQueryData<{ pages: { success: true, data: { messages: IMessage[], nextCursor: string | null } }[], pageParams: string[] }>(['messages', roomId]);
+        if (!oldMessagePages)
+            return;
+
+        const newMessagePages = structuredClone(oldMessagePages);
+        
+        // Remove the deleted message from all pages
+        newMessagePages.pages.forEach(page => {
+            page.data.messages = page.data.messages.filter(msg => msg._id !== messageId);
+        });
+
+        queryClient?.setQueryData(['messages', roomId], newMessagePages);
     });
 }
 

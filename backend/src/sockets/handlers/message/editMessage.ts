@@ -21,11 +21,6 @@ export const getEditMessageEventCallback = (io: TalketeerSocketServer, socket: T
         throw new Error('You can only edit your own messages');
       }
 
-      // Check if message is deleted
-      if (message.isDeleted) {
-        throw new Error('Cannot edit a deleted message');
-      }
-
       const oldContent = message.content;
 
       // Update the message
