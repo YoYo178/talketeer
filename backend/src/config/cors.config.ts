@@ -2,7 +2,8 @@ import ENV from '@src/common/ENV';
 import { CorsOptions } from 'cors';
 
 const allowedOrigins = [
-  'https://localhost:5173',
+  'http://localhost:5173',
+  'http://localhost:5173/talketeer/',
   'https://yoyo178.github.io',
   ENV.FrontendOrigin,
 ];

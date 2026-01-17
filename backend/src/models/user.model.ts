@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema<IUser>({
 
   email: { type: String, required: true },
 
-  passwordHash: { type: String, required: true },
+  passwordHash: { type: String, required: false },
 
   role: { type: String, required: false, enum: ['admin', 'user'], default: 'user' },
 
