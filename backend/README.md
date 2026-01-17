@@ -6,12 +6,15 @@
 - **Framework:** Express.js (with TypeScript)
 - **Database & ODM:** MongoDB + Mongoose
 - **Real-Time Communication:** Socket.io
-- **Authentication:** JWT (Access & Refresh Tokens)
+- **Authentication:** JWT (Access & Refresh Tokens), Google OAuth2
 - **Email Service:** Nodemailer
 - **Validation:** Zod
 - **Security:** Bcrypt.js (password hashing)
 - **Environment Management:** dotenv
 - **Architecture:** Modular service-based structure (Controllers, Services, Routes, Models)
+## 🔑 Google Authentication
+
+Google OAuth2 is supported for user login and signup. Users can authenticate using their Google accounts, and JWT tokens (access and refresh) are issued upon successful authentication. See the main repo and backend routes for integration details.
 
 ## 📁 Folder Structure
 
