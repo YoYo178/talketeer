@@ -60,26 +60,20 @@ Each subdirectory contains its own **README** with detailed setup and developmen
 
 ---
 
-## 🚀 Live Demo
+## 🤝 Contributing (SWoC'26)
 
-🌐 **[https://sumitchaurasiya.me/talketeer/](https://sumitchaurasiya.me/talketeer/)**
+This project is part of **Social Winter of Code (SWoC)** 🎓❄️  
+We welcome meaningful contributions from beginners and experienced developers alike.
 
----
 
-## 🧑‍💻 Author
+### ✅ Contribution Guidelines
+- PRs must be **issue-based**
+- Avoid spam or low-effort changes
+- Follow existing code style and structure
+- One feature/fix per PR
+- Be respectful and open to review feedback
 
-Made with ♥️ by **Sumit Chaurasiya**.
-
-* Portfolio / Demo: [https://sumitchaurasiya.me/talketeer/](https://sumitchaurasiya.me/talketeer/)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! 🎉
-
-* Please check the **Contributing Guidelines** before submitting a PR
-* Follow the **Code of Conduct** to keep the community respectful
+All valid PRs will be reviewed and considered for SWoC credits.
 
 ---
 
@@ -98,3 +92,12 @@ If you like this project:
 * 🗣️ Share it with others
 
 Your support helps a lot! 🙌
+
+---
+## 🧑‍💻 Author
+
+Made with ♥️ by **Sumit Chaurasiya**.
+Happy contributing! 🚀
+
+---
+
