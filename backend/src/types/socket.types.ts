@@ -71,6 +71,7 @@ export interface ClientToServerEvents {
 
     startDmTyping: (userId: string, roomId: string, username: string) => void;
     stopDmTyping: (userId: string, roomId: string) => void;
+    readMessage: (payload: { messageId: string }) => void;
 }
 
 export interface InterServerEvents {

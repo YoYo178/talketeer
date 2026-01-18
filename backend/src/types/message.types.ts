@@ -1,17 +1,16 @@
 import mongoose from 'mongoose';
 
 export interface IMessage {
-    _id: mongoose.Types.ObjectId;
+  _id: mongoose.Types.ObjectId;
 
-    /** The user who sent the message */
-    sender: mongoose.Types.ObjectId;
+  sender: mongoose.Types.ObjectId;
 
-    /** The content of the message */
-    content: string;
+  content: string;
 
-    /** The room the message was sent in */
-    room: mongoose.Types.ObjectId;
+  room: mongoose.Types.ObjectId;
 
-    updatedAt: number;
-    createdAt: number;
+  seenBy?: mongoose.Types.ObjectId[];
+
+  createdAt: number;
+  updatedAt: number;
 }

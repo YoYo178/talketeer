@@ -1,6 +1,11 @@
-import { getSendMessageEventCallback } from './sendMessage';
 import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import { getSendMessageEventCallback } from './sendMessage';
+import { registerReadMessageHandler } from './readMessage';
 
-export function registerMessageHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
+export const registerMessageHandlers = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+) => {
   socket.on('sendMessage', getSendMessageEventCallback(io, socket));
-}
+  registerReadMessageHandler(socket);
+};
