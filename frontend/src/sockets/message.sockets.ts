@@ -31,16 +31,22 @@ export function startListeningMessageEvents(socket: TalketeerSocket, queryClient
         else
             console.log(`${deletedBy} has deleted ${userId}'s message: ${messageId}`);
 
-        // Remove the deleted message from the cache
+        // Mark the message as deleted in the cache (don't show content)
         const oldMessagePages = queryClient?.getQueryData<{ pages: { success: true, data: { messages: IMessage[], nextCursor: string | null } }[], pageParams: string[] }>(['messages', roomId]);
         if (!oldMessagePages)
             return;
 
         const newMessagePages = structuredClone(oldMessagePages);
         
-        // Remove the deleted message from all pages
+        // Mark the message as deleted (backend won't send content)
         newMessagePages.pages.forEach(page => {
-            page.data.messages = page.data.messages.filter(msg => msg._id !== messageId);
+            page.data.messages.forEach(msg => {
+                if (msg._id === messageId) {
+                    msg.isDeleted = true;
+                    msg.deletedAt = new Date().toISOString();
+                    msg.content = ''; // Clear content for privacy
+                }
+            });
         });
 
         queryClient?.setQueryData(['messages', roomId], newMessagePages);

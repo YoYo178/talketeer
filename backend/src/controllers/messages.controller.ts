@@ -25,13 +25,24 @@ export const getMessages = async (req: Request, res: Response) => {
   const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
   const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
 
+  // Filter out deleted message content for privacy
+  const filteredMessages = sliced.map(msg => {
+    if (msg.isDeleted) {
+      return {
+        ...msg,
+        content: '', // Don't send deleted content to client
+      };
+    }
+    return msg;
+  });
+
   // Sort this specific batch in ascending order (oldest to newest) before returning
-  sliced.reverse();
+  filteredMessages.reverse();
 
   res.status(200).json({
     success: true, data: {
-      messages: sliced,
-      nextCursor: moreMessagesExist ? sliced[0]._id : null,
+      messages: filteredMessages,
+      nextCursor: moreMessagesExist ? filteredMessages[0]._id : null,
     },
   });
 };
@@ -80,13 +91,24 @@ export const getDmMessages = async (req: Request, res: Response) => {
   const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
   const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
 
+  // Filter out deleted message content for privacy
+  const filteredMessages = sliced.map(msg => {
+    if (msg.isDeleted) {
+      return {
+        ...msg,
+        content: '', // Don't send deleted content to client
+      };
+    }
+    return msg;
+  });
+
   // Sort this specific batch in ascending order (oldest to newest) before returning
-  sliced.reverse();
+  filteredMessages.reverse();
 
   res.status(200).json({
     success: true, data: {
-      messages: sliced,
-      nextCursor: moreMessagesExist ? sliced[0]._id : null,
+      messages: filteredMessages,
+      nextCursor: moreMessagesExist ? filteredMessages[0]._id : null,
     },
   });
 };

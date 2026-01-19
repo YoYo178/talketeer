@@ -16,6 +16,12 @@ export interface IMessage {
     /** When the message was last edited */
     editedAt?: string | null;
 
+    /** Whether the message has been soft-deleted (not sent from backend) */
+    isDeleted?: boolean;
+
+    /** When the message was soft-deleted (not sent from backend) */
+    deletedAt?: string | null;
+
     createdAt: string;
     updatedAt: string;
 }

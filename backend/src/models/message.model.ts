@@ -7,6 +7,8 @@ const messageSchema = new mongoose.Schema<IMessage>({
   room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', required: true },
   isEdited: { type: Boolean, default: false },
   editedAt: { type: Date, default: null },
+  isDeleted: { type: Boolean, default: false },
+  deletedAt: { type: Date, default: null },
 }, { timestamps: true });
 
 export const Message = mongoose.model<IMessage>('Message', messageSchema);

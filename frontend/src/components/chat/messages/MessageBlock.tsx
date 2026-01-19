@@ -84,6 +84,15 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
     };
 
     const renderMessage = (message: IMessage) => {
+        // Show placeholder for deleted messages
+        if (message.isDeleted) {
+            return (
+                <div key={message._id} className="text-muted-foreground italic text-sm py-1">
+                    This message has been deleted
+                </div>
+            );
+        }
+
         if (editingMessageId === message._id) {
             return (
                 <div key={message._id} className="flex flex-col gap-2">
@@ -119,12 +128,18 @@ export const MessageBlock: FC<MessageBlockProps> = memo(({ messages, senderId })
                 </div>
                 {(canEdit || canDelete) && (
                     <DropdownMenu>
-                        <DropdownMenuTrigger className="opacity-0 group-hover:opacity-100 md:group-hover:opacity-100 transition-opacity cursor-pointer" asChild>
-                            <button className="p-1 hover:bg-accent rounded" aria-label="Message options">
+                        <DropdownMenuTrigger 
+                            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity cursor-pointer" 
+                            asChild
+                        >
+                            <button 
+                                className="p-1 hover:bg-accent rounded" 
+                                aria-label="Message options"
+                            >
                                 <MoreVertical className="h-4 w-4 text-muted-foreground" />
                             </button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="min-w-30">
+                        <DropdownMenuContent align="end">
                             {canEdit && (
                                 <DropdownMenuItem onClick={() => handleEdit(message)} className="cursor-pointer">
                                     <Pencil className="h-4 w-4 mr-2" />

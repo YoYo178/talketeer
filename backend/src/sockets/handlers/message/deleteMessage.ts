@@ -27,8 +27,10 @@ export const getDeleteMessageEventCallback = (io: TalketeerSocketServer, socket:
         throw new Error('You can only delete your own messages or messages in rooms you own');
       }
 
-      // Hard delete - permanently remove from database
-      await Message.findByIdAndDelete(messageId);
+      // Soft delete - mark as deleted (will be hard deleted after retention period)
+      message.isDeleted = true;
+      message.deletedAt = new Date();
+      await message.save();
 
       logger.info(`${socket.data.user.id} deleted message ${messageId} in room ${roomId}`, {
         userId: socket.data.user.id,

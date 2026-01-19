@@ -3,6 +3,7 @@ import { Room } from '@src/models/room.model';
 import { User } from '@src/models/user.model';
 import mongoose from 'mongoose';
 import logger from '@src/utils/logger.utils';
+import { cleanupDeletedMessages } from './cleanup.utils';
 
 async function clearStaleData() {
   try {
@@ -13,6 +14,9 @@ async function clearStaleData() {
 
     // Clear users' room references
     await User.updateMany({}, { $unset: { room: '' } });
+
+    // Clean up old soft-deleted messages
+    await cleanupDeletedMessages();
 
     logger.info('Cleared stale data from the database.');
   } catch (e) {
