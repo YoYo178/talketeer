@@ -1,0 +1,36 @@
+name: 🛠️ Feature Enchancement
+description: An enhancement done to improve an existing feature or complete a previously incomplete feature.
+title: "[Feature Enhancement]: "
+labels: ["feature-enhancement"]
+body:
+
+  - type: textarea
+    attributes:
+      label: What feature do you intend to work on?
+      description: A short note mentioning the involving feature
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Feature Description
+      description: Clearly describe on how you wish to tranform the feature
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Why is this needed and what problem does it solve?
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: Pick the appropriate objective of your issue
+      description: What exactly are you trying to achieve with this issue?
+      multiple: false
+      options:
+        - Implementing an incomplete feature
+        - Enhancement to an already working feature
+    validations:
+      required: true

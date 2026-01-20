@@ -1,0 +1,17 @@
+name: 🧩 Miscellaneous
+description: Choose this if none of the other options match your request
+title: "[Misc]: "
+labels: ["miscellaneous"]
+body:
+  - type: textarea
+    attributes:
+      label: What do you wish to do?
+      description: Clearly describe your intentions on the application
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Why is this needed and what problem does it solve?
+    validations:
+      required: true

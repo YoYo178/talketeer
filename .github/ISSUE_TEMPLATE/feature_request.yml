@@ -1,7 +1,7 @@
 name: 🧰 Feature Proposal
 description: Propose a small, scoped feature (approval required)
 title: "[Feature]: "
-labels: ["proposal"]
+labels: ["feature-proposal"]
 body:
   - type: textarea
     attributes:

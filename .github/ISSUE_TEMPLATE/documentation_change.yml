@@ -1,0 +1,24 @@
+name: 📃 Documentation related
+description: Add new or Update existing documentation in Talketeer
+title: "[Documentation]: "
+labels: ["documentation"]
+body:
+  - type: textarea
+    attributes:
+      label: Description
+      description: Type of Documentation
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What is the purpose of this change?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional information (Optional)
+      description: Anything else you would like to add?
+    validations:
+      required: false
