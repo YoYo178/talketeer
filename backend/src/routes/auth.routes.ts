@@ -25,11 +25,12 @@ AuthRouter.post('/signup', limit({ limit: 15 }), validate({ body: signupSchema }
 AuthRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 AuthRouter.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/auth/login' }), (req, res) => {
 	// Issue JWT and redirect to frontend with token
+	if (!req.user) {
+		return res.status(401).json({ message: 'User not authenticated' });
+	}
 	const user = req.user;
-	// @ts-ignore
-	const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
-	// @ts-ignore
-	const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
+	const accessToken = generateAccessToken({ user: { id: user.id, email: user.email, username: user.username } });
+	const refreshToken = generateRefreshToken({ user: { id: user.id, email: user.email } });
 	res.cookie('accessToken', accessToken, { httpOnly: true, sameSite: 'lax' });
 	res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'lax' });
 	res.redirect(`${process.env.FRONTEND_ORIGIN || 'http://localhost:5173/talketeer/'}auth/google-success`);
