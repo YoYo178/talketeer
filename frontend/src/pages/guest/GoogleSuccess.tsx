@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // This page is shown after Google OAuth success, you can fetch user info or tokens if needed
-export default function GoogleSuccessPage() {
+export const GoogleSuccessPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {

@@ -8,13 +8,14 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { useAuthStore } from '@/hooks/state/useAuthStore';
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip';
+import { Tooltip, TooltipTrigger } from '../ui/tooltip';
 import { getFooter } from '@/utils/misc.utils';
 import { API_URL } from '@/config/api.config';
-    // Google OAuth handler
-    const handleGoogleLogin = () => {
-        window.location.href = `${API_URL}/auth/google`;
-    }
+
+// Google OAuth handler
+const handleGoogleLogin = () => {
+    window.location.href = `${API_URL}/auth/google`;
+}
 
 interface CheckEmailFormProps {
     onActionSuccess: (userExists: boolean, isVerified: boolean, userId?: string) => void;
@@ -128,9 +129,6 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
                             Continue with Google
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Sign in with your Google account</p>
-                    </TooltipContent>
                 </Tooltip>
 
             </div>
