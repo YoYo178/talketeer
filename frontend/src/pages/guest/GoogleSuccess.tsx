@@ -1,13 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-// This page is shown after Google OAuth success, you can fetch user info or tokens if needed
+// This component handles the Google OAuth success redirect
 export const GoogleSuccessPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Optionally, fetch user info or tokens from cookies/localStorage
-        // For now, just redirect to chat after a short delay
+        // Redirect to chat after a short delay
         const timer = setTimeout(() => {
             navigate('/chat');
         }, 1000);
