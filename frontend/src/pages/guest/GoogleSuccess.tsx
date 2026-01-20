@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // This component handles the Google OAuth success redirect
+// It checks for authentication cookies and redirects to /chat if found
 export const GoogleSuccessPage = () => {
     const navigate = useNavigate();
     const [error, setError] = React.useState<string | null>(null);
