@@ -1,21 +1,19 @@
 import React, { useState, type FC } from 'react'
 import { AxiosError } from 'axios';
 import { MessagesSquare } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import z from 'zod';
-import { useCheckEmailMutation } from '@/hooks/network/auth/useCheckEmailMutation';
+
 import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
-import { useAuthStore } from '@/hooks/state/useAuthStore';
-// ...existing import statements...
-import { getFooter } from '@/utils/misc.utils';
+
 import { API_URL } from '@/config/api.config';
 
-// Google OAuth handler
-const handleGoogleLogin = () => {
-    window.location.href = `${API_URL}/auth/google`;
-}
+import { useAuthStore } from '@/hooks/state/useAuthStore';
+import { useCheckEmailMutation } from '@/hooks/network/auth/useCheckEmailMutation';
+
+import { getFooter } from '@/utils/misc.utils';
 
 interface CheckEmailFormProps {
     onActionSuccess: (userExists: boolean, isVerified: boolean, userId?: string) => void;
@@ -30,6 +28,8 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
     const [error, setError] = useState('');
 
     const checkEmailMutation = useCheckEmailMutation({ queryKey: ['auth', 'check-email'] });
+
+    const handleGoogleOAuth2Redirect = () => window.location.href = `${API_URL}/auth/google`;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -121,7 +121,7 @@ export const CheckEmailForm: FC<CheckEmailFormProps> = ({ onActionSuccess }) => 
                     variant='outline'
                     type='button'
                     className='w-full'
-                    onClick={handleGoogleLogin}
+                    onClick={handleGoogleOAuth2Redirect}
                 >
                     <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
                         <path
