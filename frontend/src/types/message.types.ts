@@ -9,6 +9,7 @@ export interface IMessage {
 
     /** The room the message was sent in */
     room: string;
+    seenBy?: string[];
 
     createdAt: string;
     updatedAt: string;

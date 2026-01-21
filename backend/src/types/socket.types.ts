@@ -56,6 +56,8 @@ export interface ClientToServerEvents {
     sendMessage: (isDM: boolean, roomId: string, message: string, ack: AckFunc) => void;
     editMessage: (roomId: string, messageId: string, newContent: string, ack: AckFunc) => void;
     deleteMessage: (roomId: string, messageId: string, ack: AckFunc) => void;
+    message_read: (payload: { messageId: string, userId: string }) => Promise<void>;
+
 
     kickFromRoom: (roomId: string, userId: string, kickedBy: string, reason: string) => void;
     banFromRoom: (roomId: string, userId: string, bannedBy: string, duration: number, reason: string) => void;

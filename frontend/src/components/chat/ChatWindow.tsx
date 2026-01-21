@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react'
+import { useLayoutEffect, useState,useEffect } from 'react'
 import { ChatComposer } from './rich-text/ChatComposer';
 import { MessageList } from './messages/MessageList';
 import { useRoom } from '@/hooks/network/rooms/useGetRoomByIdQuery';
@@ -28,6 +28,15 @@ export const ChatWindow = () => {
     const { joinedRoomId, selectedRoomId, setJoinedRoomId, setSelectedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string };
 
     const me = useMe();
+
+    useEffect(() => {
+        if (!joinedRoomId || !me?._id) return;
+
+        socket.emit('message_read', {
+            messageId: joinedRoomId,
+            userId: me._id,
+        });
+    }, [joinedRoomId, me?._id]);
 
     const isMobile = useMediaQuery('(max-width: 767px)')
 
