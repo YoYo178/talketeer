@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { RequestHandler, Router } from 'express';
 import rateLimit, { Options } from 'express-rate-limit';
 
 import { DEFAULT_RATE_LIMIT_OPTIONS } from '@src/config';
@@ -7,15 +7,15 @@ import { requireAuth, validate } from '@src/middlewares';
 import { emailSchema, loginSchema, signupSchema, emailVerificationBodySchema, resendVerificationSchema, resetPasswordSchema } from '@src/schemas';
 
 import {
-	checkEmail,
-	login,
-	logout,
-	signup,
-	verifyEmail,
-	resendVerification,
-	requestPasswordReset,
-	resetPassword,
-	handleOAuth2Callback
+  checkEmail,
+  login,
+  logout,
+  signup,
+  verifyEmail,
+  resendVerification,
+  requestPasswordReset,
+  resetPassword,
+  handleOAuth2Callback,
 } from '@src/controllers';
 
 import passport from '../config/google.config';
@@ -32,8 +32,12 @@ AuthRouter.post('/logout', requireAuth, logout);
 AuthRouter.post('/signup', limit({ limit: 15 }), validate({ body: signupSchema }), signup);
 
 // Google OAuth2
-AuthRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-AuthRouter.get('/google/callback', passport.authenticate('google', { session: false, failureRedirect: '/auth/login' }), handleOAuth2Callback);
+AuthRouter.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }) as RequestHandler);
+AuthRouter.get(
+  '/google/callback',
+  passport.authenticate('google', { session: false, failureRedirect: '/auth/login' }) as RequestHandler,
+  handleOAuth2Callback,
+);
 
 // Email verification
 AuthRouter.post('/verify-email', validate({ body: emailVerificationBodySchema }), verifyEmail);

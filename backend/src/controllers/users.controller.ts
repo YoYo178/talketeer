@@ -5,7 +5,7 @@ import { APIError } from '@src/utils';
 import type { Request, Response } from 'express';
 
 export const getMe = async (req: Request, res: Response) => {
-  const user = await User.findById(req.user.id).select('-passwordHash').lean().exec();
+  const user = await User.findById(req.user!.id).select('-passwordHash').lean().exec();
 
   if (!user)
     throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
@@ -16,7 +16,7 @@ export const getMe = async (req: Request, res: Response) => {
 export const updateMe = async (req: Request, res: Response) => {
   const { bio, displayName, name } = req.body as TUpdateMeBody;
 
-  const user = await User.findById(req.user.id).select('-passwordHash').exec();
+  const user = await User.findById(req.user!.id).select('-passwordHash').exec();
 
   if (!user)
     throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
@@ -27,7 +27,7 @@ export const updateMe = async (req: Request, res: Response) => {
 
   await user.save();
 
-  req.io.emit('userUpdated', req.user.id);
+  req.io.emit('userUpdated', req.user!.id);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Updated user successfully', data: { user } });
 };

@@ -33,20 +33,20 @@ export const verifyEmail = async (req: Request, res: Response) => {
     throw new APIError('User is already verified', HTTP_STATUS_CODES.Forbidden);
 
   switch (method) {
-    case 'code':
-      if (data !== verificationObj.code)
-        throw new APIError('Invalid code', HTTP_STATUS_CODES.BadRequest);
+  case 'code':
+    if (data !== verificationObj.code)
+      throw new APIError('Invalid code', HTTP_STATUS_CODES.BadRequest);
 
-      await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
-      break;
-    case 'token':
-      if (!await bcrypt.compare(data, verificationObj.token))
-        throw new APIError('Invalid token, make sure the link is correct!', HTTP_STATUS_CODES.BadRequest);
+    await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
+    break;
+  case 'token':
+    if (!await bcrypt.compare(data, verificationObj.token))
+      throw new APIError('Invalid token, make sure the link is correct!', HTTP_STATUS_CODES.BadRequest);
 
-      await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
-      break;
-    default:
-      throw new APIError('Unknown method', HTTP_STATUS_CODES.BadRequest);
+    await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
+    break;
+  default:
+    throw new APIError('Unknown method', HTTP_STATUS_CODES.BadRequest);
   }
 
   await cleanupVerification(userId);
@@ -244,7 +244,7 @@ export const resetPassword = async (req: Request, res: Response) => {
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Password successfully reset, please login to continue' });
 };
 
-export const handleOAuth2Callback = async (req: Request, res: Response) => {
+export const handleOAuth2Callback = (req: Request, res: Response) => {
   const user = req.user;
 
   // Issue JWT and redirect to frontend with token
@@ -252,8 +252,8 @@ export const handleOAuth2Callback = async (req: Request, res: Response) => {
     return res.status(401).json({ message: 'An error occured while trying to authenticate your account' });
 
   // Issue JWT tokens and cookies
-  issueCookies(res, user.id.toString(), user.email, user.username);
+  issueCookies(res, user.id, user.email, user.username);
 
   const redirectURL = new URL('/talketeer/chat', ENV.FrontendOrigin);
   res.redirect(redirectURL.toString());
-}
+};

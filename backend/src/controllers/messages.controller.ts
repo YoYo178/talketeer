@@ -48,7 +48,7 @@ export const getMessageById = async (req: Request, res: Response) => {
 };
 
 export const getDmMessages = async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const userId = req.user!.id;
   const { roomId, before, after } = req.query as unknown as TDmMessagesQuery;
 
   const room = await DMRoom.findOne({ _id: roomId, members: userId });
@@ -92,7 +92,7 @@ export const getDmMessages = async (req: Request, res: Response) => {
 };
 
 export const getDmMessageById = async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const userId = req.user!.id;
   const { messageId, roomId } = req.params as TDmMessageQuery;
 
   const room = await DMRoom.findOne({ _id: roomId, members: userId });

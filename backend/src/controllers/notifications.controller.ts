@@ -5,7 +5,7 @@ import { APIError } from '@src/utils';
 import type { Request, Response } from 'express';
 
 export const getNotifications = async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const userId = req.user!.id;
 
   const user = await User.findById(userId)
     .populate('notifications')
@@ -22,7 +22,7 @@ export const getNotifications = async (req: Request, res: Response) => {
 
 export const getNotification = async (req: Request, res: Response) => {
   const { notificationId } = req.params as TNotificationIdParams;
-  const userId = req.user.id;
+  const userId = req.user!.id;
 
   const user = await User.findById(userId)
     .populate('notifications')

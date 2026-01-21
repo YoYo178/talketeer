@@ -1,7 +1,7 @@
 import React, { useState, type FC } from 'react'
 import { AxiosError } from 'axios';
 import { MessagesSquare } from 'lucide-react';
-import { Link, redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import z from 'zod';
 
 import { Label } from '../ui/label';
