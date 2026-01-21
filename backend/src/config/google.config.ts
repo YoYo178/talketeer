@@ -4,10 +4,13 @@ import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import ENV from '@src/common/ENV';
 import { User } from '@src/models';
 
+const isProduction = ENV.NodeEnv === 'production';
+const callbackURL = new URL((isProduction ? '/talketeer' : '') + '/api/auth/google/callback', ENV.BackendOrigin);
+
 passport.use(new GoogleStrategy({
   clientID: ENV.GoogleClientId,
   clientSecret: ENV.GoogleClientSecret,
-  callbackURL: `${ENV.BackendOrigin}/api/auth/google/callback`,
+  callbackURL: callbackURL.toString(),
 }, async (_accessToken, _refreshToken, profile, done) => {
   try {
     const googleEmail = profile.emails?.[0]?.value;
