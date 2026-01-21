@@ -7,6 +7,9 @@ const userFriendSchema = new mongoose.Schema<IUserFriend>({
   direction: { type: mongoose.Schema.Types.Mixed, enum: ['incoming', 'outgoing', null] },
 }, { _id: false });
 
+// TODO: Add a 'signupMethod' property
+//  so when the user registers via OAuth2, and they try logging in via password, we can let them know
+//  that they must use the OAuth2 method to sign in instead.
 const userSchema = new mongoose.Schema<IUser>({
   name: { type: String, required: true },
   displayName: { type: String, required: false },
