@@ -13,10 +13,7 @@ const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
 const storage = multer.diskStorage({
   destination: (req, _file, callback) => {
-    if (!req.user) {
-      return callback(new APIError('User not authenticated', HTTP_STATUS_CODES.Unauthorized), '');
-    }
-    const userId = req.user.id;
+    const userId = req.user!.id;
     const uploadPath = path.join(ASSETS_PATH, 'users', userId);
 
     fs.mkdirSync(uploadPath, { recursive: true });
