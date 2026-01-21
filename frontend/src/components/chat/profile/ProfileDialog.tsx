@@ -40,12 +40,12 @@ export const ProfileDialog = () => {
     const updateAvatarMutation = useUpdateAvatarMutation({});
 
     const [isOpen, setIsOpen] = useState(false);
+    const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
     const [errors, setErrors] = useState<{ [K in keyof ProfileFormFields]?: string } & { general?: string }>({});
 
     const [selectedAvatarImage, setSelectedAvatarImage] = useState<string>('');
     const [newAvatar, setNewAvatar] = useState<Blob | null>(null);
     const newAvatarUrl = useMemo(() => newAvatar ? URL.createObjectURL(newAvatar) : '', [newAvatar])
-    const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
 
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -168,151 +168,148 @@ export const ProfileDialog = () => {
     const fallbackName = (nameArray.length > 1 ? [nameArray[0], nameArray[nameArray.length - 1]] : [nameArray[0]]).map(str => str[0].toUpperCase()).join('');
 
     return (
-        <>
-            <Dialog
-                open={isOpen}
-                onOpenChange={(open) => {
-                    if (!open) {
-                        handleClose();   // intercept close
-                    } else {
-                        setIsOpen(true);
-                    }
-                }}
-            >
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) {
+                    handleClose();   // intercept close
+                } else {
+                    setIsOpen(true);
+                }
+            }}
+        >
 
-                <DialogTrigger asChild>
-                    <DropdownMenuItem onClick={handleProfileClick}>
-                        <CircleUserRound />
-                        Profile
-                    </DropdownMenuItem>
-                </DialogTrigger>
+            <DialogTrigger asChild>
+                <DropdownMenuItem onClick={handleProfileClick}>
+                    <CircleUserRound />
+                    Profile
+                </DropdownMenuItem>
+            </DialogTrigger>
 
-                <DialogContent className='max-h-[85vh] overflow-hidden'>
+            <DialogContent className='max-h-[85vh] overflow-hidden'>
 
-                    <DialogHeader>
-                        <DialogTitle>Profile</DialogTitle>
-                        <DialogDescription>View/edit your profile details</DialogDescription>
-                    </DialogHeader>
+                <DialogHeader>
+                    <DialogTitle>Profile</DialogTitle>
+                    <DialogDescription>View/edit your profile details</DialogDescription>
+                </DialogHeader>
 
-                    <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
-                        <ScrollArea className='h-[50vh]'>
-                            <div className='flex flex-col gap-4 mb-2 mx-4 pt-4'>
-                                <div className='flex-1 flex flex-col md:flex-row items-center justify-center gap-4 w-full'>
-                                    <div className='rounded-full aspect-square max-h-[175px] max-w-[175px] h-[175px] w-[175px] relative'>
-                                        {selectedAvatarImage && (
-                                            <AvatarCropper
-                                                imageSrc={selectedAvatarImage}
-                                                onCancel={() => setSelectedAvatarImage('')}
-                                                onCropDone={(file) => { setNewAvatar(file); setSelectedAvatarImage('') }}
-                                            />
-                                        )}
-                                        <Input
-                                            ref={inputRef}
-                                            className='hidden'
-                                            type='file'
-                                            accept='image/jpeg, image/png, image/webp'
-                                            onClick={e => (e.target as HTMLInputElement).value = ''}
-                                            onChange={handleImageSelect}
+                <AlertDialog open={showDiscardConfirm} onOpenChange={setShowDiscardConfirm}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                You have unsaved changes. Closing now will discard them.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                            <AlertDialogAction
+                                onClick={() => {
+                                    setShowDiscardConfirm(false);
+                                    setIsOpen(false);
+                                }}
+                            >
+                                Discard
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+
+                <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
+                    <ScrollArea className='h-[50vh]'>
+                        <div className='flex flex-col gap-4 mb-2 mx-4 pt-4'>
+                            <div className='flex-1 flex flex-col md:flex-row items-center justify-center gap-4 w-full'>
+                                <div className='rounded-full aspect-square max-h-[175px] max-w-[175px] h-[175px] w-[175px] relative'>
+                                    {selectedAvatarImage && (
+                                        <AvatarCropper
+                                            imageSrc={selectedAvatarImage}
+                                            onCancel={() => setSelectedAvatarImage('')}
+                                            onCropDone={(file) => { setNewAvatar(file); setSelectedAvatarImage('') }}
                                         />
-                                        <button
-                                            className='absolute rounded-full aspect-square w-full h-full flex items-center justify-center z-1 cursor-pointer hover:*:opacity-100 hover:bg-[#00000064]'
-                                            onClick={(e) => { e.preventDefault(); inputRef.current?.click() }}
-                                        >
-                                            <Pencil className='opacity-0 transition-opacity duration-200 ease-out' />
-                                        </button>
-                                        <Avatar className='absolute rounded-full aspect-square size-full'>
-                                            <AvatarImage src={newAvatarUrl || getAvatarUrl(me.avatarURL)} />
-                                            <AvatarFallback className='text-primary text-4xl'>
-                                                {fallbackName}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                    </div>
-                                    <div className='flex-1 flex flex-col gap-4'>
-                                        <div className='flex-1 flex gap-2'>
+                                    )}
+                                    <Input
+                                        ref={inputRef}
+                                        className='hidden'
+                                        type='file'
+                                        accept='image/jpeg, image/png, image/webp'
+                                        onClick={e => (e.target as HTMLInputElement).value = ''}
+                                        onChange={handleImageSelect}
+                                    />
+                                    <button
+                                        className='absolute rounded-full aspect-square w-full h-full flex items-center justify-center z-1 cursor-pointer hover:*:opacity-100 hover:bg-[#00000064]'
+                                        onClick={(e) => { e.preventDefault(); inputRef.current?.click() }}
+                                    >
+                                        <Pencil className='opacity-0 transition-opacity duration-200 ease-out' />
+                                    </button>
+                                    <Avatar className='absolute rounded-full aspect-square size-full'>
+                                        <AvatarImage src={newAvatarUrl || getAvatarUrl(me.avatarURL)} />
+                                        <AvatarFallback className='text-primary text-4xl'>
+                                            {fallbackName}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </div>
+                                <div className='flex-1 flex flex-col gap-4'>
+                                    <div className='flex-1 flex gap-2'>
 
-                                            <div className='flex flex-col gap-2'>
-                                                <Label>First Name</Label>
-                                                <Input defaultValue={initialFormState.firstName} {...register('firstName')} autoComplete='name first' />
-                                                {errors.firstName && (<p className='text-sm text-red-500'>{errors.firstName}</p>)}
-                                            </div>
-                                            <div className='flex flex-col gap-2'>
-                                                <Label>Last Name</Label>
-                                                <Input defaultValue={initialFormState.lastName} {...register('lastName')} autoComplete='name last' />
-                                                {errors.lastName && (<p className='text-sm text-red-500'>{errors.lastName}</p>)}
-                                            </div>
-                                        </div>
-                                        <div className='flex flex-col gap-2 cursor-not-allowed'>
-                                            <Label>Email</Label>
-                                            <Input defaultValue={me.email} disabled />
-                                        </div>
-                                        <div className='flex flex-col gap-2 cursor-not-allowed'>
-                                            <Label>Username</Label>
-                                            <Input defaultValue={me.username} disabled />
+                                        <div className='flex flex-col gap-2'>
+                                            <Label>First Name</Label>
+                                            <Input defaultValue={initialFormState.firstName} {...register('firstName')} autoComplete='name first' />
+                                            {errors.firstName && (<p className='text-sm text-red-500'>{errors.firstName}</p>)}
                                         </div>
                                         <div className='flex flex-col gap-2'>
-                                            <Label>Display Name</Label>
-                                            <Input defaultValue={initialFormState.displayName} {...register('displayName')} autoComplete='nickname' />
-                                            {errors.displayName && (<p className='text-sm text-red-500'>{errors.displayName}</p>)}
+                                            <Label>Last Name</Label>
+                                            <Input defaultValue={initialFormState.lastName} {...register('lastName')} autoComplete='name last' />
+                                            {errors.lastName && (<p className='text-sm text-red-500'>{errors.lastName}</p>)}
                                         </div>
                                     </div>
-                                </div>
-
-                                <div className='flex-1 flex flex-col gap-2'>
-                                    <Label>Bio</Label>
-                                    <Textarea
-                                        className='min-h-30 resize-none max-h-30 overflow-y-auto whitespace-pre-wrap wrap-anywhere'
-                                        defaultValue={initialFormState.bio}
-                                        {...register('bio')}
-                                        autoComplete='off'
-                                    />
-                                    {errors.bio && (<p className='text-sm text-red-500'>{errors.bio}</p>)}
+                                    <div className='flex flex-col gap-2 cursor-not-allowed'>
+                                        <Label>Email</Label>
+                                        <Input defaultValue={me.email} disabled />
+                                    </div>
+                                    <div className='flex flex-col gap-2 cursor-not-allowed'>
+                                        <Label>Username</Label>
+                                        <Input defaultValue={me.username} disabled />
+                                    </div>
+                                    <div className='flex flex-col gap-2'>
+                                        <Label>Display Name</Label>
+                                        <Input defaultValue={initialFormState.displayName} {...register('displayName')} autoComplete='nickname' />
+                                        {errors.displayName && (<p className='text-sm text-red-500'>{errors.displayName}</p>)}
+                                    </div>
                                 </div>
                             </div>
-                        </ScrollArea>
 
-                        <DialogFooter>
-                            {errors.general && (<p className='mr-auto text-sm text-red-500 self-center text-center'>{errors.general}</p>)}
+                            <div className='flex-1 flex flex-col gap-2'>
+                                <Label>Bio</Label>
+                                <Textarea
+                                    className='min-h-30 resize-none max-h-30 overflow-y-auto whitespace-pre-wrap wrap-anywhere'
+                                    defaultValue={initialFormState.bio}
+                                    {...register('bio')}
+                                    autoComplete='off'
+                                />
+                                {errors.bio && (<p className='text-sm text-red-500'>{errors.bio}</p>)}
+                            </div>
+                        </div>
+                    </ScrollArea>
 
-                            <Button
-                                type='button'
-                                variant='outline'
-                                onClick={handleClose}
-                            >
-                                Close
-                            </Button>
+                    <DialogFooter>
+                        {errors.general && (<p className='mr-auto text-sm text-red-500 self-center text-center'>{errors.general}</p>)}
 
-                            {(formState.isDirty || newAvatar) && (<Button type='submit'>Save</Button>)}
-                        </DialogFooter>
-                    </form>
-
-                </DialogContent>
-
-            </Dialog>
-
-            <AlertDialog open={showDiscardConfirm} onOpenChange={setShowDiscardConfirm}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Discard changes?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            You have unsaved changes. Closing now will discard them.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-
-                        <AlertDialogAction
-                            onClick={() => {
-                                setShowDiscardConfirm(false);
-                                setIsOpen(false);
-                            }}
+                        <Button
+                            type='button'
+                            variant='outline'
+                            onClick={handleClose}
                         >
-                            Discard
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-        </>
+                            Close
+                        </Button>
 
+                        {(formState.isDirty || newAvatar) && (<Button type='submit'>Save</Button>)}
+                    </DialogFooter>
+                </form>
+
+            </DialogContent>
+
+        </Dialog>
     )
 }
