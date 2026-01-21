@@ -243,3 +243,17 @@ export const resetPassword = async (req: Request, res: Response) => {
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Password successfully reset, please login to continue' });
 };
+
+export const handleOAuth2Callback = async (req: Request, res: Response) => {
+  const user = req.user;
+
+  // Issue JWT and redirect to frontend with token
+  if (!user)
+    return res.status(401).json({ message: 'An error occured while trying to authenticate your account' });
+
+  // Issue JWT tokens and cookies
+  issueCookies(res, user.id.toString(), user.email, user.username);
+
+  const redirectURL = new URL('/talketeer/chat', ENV.FrontendOrigin);
+  res.redirect(redirectURL.toString());
+}
