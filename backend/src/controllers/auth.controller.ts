@@ -33,20 +33,20 @@ export const verifyEmail = async (req: Request, res: Response) => {
     throw new APIError('User is already verified', HTTP_STATUS_CODES.Forbidden);
 
   switch (method) {
-  case 'code':
-    if (data !== verificationObj.code)
-      throw new APIError('Invalid code', HTTP_STATUS_CODES.BadRequest);
+    case 'code':
+      if (data !== verificationObj.code)
+        throw new APIError('Invalid code', HTTP_STATUS_CODES.BadRequest);
 
-    await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
-    break;
-  case 'token':
-    if (!await bcrypt.compare(data, verificationObj.token))
-      throw new APIError('Invalid token, make sure the link is correct!', HTTP_STATUS_CODES.BadRequest);
+      await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
+      break;
+    case 'token':
+      if (!await bcrypt.compare(data, verificationObj.token))
+        throw new APIError('Invalid token, make sure the link is correct!', HTTP_STATUS_CODES.BadRequest);
 
-    await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
-    break;
-  default:
-    throw new APIError('Unknown method', HTTP_STATUS_CODES.BadRequest);
+      await updateUser(user._id.toString(), { isVerified: true, verifiedAt: new Date(Date.now()) });
+      break;
+    default:
+      throw new APIError('Unknown method', HTTP_STATUS_CODES.BadRequest);
   }
 
   await cleanupVerification(userId);

@@ -9,15 +9,15 @@ import { NODE_ENVS } from './constants';
 ******************************************************************************/
 
 const ENV = jetEnv({
-    /** Google OAuth */
-    GoogleClientId: str,
-    GoogleClientSecret: str,
-    BackendOrigin: str,
+  /** General */
   NodeEnv: isValueOf(NODE_ENVS),
+  AppName: str,
   Port: num,
 
-  /** General */
-  AppName: str,
+  /** Google OAuth */
+  GoogleClientId: str,
+  GoogleClientSecret: str,
+  BackendOrigin: str,
 
   /** Frontend */
   FrontendOrigin: str,
