@@ -2,14 +2,19 @@ import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 
 import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
+import ENV from '@src/common/ENV';
+
+import { cookieConfig, tokenConfig } from '@src/config';
 
 import { User } from '@src/models';
-import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody, TResetPasswordBody } from '@src/schemas';
-import { cookieConfig, tokenConfig } from '@src/config';
-import { generateAccessToken, generateRefreshToken, sendPasswordResetMail, validateEmailMx } from '@src/utils';
-import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
-import { APIError, sendVerificationMail } from '@src/utils';
+
 import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service';
+import { cleanupVerification, generateVerificationObject, getVerificationObject } from '@src/services/verification.service';
+
+import { TEmailBody, TLoginBody, TSignUpBody, TEmailVerificationBody, TResendVerificationBody, TResetPasswordBody } from '@src/schemas';
+
+import { sendPasswordResetMail, validateEmailMx } from '@src/utils';
+import { APIError, sendVerificationMail, issueCookies } from '@src/utils';
 
 export const verifyEmail = async (req: Request, res: Response) => {
   const { userId, method, data } = req.body as TEmailVerificationBody;
@@ -46,18 +51,8 @@ export const verifyEmail = async (req: Request, res: Response) => {
 
   await cleanupVerification(userId);
 
-  const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
-  const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
-
-  res.cookie('accessToken', accessToken, {
-    ...cookieConfig,
-    maxAge: tokenConfig.accessToken.expiry,
-  });
-
-  res.cookie('refreshToken', refreshToken, {
-    ...cookieConfig,
-    maxAge: tokenConfig.refreshToken.expiry,
-  });
+  // Issue JWT tokens and cookies
+  issueCookies(res, user._id.toString(), user.email, user.username);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'User verified successfully!', data: { user } });
 };
@@ -112,18 +107,8 @@ export const login = async (req: Request, res: Response) => {
   if (!passwordMatches)
     throw new APIError('Invalid password', HTTP_STATUS_CODES.BadRequest);
 
-  const refreshToken = generateRefreshToken({ user: { id: user._id.toString(), email: user.email } });
-  const accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
-
-  res.cookie('accessToken', accessToken, {
-    ...cookieConfig,
-    maxAge: tokenConfig.accessToken.expiry,
-  });
-
-  res.cookie('refreshToken', refreshToken, {
-    ...cookieConfig,
-    maxAge: tokenConfig.refreshToken.expiry,
-  });
+  // Issue JWT tokens and cookies
+  issueCookies(res, user._id.toString(), user.email, user.username);
 
   // the pain to exclude a SINGLE field from an object while keeping both typescript and eslint happy...
   res.status(HTTP_STATUS_CODES.Ok).json(
@@ -257,4 +242,18 @@ export const resetPassword = async (req: Request, res: Response) => {
   await cleanupVerification(userId);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Password successfully reset, please login to continue' });
+};
+
+export const handleOAuth2Callback = (req: Request, res: Response) => {
+  const user = req.user;
+
+  // Issue JWT and redirect to frontend with token
+  if (!user)
+    return res.status(401).json({ message: 'An error occured while trying to authenticate your account' });
+
+  // Issue JWT tokens and cookies
+  issueCookies(res, user.id, user.email, user.username);
+
+  const redirectURL = new URL('/talketeer/chat', ENV.FrontendOrigin);
+  res.redirect(redirectURL.toString());
 };

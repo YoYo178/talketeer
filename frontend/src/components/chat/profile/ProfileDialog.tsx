@@ -1,21 +1,25 @@
+import z from 'zod';
+import { AxiosError } from 'axios';
+import { useQueryClient } from '@tanstack/react-query';
+import { CircleUserRound, Pencil } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useForm, type SubmitHandler } from 'react-hook-form'
+
+import { AvatarCropper } from './AvatarCropper';
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { useUpdateMeMutation } from '@/hooks/network/users/useUpdateMeMutation';
-import { useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { CircleUserRound, Pencil } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useForm, type SubmitHandler } from 'react-hook-form'
-import z from 'zod';
-import { AvatarCropper } from './AvatarCropper';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useUpdateAvatarMutation } from '@/hooks/network/files/useUpdateAvatarMutation';
+
 import { getAvatarUrl } from '@/utils/avatar.utils';
 
 const profileFormSchema = z.object({
@@ -36,6 +40,7 @@ export const ProfileDialog = () => {
     const updateAvatarMutation = useUpdateAvatarMutation({});
 
     const [isOpen, setIsOpen] = useState(false);
+    const [showDiscardConfirm, setShowDiscardConfirm] = useState(false);
     const [errors, setErrors] = useState<{ [K in keyof ProfileFormFields]?: string } & { general?: string }>({});
 
     const [selectedAvatarImage, setSelectedAvatarImage] = useState<string>('');
@@ -58,6 +63,17 @@ export const ProfileDialog = () => {
         e.preventDefault();
         setIsOpen(true);
     }
+
+    const handleClose = () => {
+        const hasUnsavedChanges = formState.isDirty || !!newAvatar;
+
+        if (hasUnsavedChanges) {
+            setShowDiscardConfirm(true);
+            return;
+        }
+
+        setIsOpen(false);
+    };
 
     const onSubmit: SubmitHandler<ProfileFormFields> = async (data: ProfileFormFields) => {
         // Avatar changed
@@ -152,7 +168,17 @@ export const ProfileDialog = () => {
     const fallbackName = (nameArray.length > 1 ? [nameArray[0], nameArray[nameArray.length - 1]] : [nameArray[0]]).map(str => str[0].toUpperCase()).join('');
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) {
+                    handleClose();   // intercept close
+                } else {
+                    setIsOpen(true);
+                }
+            }}
+        >
+
             <DialogTrigger asChild>
                 <DropdownMenuItem onClick={handleProfileClick}>
                     <CircleUserRound />
@@ -166,6 +192,30 @@ export const ProfileDialog = () => {
                     <DialogTitle>Profile</DialogTitle>
                     <DialogDescription>View/edit your profile details</DialogDescription>
                 </DialogHeader>
+
+                <AlertDialog open={showDiscardConfirm} onOpenChange={setShowDiscardConfirm}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                You have unsaved changes. Closing now will discard them.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                            <AlertDialogAction
+                                onClick={() => {
+                                    setShowDiscardConfirm(false);
+                                    setIsOpen(false);
+                                }}
+                            >
+                                Discard
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
 
                 <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-2'>
                     <ScrollArea className='h-[50vh]'>
@@ -245,11 +295,15 @@ export const ProfileDialog = () => {
 
                     <DialogFooter>
                         {errors.general && (<p className='mr-auto text-sm text-red-500 self-center text-center'>{errors.general}</p>)}
-                        <DialogClose asChild>
-                            <Button type='button' variant='outline'>
-                                Close
-                            </Button>
-                        </DialogClose>
+
+                        <Button
+                            type='button'
+                            variant='outline'
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button>
+
                         {(formState.isDirty || newAvatar) && (<Button type='submit'>Save</Button>)}
                     </DialogFooter>
                 </form>

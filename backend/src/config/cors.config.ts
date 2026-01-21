@@ -2,6 +2,7 @@ import ENV from '@src/common/ENV';
 import { CorsOptions } from 'cors';
 
 const allowedOrigins = [
+  'http://localhost:5173',
   'https://localhost:5173',
   'https://yoyo178.github.io',
   ENV.FrontendOrigin,
