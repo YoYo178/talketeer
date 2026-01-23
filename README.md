@@ -1,70 +1,14 @@
 # 🗨️ Talketeer
+**Talketeer** is a full-stack, real-time chat application built with the **MERN** stack and **Socket.io**.  
+It delivers an intuitive chatting experience with real-time messaging, room creation, typing indicators, and message persistence — all wrapped in a modern and responsive interface.
 
-**Talketeer** is a full‑stack, real‑time chat application built with the **MERN stack** and **Socket.IO**. It delivers a fast, intuitive chatting experience with room‑based conversations, typing indicators, and persistent message history — all wrapped in a clean, modern, and responsive interface.
-
-> 💬 **Design note:** The UI takes inspiration from **Discord** (because I use it a lot!), focusing on clarity, speed, and usability.
-
----
-
-## ✨ Overview
-
-Talketeer focuses on providing a smooth and reliable real‑time communication system with:
-
-* 🔐 **Email‑based registration & login**
-* 🔄 **Tokenized password reset flow**
-* 💬 **Public & private chat rooms**
-* ⚡ **Real‑time messaging & typing indicators**
-* 🕓 **Message history & recent chat fetching**
-* 👥 **Room management** (owner kick/ban controls)
-* 🪟 **Tenor GIF integration**
-* 🎨 **Clean, minimal UI** built for responsiveness
-
----
-
-## 🖼️ Screenshots
-
-### Unauthorized (Not Logged In)
-
-* **Landing Page**
-![Landing Page](https://github.com/user-attachments/assets/5b557ff5-72df-4d86-9fd5-bb8c428a8806)
-
-* **Login / Register Page**
-![Login Page](https://github.com/user-attachments/assets/1e724230-628b-4c57-bc85-85a16245af6f)
-
-### Authorized (Logged In)
-
-* **Chat page (Not in a room)**
-![Chat Page](https://github.com/user-attachments/assets/82d9461a-1d8b-4c28-86b2-8bf8f252f1ba)
-* **Notifications dialog open**
-![Notifications Page](https://github.com/user-attachments/assets/5b68a4b1-6e5d-4191-bc99-01ba3e215cf0)
-* **Inside a room**
-![Room Page](https://github.com/user-attachments/assets/0fe2e3e8-ce02-46a4-91ec-f482a04b526d)
-* **Room & member list expanded**
-![Memlist Page](https://github.com/user-attachments/assets/9e465605-c10e-4c76-9570-d2943a63c3ea)
-* **Room & member list collapsed**
-![listcollapsed Page](https://github.com/user-attachments/assets/0f70be82-5830-479f-86a5-418345fa7dc4)
----
-
-
-
-## 📂 Project Structure
-
-```
-talketeer/
-├── backend/      # Express + TypeScript + Socket.IO server
-├── frontend/     # React + Vite + TypeScript client
-└── README.md     # You are here
-```
-
-Each subdirectory contains its own **README** with detailed setup and development instructions.
-
----
+> 💬 The design takes _some_ inspiration from [Discord](https://github.com/discord), because I use it a lot!
 
 ## 🤝 Contributing (SWoC'26)
+This project is part of **Social Winter of Code 2026! (SWoC'26!)** 🎓❄️
 
-This project is part of **Social Winter of Code (SWoC)** 🎓❄️  
-We welcome meaningful contributions from beginners and experienced developers alike.
-
+Initially the project was developed by the project maintainer as a solo MVP,
+but later added to SWoC'26, opening contributions from beginners and experienced developers alike.
 
 ### ✅ Contribution Guidelines
 - PRs must be **issue-based**
@@ -72,19 +16,67 @@ We welcome meaningful contributions from beginners and experienced developers al
 - Follow existing code style and structure
 - One feature/fix per PR
 - Be respectful and open to review feedback
+- Read `CONTRIBUTING.md`
 
-All valid PRs will be reviewed and considered for SWoC credits.
+All valid PRs will be reviewed and considered for SWoC credits.    
+Happy contributing! 🚀
 
----
+## ✨ Overview
+Talketeer focuses on providing a smooth and reliable real-time communication system with:
+- 🔐 Email-based registration & login
+- 🔄 Tokenized password reset flow
+- 💬 Public & private chat rooms
+- ⚡ Real-time messaging and typing indicators
+- 🕓 Message history and recent chat fetching
+- 👥 Room management (owner kick/ban controls)
+- 🪟 Tenor integration
+- 🎨 Clean, minimal UI built for responsiveness
 
-## 📝 License
+## 🖼️ Screenshots
+### Unauthorized (not logged in) pages:
+  - Landing page
+  <img width="1556" height="742" alt="0" src="https://github.com/user-attachments/assets/66d2a175-578a-4bbe-95ca-c39b3c13c30c" />
 
-This project is licensed under the **MIT License**.
+  - Login/Register page
+  <img width="1556" height="742" alt="0 5" src="https://github.com/user-attachments/assets/78ede18a-6125-4c43-ac0c-3bdfdd6e9a36" />
 
----
+### Authorized (logged in) pages:
+  - Chat page
+    - Not in a room
+    <img width="1556" height="744" alt="1" src="https://github.com/user-attachments/assets/eb1f36ac-8b69-4790-a30e-cf4046f0cca9" />
+
+    - Not in a room, notifications dialog open
+    <img width="1556" height="744" alt="5" src="https://github.com/user-attachments/assets/5073722f-a96b-4d1b-8c41-6e2c85165c15" />
+
+    - In a room
+    <img width="1556" height="744" alt="2" src="https://github.com/user-attachments/assets/f2a7bfb1-42a9-457e-85c8-1e4c5e163076" />
+
+    - In a room, member list and room list expanded
+    <img width="1556" height="744" alt="3" src="https://github.com/user-attachments/assets/10d1af4a-6780-45fb-a317-692c62b11d0f" />
+
+    - In a room, member list and room list collapsed
+    <img width="1556" height="744" alt="4" src="https://github.com/user-attachments/assets/64131047-7aa4-4914-8d92-fae325edcc49" />
+
+## Other pages:
+  - Loading page (Animated spinner)
+  <img width="1544" height="734" alt="image" src="https://github.com/user-attachments/assets/b35836af-0fa6-47b3-8a42-638fb41e5095" />
+
+  - Not found page
+  <img width="1548" height="737" alt="image" src="https://github.com/user-attachments/assets/135cf76a-5028-43d0-80bd-731e4999b42c" />
+
+  - Error page
+  <img width="1545" height="736" alt="image" src="https://github.com/user-attachments/assets/25d1ce86-d5e2-4279-8e85-1bebcd52d3e9" />
+
+## 📂 Project Structure
+```bash
+talketeer/
+├── backend/      # Express + TypeScript + Socket.io server
+├── frontend/     # React + Vite + TypeScript client
+└── README.md     # (You’re here!)
+```
+Each subdirectory includes its own README with setup and development instructions.
 
 ## ⭐ Support
-
 If you like this project:
 
 * ⭐ Star the repository
@@ -93,11 +85,8 @@ If you like this project:
 
 Your support helps a lot! 🙌
 
----
+## 📝 License
+This project is licensed under the **MIT License**.
+
 ## 🧑‍💻 Author
-
 Made with ♥️ by **Sumit Chaurasiya**.
-Happy contributing! 🚀
-
----
-
