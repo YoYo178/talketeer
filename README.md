@@ -89,4 +89,4 @@ Your support helps a lot! 🙌
 This project is licensed under the **MIT License**.
 
 ## 🧑‍💻 Author
-Made with ♥️ by **Sumit Chaurasiya**.
+Made with ♥️ by [**Sumit Chaurasiya**](https://github.com/YoYo178).
