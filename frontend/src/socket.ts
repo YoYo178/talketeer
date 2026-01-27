@@ -5,5 +5,5 @@ import type { TalketeerSocket } from './types/socket.types';
 export const socket: TalketeerSocket = io(SERVER_URL, {
     withCredentials: true,
     autoConnect: false,
-    path: '/talketeer/socket.io/'
+    path: '/socket.io'
 }) as TalketeerSocket;

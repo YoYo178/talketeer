@@ -10,7 +10,8 @@ export const SERVER_URL = isProduction
 export const API_URL = SERVER_URL + `${isProduction ? '/talketeer/api' : '/api'}`;
 
 export const API = axios.create({
-    baseURL: API_URL
+    baseURL: API_URL,
+    withCredentials:true
 })
 
 // Endpoints config

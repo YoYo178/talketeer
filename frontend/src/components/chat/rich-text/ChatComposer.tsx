@@ -6,8 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { GIFButton } from './GIFButton';
 import { useRoomsStore, type TypingUser } from '@/hooks/state/useRoomsStore';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, Loader2 } from 'lucide-react'; 
 import { useGetDmRoomByIdQuery } from '@/hooks/network/rooms/useGetDmRoomByIdQuery';
+import { useUploadFileMutation } from '@/hooks/network/files/useUploadFileMutation'; 
 
 function buildTypingString(typingUsers: TypingUser[]) {
     switch (typingUsers.length) {
@@ -57,11 +58,13 @@ function buildTypingString(typingUsers: TypingUser[]) {
 export const ChatComposer = () => {
     const { joinedRoomId, dmRoomId, typingUsers } = useRoomsStore();
     const [message, setMessage] = useState('');
+    
+    const { mutate: uploadFile, isPending: isUploading } = useUploadFileMutation();
 
     const dmTypingUsers = !!dmRoomId ? typingUsers.filter(usr => usr.roomType === 'dm' && usr.roomId === dmRoomId) : [];
     const roomTypingUsers = !!joinedRoomId ? typingUsers.filter(usr => usr.roomType === 'normal' && usr.roomId === joinedRoomId) : [];
 
-    const typingTimer = useRef<NodeJS.Timeout>(null);
+    const typingTimer = useRef<NodeJS.Timeout | null>(null);
     const inputElement = useRef<HTMLTextAreaElement>(null);
 
     const focusChat = () => {
@@ -80,7 +83,6 @@ export const ChatComposer = () => {
     const dmRoom = data?.data?.room;
     const canSendMessage = !!dmRoomId ? (dmRoom && dmRoom.isActive) : true;
 
-    // Autofocus chat on visiblity change
     useEffect(() => {
         const handleVisibilityChange = () => focusChat()
         document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -90,10 +92,32 @@ export const ChatComposer = () => {
         }
     }, []);
 
-    // Autofocus chat on room id change
     useEffect(() => {
         focusChat()
     }, [joinedRoomId, dmRoomId])
+
+    const handleFileSelect = (file: File) => {
+        if (!me) return;
+
+        if (file.size > 10 * 1024 * 1024) {
+            alert("File is too large (Max 10MB)");
+            return;
+        }
+
+        const activeRoomId = dmRoomId || joinedRoomId;
+
+    if (!activeRoomId) {
+        console.error("Cannot upload: No active room found.");
+        return;
+    }
+
+        uploadFile({file:file,roomId:activeRoomId}, {
+            onSuccess: (response) => {
+                const fileUrl = response.data.url;
+                sendMessage(fileUrl); 
+            }
+        });
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         if (!me)
@@ -148,23 +172,23 @@ export const ChatComposer = () => {
         }
     }
 
-    const sendMessage = () => {
-        if (!me)
-            return;
+    const sendMessage = (contentOverride?: string) => {
+        if (!me) return;
+
+        const contentToSend = contentOverride || message;
+        if (!contentToSend || !contentToSend.trim()) return;
 
         if (!!dmRoomId) {
-            socket.emit('sendMessage', true, dmRoomId, message, ({ success }) => {
-                if (success)
-                    setMessage('');
+            socket.emit('sendMessage', true, dmRoomId, contentToSend, ({ success }: { success: boolean }) => {
+                if (success && !contentOverride) setMessage('');
             })
         } else if (!!joinedRoomId) {
-            socket.emit('sendMessage', false, joinedRoomId, message, ({ success }) => {
-                if (success)
-                    setMessage('');
+            socket.emit('sendMessage', false, joinedRoomId, contentToSend, ({ success }: { success: boolean }) => {
+                if (success && !contentOverride) setMessage('');
             })
         }
 
-        if (typingTimer.current) {
+        if (!contentOverride && typingTimer.current) {
             clearTimeout(typingTimer.current);
             typingTimer.current = null;
 
@@ -176,15 +200,14 @@ export const ChatComposer = () => {
     }
 
     const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault(); // Prevent form's default submit action
-
+        e.preventDefault(); 
         if (message.trim())
             sendMessage();
     }
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault(); // Stop newline input if shift key isn't held
+            e.preventDefault(); 
             handleSubmit(e as unknown as React.FormEvent);
         }
     }
@@ -194,12 +217,23 @@ export const ChatComposer = () => {
             <div className="w-full flex flex-col gap-2">
                 {!!dmRoomId ? buildTypingString(dmTypingUsers) : buildTypingString(roomTypingUsers)}
                 <div className="flex w-full gap-2">
-                    <AttachFileButton disabled={!canSendMessage} />
+                    
+                    {isUploading ? (
+                         <div className="flex items-center justify-center w-10">
+                             <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                         </div>
+                    ) : (
+                        <AttachFileButton 
+                            onFileSelect={handleFileSelect}
+                            disabled={!canSendMessage} 
+                        />
+                    )}
+                    
                     <Textarea
                         ref={inputElement}
                         rows={1}
                         placeholder='Start typing...'
-                        disabled={!canSendMessage}
+                        disabled={!canSendMessage || isUploading}
                         value={message}
                         onChange={handleChange}
                         onKeyDown={handleKeyDown}
