@@ -62,5 +62,44 @@ talketeer/
 ```
 Each subdirectory includes its own README with setup and development instructions.
 
+## 🤝 Contributors
+
+Thanks to the following people who have contributed to **Talketeer** as part of SWoC and open-source development. 💙
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/YoYo178">
+        <img src="https://github.com/YoYo178.png" width="130px;" alt="YoYo178" />
+        <br />
+        <sub><b>Sumit Chaurasiya</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/palchhinparihar">
+        <img src="https://github.com/palchhinparihar.png" width="130px;" alt="palchhinparihar" />
+        <br />
+        <sub><b>Palchhin</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/nowsheen19jahan">
+        <img src="https://github.com/nowsheen19jahan.png" width="130px;" alt="nowsheen19jahan" />
+        <br />
+        <sub><b>Nowsheen Jahan</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/k4rth1k-h3gd3">
+        <img src="https://github.com/k4rth1k-h3gd3.png" width="130px;" alt="k4rth1k-h3gd3" />
+        <br />
+        <sub><b>Karthik Hegde</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+<br><b>Want to see your name here? Make a contribution and submit a PR. ✨</b><br>
+
 ## 🧑‍💻 Author
 Made with ♥️ by [Sumit Chaurasiya](https://github.com/YoYo178).
