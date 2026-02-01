@@ -1,12 +1,27 @@
 # 🗨️ Talketeer
-
 **Talketeer** is a full-stack, real-time chat application built with the **MERN** stack and **Socket.io**.  
 It delivers an intuitive chatting experience with real-time messaging, room creation, typing indicators, and message persistence — all wrapped in a modern and responsive interface.
 
 > 💬 The design takes _some_ inspiration from [Discord](https://github.com/discord), because I use it a lot!
 
-## ✨ Overview
+## 🤝 Contributing (SWoC'26)
+This project is part of **Social Winter of Code 2026! (SWoC'26!)** 🎓❄️
 
+Initially the project was developed by the project maintainer as a solo MVP,
+but later added to SWoC'26, opening contributions from beginners and experienced developers alike.
+
+### ✅ Contribution Guidelines
+- PRs must be **issue-based**
+- Avoid spam or low-effort changes
+- Follow existing code style and structure
+- One feature/fix per PR
+- Be respectful and open to review feedback
+- Read `CONTRIBUTING.md`
+
+All valid PRs will be reviewed and considered for SWoC credits.    
+Happy contributing! 🚀
+
+## ✨ Overview
 Talketeer focuses on providing a smooth and reliable real-time communication system with:
 - 🔐 Email-based registration & login
 - 🔄 Tokenized password reset flow
@@ -53,7 +68,6 @@ Talketeer focuses on providing a smooth and reliable real-time communication sys
   <img width="1545" height="736" alt="image" src="https://github.com/user-attachments/assets/25d1ce86-d5e2-4279-8e85-1bebcd52d3e9" />
 
 ## 📂 Project Structure
-
 ```bash
 talketeer/
 ├── backend/      # Express + TypeScript + Socket.io server
@@ -102,4 +116,4 @@ Thanks to the following people who have contributed to **Talketeer** as part of 
 <br><b>Want to see your name here? Make a contribution and submit a PR. ✨</b><br>
 
 ## 🧑‍💻 Author
-Made with ♥️ by [Sumit Chaurasiya](https://github.com/YoYo178).
+Made with ♥️ by [**Sumit Chaurasiya**](https://github.com/YoYo178).
