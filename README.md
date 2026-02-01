@@ -4,23 +4,6 @@ It delivers an intuitive chatting experience with real-time messaging, room crea
 
 > 💬 The design takes _some_ inspiration from [Discord](https://github.com/discord), because I use it a lot!
 
-## 🤝 Contributing (SWoC'26)
-This project is part of **Social Winter of Code 2026! (SWoC'26!)** 🎓❄️
-
-Initially the project was developed by the project maintainer as a solo MVP,
-but later added to SWoC'26, opening contributions from beginners and experienced developers alike.
-
-### ✅ Contribution Guidelines
-- PRs must be **issue-based**
-- Avoid spam or low-effort changes
-- Follow existing code style and structure
-- One feature/fix per PR
-- Be respectful and open to review feedback
-- Read `CONTRIBUTING.md`
-
-All valid PRs will be reviewed and considered for SWoC credits.    
-Happy contributing! 🚀
-
 ## ✨ Overview
 Talketeer focuses on providing a smooth and reliable real-time communication system with:
 - 🔐 Email-based registration & login
@@ -84,6 +67,62 @@ If you like this project:
 * 🗣️ Share it with others
 
 Your support helps a lot! 🙌
+
+## 🤝 Contributing (SWoC'26)
+This project is part of **Social Winter of Code 2026! (SWoC'26!)** 🎓❄️
+
+Initially the project was developed by the project maintainer as a solo MVP,
+but later added to SWoC'26, opening contributions from beginners and experienced developers alike.
+
+### ✅ Contribution Guidelines
+- PRs must be **issue-based**
+- Avoid spam or low-effort changes
+- Follow existing code style and structure
+- One feature/fix per PR
+- Be respectful and open to review feedback
+- Read `CONTRIBUTING.md`
+
+All valid PRs will be reviewed and considered for SWoC credits.    
+Happy contributing! 🚀
+
+## 🤝 Contributors
+
+Thanks to the following people who have contributed to **Talketeer** as part of SWoC and open-source development. 💙
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/YoYo178">
+        <img src="https://github.com/YoYo178.png" width="130px;" alt="YoYo178" />
+        <br />
+        <sub><b>Sumit Chaurasiya</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/palchhinparihar">
+        <img src="https://github.com/palchhinparihar.png" width="130px;" alt="palchhinparihar" />
+        <br />
+        <sub><b>Palchhin</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/nowsheen19jahan">
+        <img src="https://github.com/nowsheen19jahan.png" width="130px;" alt="nowsheen19jahan" />
+        <br />
+        <sub><b>Nowsheen Jahan</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/k4rth1k-h3gd3">
+        <img src="https://github.com/k4rth1k-h3gd3.png" width="130px;" alt="k4rth1k-h3gd3" />
+        <br />
+        <sub><b>Karthik Hegde</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
+<br><b>Want to see your name here? Make a contribution and submit a PR. ✨</b><br>
 
 ## 📝 License
 This project is licensed under the **MIT License**.
