@@ -76,6 +76,32 @@ talketeer/
 ```
 Each subdirectory includes its own README with setup and development instructions.
 
+## ⭐ Support
+If you like this project:
+
+* ⭐ Star the repository
+* 🍴 Fork it
+* 🗣️ Share it with others
+
+Your support helps a lot! 🙌
+
+## 🤝 Contributing (SWoC'26)
+This project is part of **Social Winter of Code 2026! (SWoC'26!)** 🎓❄️
+
+Initially the project was developed by the project maintainer as a solo MVP,
+but later added to SWoC'26, opening contributions from beginners and experienced developers alike.
+
+### ✅ Contribution Guidelines
+- PRs must be **issue-based**
+- Avoid spam or low-effort changes
+- Follow existing code style and structure
+- One feature/fix per PR
+- Be respectful and open to review feedback
+- Read `CONTRIBUTING.md`
+
+All valid PRs will be reviewed and considered for SWoC credits.    
+Happy contributing! 🚀
+
 ## 🤝 Contributors
 
 Thanks to the following people who have contributed to **Talketeer** as part of SWoC and open-source development. 💙
@@ -114,6 +140,9 @@ Thanks to the following people who have contributed to **Talketeer** as part of 
 </table>
 
 <br><b>Want to see your name here? Make a contribution and submit a PR. ✨</b><br>
+
+## 📝 License
+This project is licensed under the **MIT License**.
 
 ## 🧑‍💻 Author
 Made with ♥️ by [**Sumit Chaurasiya**](https://github.com/YoYo178).
