@@ -4,23 +4,6 @@ It delivers an intuitive chatting experience with real-time messaging, room crea
 
 > 💬 The design takes _some_ inspiration from [Discord](https://github.com/discord), because I use it a lot!
 
-## 🤝 Contributing (SWoC'26)
-This project is part of **Social Winter of Code 2026! (SWoC'26!)** 🎓❄️
-
-Initially the project was developed by the project maintainer as a solo MVP,
-but later added to SWoC'26, opening contributions from beginners and experienced developers alike.
-
-### ✅ Contribution Guidelines
-- PRs must be **issue-based**
-- Avoid spam or low-effort changes
-- Follow existing code style and structure
-- One feature/fix per PR
-- Be respectful and open to review feedback
-- Read `CONTRIBUTING.md`
-
-All valid PRs will be reviewed and considered for SWoC credits.    
-Happy contributing! 🚀
-
 ## ✨ Overview
 Talketeer focuses on providing a smooth and reliable real-time communication system with:
 - 🔐 Email-based registration & login
