@@ -93,8 +93,11 @@ export async function joinRoom(userId: string, roomId: string, isAdmin?: boolean
 
       return { user, room };
     });
-  } catch (error) {
-    throw new Error(`Failed to join room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  } catch (error: unknown) {
+    throw new Error(
+      'Failed to join room',
+      { cause: error },
+    );
   } finally {
     await session.endSession();
   }
@@ -124,8 +127,11 @@ export async function leaveRoom(userId: string, roomId: string) {
 
       return { user, room };
     });
-  } catch (error) {
-    throw new Error(`Failed to leave room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+  } catch (error: unknown) {
+    throw new Error(
+      'Failed to leave room',
+      { cause: error },
+    );
   } finally {
     await session.endSession();
   }
