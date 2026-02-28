@@ -1,7 +1,4 @@
 import jetEnv, { num, str } from 'jet-env';
-import { isValueOf } from 'jet-validators';
-
-import { NODE_ENVS } from './constants';
 
 
 /******************************************************************************
@@ -10,7 +7,7 @@ import { NODE_ENVS } from './constants';
 
 const ENV = jetEnv({
   /** General */
-  NodeEnv: isValueOf(NODE_ENVS),
+  NodeEnv: str,
   AppName: str,
   Port: num,
 
