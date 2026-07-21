@@ -1,4 +1,4 @@
-import { INotification } from '@src/types';
+import type { INotification } from '@src/types/notification.types.js';
 import mongoose from 'mongoose';
 
 const notificationTypes = [

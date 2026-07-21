@@ -1,12 +1,12 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import type { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
 
-import { getAcceptFriendRequestCallback } from './acceptFriendRequest';
-import { getDeclineFriendRequestCallback } from './declineFriendRequest';
+import { getAcceptFriendRequestCallback } from './acceptFriendRequest.js';
+import { getDeclineFriendRequestCallback } from './declineFriendRequest.js';
 
-import { getRevokeFriendRequestCallback } from './revokeFriendRequest';
-import { getSendFriendRequestCallback } from './sendFriendRequest';
+import { getRevokeFriendRequestCallback } from './revokeFriendRequest.js';
+import { getSendFriendRequestCallback } from './sendFriendRequest.js';
 
-import { getRemoveFriendCallback } from './removeFriend';
+import { getRemoveFriendCallback } from './removeFriend.js';
 
 export function registerFriendHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
   socket.on('acceptFriendRequest', getAcceptFriendRequestCallback(io, socket));

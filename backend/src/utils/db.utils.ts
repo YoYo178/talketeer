@@ -1,8 +1,8 @@
-import ENV from '@src/common/ENV';
-import { Room } from '@src/models/room.model';
-import { User } from '@src/models/user.model';
+import ENV from '@src/common/env.js';
+import { Room } from '@src/models/room.model.js';
+import { User } from '@src/models/user.model.js';
 import mongoose from 'mongoose';
-import logger from '@src/utils/logger.utils';
+import logger from '@src/utils/logger.utils.js';
 
 async function clearStaleData() {
   try {
@@ -25,11 +25,11 @@ async function clearStaleData() {
 
 export const connectDB = async () => {
   try {
-    await mongoose.connect(ENV.MongodbUri);
+    await mongoose.connect(ENV.MONGODB_URI);
     logger.info('Connected to MongoDB successfully.');
     clearStaleData();
   } catch (error) {
-    logger.error('Couldn\'t connect to MongoDB', {
+    logger.error("Couldn't connect to MongoDB", {
       error: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
     });

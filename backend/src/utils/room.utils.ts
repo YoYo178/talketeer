@@ -1,7 +1,7 @@
-import { DEFAULT_SYSTEM_ROOM_CONFIG, MAX_SYSTEM_ROOMS } from '@src/config';
-import { Room } from '@src/models/room.model';
-import { IRoom, IRoomPublicView } from '@src/types';
-import logger from './logger.utils';
+import { DEFAULT_SYSTEM_ROOM_CONFIG, MAX_SYSTEM_ROOMS } from '@src/config/rooms.config.js';
+import { Room } from '@src/models/room.model.js';
+import type { IRoom, IRoomPublicView } from '@src/types/room.types.js';
+import logger from './logger.utils.js';
 
 export const populateRoomData = async () => {
   const rooms = await Room.find({ isSystemGenerated: true }).lean().exec();

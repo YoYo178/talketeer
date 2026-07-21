@@ -1,4 +1,4 @@
-import { IDMRoom, IRoom, IRoomMember } from '@src/types';
+import type { IDMRoom, IRoom, IRoomMember } from '@src/types/room.types.js';
 import mongoose from 'mongoose';
 
 const roomMemberSchema = new mongoose.Schema<IRoomMember>({

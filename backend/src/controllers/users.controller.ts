@@ -1,7 +1,7 @@
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
-import { User } from '@src/models';
-import { TUpdateMeBody, TUserIdParams } from '@src/schemas';
-import { APIError } from '@src/utils';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
+import { User } from '@src/models/user.model.js';
+import type { TUpdateMeBody, TUserIdParams } from '@src/schemas/users.schema.js';
+import { APIError } from '@src/utils/api.utils.js';
 import type { Request, Response } from 'express';
 
 export const getMe = async (req: Request, res: Response) => {

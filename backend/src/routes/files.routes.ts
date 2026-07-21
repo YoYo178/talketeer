@@ -1,12 +1,12 @@
-import { Router, Request, Response } from 'express';
+import { Router, type Request, type Response } from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-import { APIError } from '@src/utils';
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
+import { APIError } from '@src/utils/api.utils.js';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
 
-import { ASSETS_PATH } from '@src/config';
+import { ASSETS_PATH } from '@src/config/files.config.js';
 
 // Multer setup
 const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
@@ -29,7 +29,12 @@ const fileFilter: multer.Options['fileFilter'] = (_, file, callback) => {
   if (allowedMimeTypes.includes(file.mimetype)) {
     callback(null, true);
   } else {
-    callback(new APIError('Only JPEG, PNG, and WEBP images are allowed!', HTTP_STATUS_CODES.BadRequest));
+    callback(
+      new APIError(
+        'Only JPEG, PNG, and WEBP images are allowed!',
+        HTTP_STATUS_CODES.BadRequest,
+      ),
+    );
   }
 };
 
@@ -41,8 +46,14 @@ const upload = multer({ storage, fileFilter, limits });
 
 const FilesRouter = Router();
 
-FilesRouter.post('/avatar', upload.single('avatar'), (_: Request, res: Response) => {
-  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Updated avatar successfully!' });
-});
+FilesRouter.post(
+  '/avatar',
+  upload.single('avatar'),
+  (_: Request, res: Response) => {
+    res
+      .status(HTTP_STATUS_CODES.Ok)
+      .json({ success: true, message: 'Updated avatar successfully!' });
+  },
+);
 
 export default FilesRouter;

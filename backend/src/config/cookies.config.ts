@@ -1,8 +1,7 @@
-import { NODE_ENVS } from '@src/common/constants';
-import ENV from '@src/common/ENV';
-import { CookieOptions } from 'express';
+import ENV, { NODE_ENVS } from '@src/common/env.js';
+import type { CookieOptions } from 'express';
 
-const isProd = ENV.NodeEnv === NODE_ENVS.Production;
+const isProd = ENV.NODE_ENV === NODE_ENVS.PRODUCTION;
 
 export const cookieConfig: CookieOptions = {
   httpOnly: true,

@@ -1,0 +1,4 @@
+allowBuilds:
+  '@swc/core': true
+  argon2: true
+  esbuild: true

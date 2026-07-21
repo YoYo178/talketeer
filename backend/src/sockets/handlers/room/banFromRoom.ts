@@ -1,12 +1,23 @@
-import { banFromRoomSchema } from '@src/schemas';
-import { banUser, isUserBanned } from '@src/services/ban.service';
-import { getRoom, isUserInRoom, leaveRoom } from '@src/services/room.service';
-import { getUser } from '@src/services/user.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
+import { banFromRoomSchema } from '@src/schemas/rooms.schema.js';
+import { banUser, isUserBanned } from '@src/services/ban.service.js';
+import {
+  getRoom,
+  isUserInRoom,
+  leaveRoom,
+} from '@src/services/room.service.js';
+import { getUser } from '@src/services/user.service.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
-export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['banFromRoom'] => {
+export const getBanFromRoomEventCallback = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['banFromRoom'] => {
   return async (roomId, userId, bannedBy, duration, reason) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to ban a member from a room');
@@ -19,8 +30,7 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
 
       const room = await getRoom(roomId);
 
-      if (!room)
-        throw new Error('Room not found');
+      if (!room) throw new Error('Room not found');
 
       const admin = await getUser(bannedBy);
 
@@ -38,7 +48,9 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
       const isMember = await isUserInRoom(roomId, userId);
 
       if (!isMember)
-        throw new Error('The user you are trying to ban is not a member of this room');
+        throw new Error(
+          'The user you are trying to ban is not a member of this room',
+        );
 
       const alreadyBanned = await isUserBanned(userId, roomId);
 
@@ -58,31 +70,30 @@ export const getBanFromRoomEventCallback = (io: TalketeerSocketServer, socket: T
       });
 
       if (!ban)
-        throw new Error('An error occured in the server while banning the user.');
+        throw new Error(
+          'An error occured in the server while banning the user.',
+        );
 
       await leaveRoom(userId, roomId);
 
       const targetSocket = (await io.in(userId).fetchSockets())[0];
-      targetSocket.leave(roomId);
+      targetSocket?.leave?.(roomId);
 
-      logger.info(`${admin._id.toString()} banned ${user._id.toString()} from ${room._id.toString()}`, {
-        roomId,
-        bannedBy,
-        userId,
-      });
-
-      io.emit(
-        'memberBanned',
-        roomId,
-        userId,
-        bannedBy,
+      logger.info(
+        `${admin._id.toString()} banned ${user._id.toString()} from ${room._id.toString()}`,
         {
-          created: ban.createdAt.valueOf(),
-          expiry: ban.expiresAt?.valueOf() ?? null,
-          isPermanent: duration === -1,
-          reason,
+          roomId,
+          bannedBy,
+          userId,
         },
       );
+
+      io.emit('memberBanned', roomId, userId, bannedBy, {
+        created: ban.createdAt.valueOf(),
+        expiry: ban.expiresAt?.valueOf() ?? null,
+        isPermanent: duration === -1,
+        reason,
+      });
 
       io.emit('roomUpdated', roomId);
     } catch (err) {

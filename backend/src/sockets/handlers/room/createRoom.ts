@@ -1,13 +1,25 @@
-import { DEFAULT_ROOM_CODE_LENGTH } from '@src/config';
-import { createRoom, joinRoom, leaveRoom, isUserInRoom } from '@src/services/room.service';
-import { getUser } from '@src/services/user.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import { generateRoomCode } from '@src/utils';
-import { createRoomSchema } from '@src/schemas';
-import logger from '@src/utils/logger.utils';
+import { DEFAULT_ROOM_CODE_LENGTH } from '@src/config/rooms.config.js';
+import { createRoomSchema } from '@src/schemas/rooms.schema.js';
+import {
+  createRoom,
+  isUserInRoom,
+  joinRoom,
+  leaveRoom,
+} from '@src/services/room.service.js';
+import { getUser } from '@src/services/user.service.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
+import { generateRoomCode } from '@src/utils/room.utils.js';
 import mongoose from 'mongoose';
 
-export const getCreateRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['createRoom'] => {
+export const getCreateRoomEventCallback = (
+  _: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['createRoom'] => {
   return async (name, visibility, memberLimit, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to create room');
@@ -20,8 +32,7 @@ export const getCreateRoomEventCallback = (_: TalketeerSocketServer, socket: Tal
 
       const userId = socket.data.user.id;
       const user = await getUser(userId);
-      if (!user)
-        throw new Error('User not found');
+      if (!user) throw new Error('User not found');
 
       if (user.room?.toString()) {
         const roomId = user.room.toString();
@@ -32,10 +43,13 @@ export const getCreateRoomEventCallback = (_: TalketeerSocketServer, socket: Tal
 
           // Leave the specified room for the client
           socket.leave(roomId);
-          logger.info(`${socket.data.user.id} left room ${roomId} to create new room`, {
-            userId: socket.data.user.id,
-            oldRoomId: roomId,
-          });
+          logger.info(
+            `${socket.data.user.id} left room ${roomId} to create new room`,
+            {
+              userId: socket.data.user.id,
+              oldRoomId: roomId,
+            },
+          );
 
           // Broadcast the member leave event to everyone in this room
           socket.to(roomId).emit('memberLeft', roomId, userId);

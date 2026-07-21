@@ -1,7 +1,8 @@
-import { DMRoom, Message, Room } from '@src/models';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import { sendMessageSchema } from '@src/schemas';
-import logger from '@src/utils/logger.utils';
+import { DMRoom, Room } from '@src/models/room.model.js';
+import { Message } from '@src/models/message.model.js';
+import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import { sendMessageSchema } from '@src/schemas/messages.schema.js';
+import logger from '@src/utils/logger.utils.js';
 
 export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendMessage'] => {
   return async (isDM, roomId, messageContent, ack) => {

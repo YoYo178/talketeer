@@ -1,16 +1,33 @@
 import type { ExtendedError } from 'socket.io';
 import type { Request, Response, NextFunction } from 'express';
-import * as cookie from 'cookie';
+import { parseCookie } from 'cookie';
 
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
 
-import { cookieConfig, tokenConfig } from '@src/config';
-import { User } from '@src/models';
-import { TalketeerSocket, TVerifyAuthReturn } from '@src/types';
-import { APIError, generateAccessToken, verifyAccessToken, verifyRefreshToken } from '@src/utils';
+import {
+  DEFAULT_ACCESS_TOKEN_EXPIRY,
+  tokenConfig,
+} from '@src/config/jwt.config.js';
+import { cookieConfig } from '@src/config/cookies.config.js';
+import { User } from '@src/models/user.model.js';
+import type { TalketeerSocket } from '@src/types/socket.types.js';
+import type { TVerifyAuthReturn } from '@src/types/jwt.types.js';
+import { APIError } from '@src/utils/api.utils.js';
+import {
+  generateAccessToken,
+  verifyAccessToken,
+  verifyRefreshToken,
+} from '@src/utils/jwt.utils.js';
 
-const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<TVerifyAuthReturn> => {
-  const returnObj: TVerifyAuthReturn = { success: false, isMaliciousUser: false, data: { user: null } };
+const verifyAuth = async (
+  refreshToken?: string,
+  accessToken?: string,
+): Promise<TVerifyAuthReturn> => {
+  const returnObj: TVerifyAuthReturn = {
+    success: false,
+    isMaliciousUser: false,
+    data: { user: null },
+  };
 
   // Verify refresh token
   const decodedRefreshToken = verifyRefreshToken(refreshToken ?? '');
@@ -54,7 +71,8 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
 
     // Access token and Refresh token mismatch, malicious user spotted
     // Add the user to blacklist
-    const isMaliciousUser = decodedRefreshToken.data.user.id !== decodedAccessToken.data.user.id;
+    const isMaliciousUser =
+      decodedRefreshToken.data.user.id !== decodedAccessToken.data.user.id;
     if (isMaliciousUser) {
       returnObj.isMaliciousUser = true;
       return returnObj;
@@ -62,7 +80,10 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
   }
 
   // Fetch the user via ID from database, and exclude password because we ain't need any of that
-  const user = await User.findById(decodedRefreshToken.data.user.id).select('-passwordHash').lean().exec();
+  const user = await User.findById(decodedRefreshToken.data.user.id)
+    .select('-passwordHash')
+    .lean()
+    .exec();
 
   // User not found, maybe user deleted their account but the tokens are still stored?
   if (!user) {
@@ -75,7 +96,13 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
 
   // Silent access token refresh (yes checking this late is intentional)
   if (decodedAccessToken.expired || decodedAccessToken.isBlank)
-    returnObj.data.accessToken = generateAccessToken({ user: { id: user._id.toString(), email: user.email, username: user.username } });
+    returnObj.data.accessToken = generateAccessToken({
+      user: {
+        id: user._id.toString(),
+        email: user.email,
+        username: user.username,
+      },
+    });
 
   // Update object state and finally return, as shrimple as that
   returnObj.success = true;
@@ -84,23 +111,38 @@ const verifyAuth = async (refreshToken?: string, accessToken?: string): Promise<
   return returnObj;
 };
 
-export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
-  const { accessToken, refreshToken }: {accessToken?: string, refreshToken?: string} = req.cookies;
+export const requireAuth = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const {
+    accessToken,
+    refreshToken,
+  }: { accessToken?: string; refreshToken?: string } = req.cookies;
 
   const authDetails = await verifyAuth(refreshToken, accessToken);
 
   if (!authDetails.success && authDetails.error) {
-    res.status(authDetails.error.code).json({ success: false, message: authDetails.error.message });
+    res
+      .status(authDetails.error.code)
+      .json({ success: false, message: authDetails.error.message });
     return;
   }
 
   // TODO: Blacklist by IP
   if (authDetails.isMaliciousUser)
-    throw new APIError('Malicious activity detected, you have been added to the blacklist.', HTTP_STATUS_CODES.Forbidden);
+    throw new APIError(
+      'Malicious activity detected, you have been added to the blacklist.',
+      HTTP_STATUS_CODES.Forbidden,
+    );
 
   // Handle silent access token refresh
   if (authDetails.data.accessToken)
-    res.cookie('accessToken', authDetails.data.accessToken, { ...cookieConfig, maxAge: tokenConfig.accessToken.expiry });
+    res.cookie('accessToken', authDetails.data.accessToken, {
+      ...cookieConfig,
+      maxAge: tokenConfig.accessToken?.expiry ?? DEFAULT_ACCESS_TOKEN_EXPIRY,
+    });
 
   if (authDetails.data.user) {
     const user = authDetails.data.user;
@@ -115,21 +157,31 @@ export const requireAuth = async (req: Request, res: Response, next: NextFunctio
     return;
   }
 
-  throw new APIError('Authentication failed', HTTP_STATUS_CODES.InternalServerError);
+  throw new APIError(
+    'Authentication failed',
+    HTTP_STATUS_CODES.InternalServerError,
+  );
 };
 
-export const requireSocketAuth = async (socket: TalketeerSocket, next: (err?: ExtendedError) => void) => {
+export const requireSocketAuth = async (
+  socket: TalketeerSocket,
+  next: (err?: ExtendedError) => void,
+) => {
   const rawCookie = socket.handshake.headers.cookie;
   if (!rawCookie) return next(new Error('Unauthorized'));
 
-  const cookies = cookie.parse(rawCookie);
+  const cookies = parseCookie(rawCookie);
   const { accessToken, refreshToken } = cookies;
 
   const authDetails = await verifyAuth(refreshToken, accessToken);
 
   if (authDetails.isMaliciousUser) {
     // TODO: Blacklist by IP
-    next(new Error('Malicious activity detected, you have been added to the blacklist.'));
+    next(
+      new Error(
+        'Malicious activity detected, you have been added to the blacklist.',
+      ),
+    );
     return;
   }
 

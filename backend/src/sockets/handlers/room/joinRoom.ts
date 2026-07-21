@@ -1,8 +1,9 @@
-import { getRoom, getRoomByCode, joinRoom } from '@src/services/room.service';
-import { ClientToServerEvents, IRoom, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import { joinRoomSchema } from '@src/schemas';
-import logger from '@src/utils/logger.utils';
-import { getBan, isUserBanned } from '@src/services/ban.service';
+import { getRoom, getRoomByCode, joinRoom } from '@src/services/room.service.js';
+import type { IRoom } from '@src/types/room.types.js';
+import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import { joinRoomSchema } from '@src/schemas/rooms.schema.js';
+import logger from '@src/utils/logger.utils.js';
+import { getBan, isUserBanned } from '@src/services/ban.service.js';
 
 export const getJoinRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
   return async ({ method, data }, ack) => {

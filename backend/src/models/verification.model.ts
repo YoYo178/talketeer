@@ -1,4 +1,4 @@
-import { IVerification } from '@src/types';
+import type { IVerification } from '@src/types/verification.types.js';
 import mongoose from 'mongoose';
 
 const verificationSchema = new mongoose.Schema<IVerification>({

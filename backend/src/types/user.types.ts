@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import { DBRef } from './db.types';
-import { INotification } from './notification.types';
+import type { DBRef } from './db.types.js';
+import type { INotification } from './notification.types.js';
 
 export interface IUserFriend {
     userId: mongoose.Types.ObjectId;

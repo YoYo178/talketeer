@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { mongooseObjectId } from '../utils';
+import { mongooseObjectId } from '../utils/schema.utils.js';
 
 export const notificationIdParams = z.object({
   notificationId: mongooseObjectId,

@@ -1,6 +1,6 @@
-import { DMRoom, Room } from '@src/models';
-import { IRoom } from '@src/types';
-import { getUser, updateUserRoom } from './user.service';
+import { DMRoom, Room } from '@src/models/room.model.js';
+import type { IRoom } from '@src/types/room.types.js';
+import { getUser, updateUserRoom } from './user.service.js';
 import mongoose from 'mongoose';
 
 export async function getAllRooms(filter = {}): Promise<IRoom[]> {
@@ -41,7 +41,7 @@ export async function addUserToRoom(roomId: string, userId: string, isAdmin?: bo
         },
       },
     },
-    { new: true, lean: true, session: undefined }, // Remove session for now, will be handled by transaction
+    { new: true, lean: true, session: null }, // Remove session for now, will be handled by transaction
   ).exec();
 }
 
@@ -49,7 +49,7 @@ export async function removeUserFromRoom(roomId: string, userId: string) {
   return Room.findByIdAndUpdate(
     roomId,
     { $inc: { memberCount: -1 }, $pull: { members: { user: userId } } },
-    { new: true, lean: true, session: undefined }, // Remove session for now, will be handled by transaction
+    { new: true, lean: true, session: null }, // Remove session for now, will be handled by transaction
   ).exec();
 }
 
@@ -138,7 +138,7 @@ export async function checkDMRoom(userId: string, otherUserId: string) {
 
   const existingRoom = await DMRoom.findOne({ members: { $all: [userObjectId, otherUserObjectId] } }).lean().exec();
 
-  if (!!existingRoom) {
+  if (existingRoom) {
     const updatedRoom = await DMRoom.findOneAndUpdate({ _id: existingRoom._id }, { isActive: true }, { lean: true, new: true }).exec();
     return updatedRoom;
   } else {

@@ -1,12 +1,12 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import type { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
 
-import { getJoinRoomEventCallback } from './joinRoom';
-import { getLeaveRoomEventCallback } from './leaveRoom';
-import { getCreateRoomEventCallback } from './createRoom';
-import { getDeleteRoomEventCallback } from './deleteRoom';
-import { getUpdateRoomEventCallback } from './updateRoom';
-import { getKickFromRoomEventCallback } from './kickFromRoom';
-import { getBanFromRoomEventCallback } from './banFromRoom';
+import { getJoinRoomEventCallback } from './joinRoom.js';
+import { getLeaveRoomEventCallback } from './leaveRoom.js';
+import { getCreateRoomEventCallback } from './createRoom.js';
+import { getDeleteRoomEventCallback } from './deleteRoom.js';
+import { getUpdateRoomEventCallback } from './updateRoom.js';
+import { getKickFromRoomEventCallback } from './kickFromRoom.js';
+import { getBanFromRoomEventCallback } from './banFromRoom.js';
 
 export function registerRoomHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
   socket.on('joinRoom', getJoinRoomEventCallback(io, socket));

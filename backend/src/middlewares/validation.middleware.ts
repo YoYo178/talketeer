@@ -1,4 +1,4 @@
-import { ValidationSchemas } from '@src/types';
+import type { ValidationSchemas } from '@src/types/schema.types.js';
 import type { Request, Response, NextFunction } from 'express';
 import { z, type ZodError } from 'zod';
 

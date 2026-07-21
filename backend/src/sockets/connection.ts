@@ -1,11 +1,11 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import { registerGeneralHandlers } from './handlers/general';
-import { registerRoomHandlers } from './handlers/room';
-import { registerMessageHandlers } from './handlers/message';
-import logger from '@src/utils/logger.utils';
-import { onlineMembers } from '@src/utils';
-import { registerFriendHandlers } from './handlers/friends';
-import { DMRoom } from '@src/models';
+import type { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import { registerGeneralHandlers } from './handlers/general/index.js';
+import { registerRoomHandlers } from './handlers/room/index.js';
+import { registerMessageHandlers } from './handlers/message/index.js';
+import logger from '@src/utils/logger.utils.js';
+import { onlineMembers } from '@src/utils/socket.utils.js';
+import { registerFriendHandlers } from './handlers/friends/index.js';
+import { DMRoom } from '@src/models/room.model.js';
 
 async function joinDMRooms(socket: TalketeerSocket) {
   const rooms = await DMRoom.find({ members: socket.data.user.id }).select('_id isActive').lean().exec() || [];

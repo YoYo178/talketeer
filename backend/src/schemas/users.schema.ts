@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { mongooseObjectId } from '@src/utils';
+import { mongooseObjectId } from '@src/utils/schema.utils.js';
 
 // User ID schema
 export const userIdParamsSchema = z.object({

@@ -1,8 +1,8 @@
-import { Message } from '@src/models';
-import { deleteRoom, leaveRoom, isUserRoomOwner, getRoom } from '@src/services/room.service';
-import { getUser } from '@src/services/user.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
+import { Message } from '@src/models/message.model.js';
+import { deleteRoom, leaveRoom, isUserRoomOwner, getRoom } from '@src/services/room.service.js';
+import { getUser } from '@src/services/user.service.js';
+import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
 export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['deleteRoom'] => {

@@ -1,5 +1,5 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
+import type { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
 
 export const getDisconnectingEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket) => {
   return (reason: string, description: string) => {

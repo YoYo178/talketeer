@@ -1,6 +1,6 @@
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
-import { TGIFSearchQuery } from '@src/schemas';
-import { TenorClient } from '@src/services/gif.service';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
+import type { TGIFSearchQuery } from '@src/schemas/gif.schema.js';
+import { TenorClient } from '@src/services/gif.service.js';
 import type { Request, Response } from 'express';
 
 const tenorClient = TenorClient.getInstance();

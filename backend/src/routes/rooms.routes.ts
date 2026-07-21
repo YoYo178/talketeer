@@ -1,9 +1,9 @@
 import { Router } from 'express';
 
-import { validate } from '@src/middlewares';
-import { friendIdParamsSchema, roomIdParamsSchema } from '@src/schemas';
+import { validate } from '@src/middlewares/validation.middleware.js';
+import { friendIdParamsSchema, roomIdParamsSchema } from '@src/schemas/rooms.schema.js';
 
-import { getAllRooms, getRoomById, getAllDmRooms, getDmRoomById, getDmRoomByFriendId } from '@src/controllers';
+import { getAllRooms, getRoomById, getAllDmRooms, getDmRoomById, getDmRoomByFriendId } from '@src/controllers/rooms.controller.js';
 
 const RoomsRouter = Router();
 

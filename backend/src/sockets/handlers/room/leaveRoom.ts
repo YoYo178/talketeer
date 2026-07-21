@@ -1,6 +1,6 @@
-import { leaveRoom } from '@src/services/room.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
+import { leaveRoom } from '@src/services/room.service.js';
+import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
 export const getLeaveRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {

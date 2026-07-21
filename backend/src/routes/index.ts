@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
-import AuthRouter from './auth.routes';
-import FilesRouter from './files.routes';
-import GIFRouter from './gif.routes';
-import MessagesRouter from './messages.routes';
-import NotificationsRouter from './notifications.routes';
-import RoomsRouter from './rooms.routes';
-import UsersRouter from './users.routes';
+import AuthRouter from './auth.routes.js';
+import FilesRouter from './files.routes.js';
+import GIFRouter from './gif.routes.js';
+import MessagesRouter from './messages.routes.js';
+import NotificationsRouter from './notifications.routes.js';
+import RoomsRouter from './rooms.routes.js';
+import UsersRouter from './users.routes.js';
 
-import { requireAuth } from '@src/middlewares';
+import { requireAuth } from '@src/middlewares/auth.middleware.js';
 
 const APIRouter = Router();
 

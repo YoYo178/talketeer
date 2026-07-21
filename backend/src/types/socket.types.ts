@@ -1,7 +1,7 @@
 import { Server, Socket } from 'socket.io';
-import { IMessage } from './message.types';
-import { IRoom } from './room.types';
-import { INotification } from './notification.types';
+import type { IMessage } from './message.types.js';
+import type { IRoom } from './room.types.js';
+import type { INotification } from './notification.types.js';
 
 interface BanDetails {
     created: number;

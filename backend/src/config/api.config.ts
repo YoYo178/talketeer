@@ -1,4 +1,4 @@
-import { Options } from 'express-rate-limit';
+import type { Options } from 'express-rate-limit';
 
 export const DEFAULT_RATE_LIMIT_OPTIONS: Partial<Options> = {
   windowMs: 15 * 60 * 1000, // 15 minutes

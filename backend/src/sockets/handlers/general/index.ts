@@ -1,8 +1,8 @@
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
+import type { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
 
-import { getDisconnectEventCallback } from './disconnect';
-import { getDisconnectingEventCallback } from './disconnecting';
-import { getErrorEventCallback } from './error';
+import { getDisconnectEventCallback } from './disconnect.js';
+import { getDisconnectingEventCallback } from './disconnecting.js';
+import { getErrorEventCallback } from './error.js';
 
 export function registerGeneralHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
   socket.on('disconnect', getDisconnectEventCallback(io, socket));

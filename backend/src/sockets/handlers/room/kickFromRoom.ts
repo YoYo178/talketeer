@@ -1,8 +1,8 @@
-import { kickFromRoomSchema } from '@src/schemas';
-import { getRoom, isUserInRoom, leaveRoom } from '@src/services/room.service';
-import { getUser } from '@src/services/user.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
+import { kickFromRoomSchema } from '@src/schemas/rooms.schema.js';
+import { getRoom, isUserInRoom, leaveRoom } from '@src/services/room.service.js';
+import { getUser } from '@src/services/user.service.js';
+import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
 
 export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['kickFromRoom'] => {
   return async (roomId, userId, kickedBy, reason) => {
@@ -40,7 +40,7 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
       await leaveRoom(user._id.toString(), roomId);
 
       const targetSocket = (await io.in(user._id.toString()).fetchSockets())[0];
-      targetSocket.leave(roomId);
+      targetSocket?.leave?.(roomId);
 
       logger.info(`${admin._id.toString()} kicked ${user._id.toString()} from ${room._id.toString()}`, {
         roomId,

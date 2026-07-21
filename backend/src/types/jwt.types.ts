@@ -1,6 +1,6 @@
 
-import { HttpStatusCodes } from '@src/common/HTTP_STATUS_CODES';
-import { IUser } from './user.types';
+import type { HttpStatusCodes } from '@src/common/HttpStatusCodes.js';
+import type { IUser } from './user.types.js';
 
 export type TTokenConfig = Record<string, { expiry: number }>;
 

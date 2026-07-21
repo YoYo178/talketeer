@@ -1,4 +1,4 @@
-import { IRoom } from '@src/types';
+import type { IRoom } from '@src/types/room.types.js';
 
 export const MAX_SYSTEM_ROOMS = 3;
 

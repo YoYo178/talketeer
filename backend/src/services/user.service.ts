@@ -1,5 +1,5 @@
-import { User } from '@src/models';
-import { IUser, IUserFriend } from '@src/types';
+import { User } from '@src/models/user.model.js';
+import type { IUser, IUserFriend } from '@src/types/user.types.js';
 import mongoose from 'mongoose';
 
 const sensitiveUserFields = [

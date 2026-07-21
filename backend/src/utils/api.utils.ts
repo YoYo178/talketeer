@@ -1,4 +1,4 @@
-import { HttpStatusCodes } from '@src/common/HTTP_STATUS_CODES';
+import type { HttpStatusCodes } from '@src/common/HttpStatusCodes.js';
 
 export class APIError extends Error {
   public statusCode: HttpStatusCodes | null = null;

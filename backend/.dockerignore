@@ -1,0 +1,8 @@
+config
+dist
+logs
+node_modules
+.editorconfig
+.prettierignore
+.prettierrc
+README.md

@@ -1,4 +1,4 @@
-import { IMessage } from '@src/types';
+import type { IMessage } from '@src/types/message.types.js';
 import mongoose from 'mongoose';
 
 const messageSchema = new mongoose.Schema<IMessage>({

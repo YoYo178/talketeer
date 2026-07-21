@@ -1,4 +1,4 @@
-import { TalketeerSocketServer } from '@src/types';
+import type { TalketeerSocketServer } from '@src/types/index.js';
 
 declare global {
     namespace Express {

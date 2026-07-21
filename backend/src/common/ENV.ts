@@ -1,44 +1,44 @@
-import jetEnv, { num, str } from 'jet-env';
-import { isValueOf } from 'jet-validators';
+import z from 'zod';
 
-import { NODE_ENVS } from './constants';
+export const NODE_ENVS = {
+  DEVELOPMENT: 'development',
+  PRODUCTION: 'production',
+  TEST: 'test',
+} as const;
 
-
-/******************************************************************************
-                                 Setup
-******************************************************************************/
-
-const ENV = jetEnv({
-  NodeEnv: isValueOf(NODE_ENVS),
-  Port: num,
+const envSchema = z.object({
+  NODE_ENV: z.enum(Object.values(NODE_ENVS)).default(NODE_ENVS.DEVELOPMENT),
+  PORT: z.coerce.number().default(3000),
 
   /** General */
-  AppName: str,
+  APP_NAME: z.string(),
+  DISABLE_HELMET: z.coerce.boolean(),
 
   /** Frontend */
-  FrontendOrigin: str,
+  FRONTEND_ORIGIN: z.string(),
 
   /** MongoDB */
-  MongodbUri: str,
+  MONGODB_URI: z.string(),
 
   /** JWT */
-  AccessTokenSecret: str,
-  RefreshTokenSecret: str,
+  ACCESS_TOKEN_SECRET: z.string(),
+  REFRESH_TOKEN_SECRET: z.string(),
 
   /** Tenor API */
-  TenorApiBaseUrl: str,
-  TenorApiKey: str,
-  TenorApiClientKey: str,
+  TENOR_API_BASE_URL: z.string(),
+  TENOR_API_KEY: z.string(),
+  TENOR_API_CLIENT_KEY: z.string(),
 
   /** SMTP */
-  SmtpProvider: str,
-  SmtpEmail: str,
-  SmtpPass: str,
+  SMTP_PROVIDER: z.string(),
+  SMTP_EMAIL: z.string(),
+  SMTP_PASS: z.string(),
+
+  /** Optional SSL config */
+  SSL_KEY_PATH: z.string().optional(),
+  SSL_CERT_PATH: z.string().optional(),
 });
 
-
-/******************************************************************************
-                            Export default
-******************************************************************************/
+const ENV = envSchema.parse(process.env);
 
 export default ENV;

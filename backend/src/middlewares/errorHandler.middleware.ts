@@ -1,10 +1,15 @@
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
 import type { NextFunction, Request, Response } from 'express';
 
-import { APIError } from '@src/utils';
-import logger from '@src/utils/logger.utils'; // Default export, need to be imported separately
+import { APIError } from '@src/utils/api.utils.js';
+import logger from '@src/utils/logger.utils.js'; // Default export, need to be imported separately
 
-export const errorHandler = (err: unknown, req: Request, res: Response, _next: NextFunction) => {
+export const errorHandler = (
+  err: unknown,
+  req: Request,
+  res: Response,
+  _next: NextFunction,
+) => {
   if (err instanceof APIError) {
     // Log to debug level because if it's an instance of APIError, then it's probably expected
     logger.debug('Express error handler handled an API error', {

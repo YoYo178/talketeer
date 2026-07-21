@@ -1,7 +1,7 @@
-import { saveNotification } from '@src/services/notification.service';
-import { removeFriendObject, getUser } from '@src/services/user.service';
-import { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
+import { saveNotification } from '@src/services/notification.service.js';
+import { removeFriendObject, getUser } from '@src/services/user.service.js';
+import type { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
 export const getDeclineFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['declineFriendRequest'] => {

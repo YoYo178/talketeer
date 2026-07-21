@@ -1,5 +1,5 @@
-import { Ban } from '@src/models';
-import { IBan } from '@src/types';
+import { Ban } from '@src/models/ban.model.js';
+import type { IBan } from '@src/types/ban.types.js';
 
 export async function getBans(roomId: string): Promise<IBan[]> {
   return Ban.find({ roomId }).lean().exec();

@@ -1,8 +1,8 @@
-import { updateRoom, getRoom } from '@src/services/room.service';
-import { getUser } from '@src/services/user.service';
-import { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import { updateRoomSchema } from '@src/schemas';
-import logger from '@src/utils/logger.utils';
+import { updateRoom, getRoom } from '@src/services/room.service.js';
+import { getUser } from '@src/services/user.service.js';
+import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import { updateRoomSchema } from '@src/schemas/rooms.schema.js';
+import logger from '@src/utils/logger.utils.js';
 
 export const getUpdateRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['updateRoom'] => {
   return async (roomId, name, visibility, memberLimit, ack) => {

@@ -1,4 +1,4 @@
-import { mongooseObjectId } from '@src/utils';
+import { mongooseObjectId } from '@src/utils/schema.utils.js';
 import z from 'zod';
 
 // Send message schema

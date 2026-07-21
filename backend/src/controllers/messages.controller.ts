@@ -1,7 +1,13 @@
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
-import { DMRoom, Message } from '@src/models';
-import { TMessagesQuery, TMessageIdParams, TDmMessagesQuery, TDmMessageQuery } from '@src/schemas';
-import { APIError } from '@src/utils';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
+import { DMRoom } from '@src/models/room.model.js';
+import { Message } from '@src/models/message.model.js';
+import type {
+  TMessagesQuery,
+  TMessageIdParams,
+  TDmMessagesQuery,
+  TDmMessageQuery,
+} from '@src/schemas/messages.schema.js';
+import { APIError } from '@src/utils/api.utils.js';
 import type { Request, Response } from 'express';
 
 const MESSAGES_PER_PAGE = 20;
@@ -9,13 +15,13 @@ const MESSAGES_PER_PAGE = 20;
 export const getMessages = async (req: Request, res: Response) => {
   const { roomId, before, after } = req.query as unknown as TMessagesQuery;
 
-  const query: { _id?: { $lt: string } | { $gt: string }, room: string } = { room: roomId };
+  const query: { _id?: { $lt: string } | { $gt: string }; room: string } = {
+    room: roomId,
+  };
 
-  if (before)
-    query._id = { $lt: before };
+  if (before) query._id = { $lt: before };
 
-  if (after)
-    query._id = { $gt: after };
+  if (after) query._id = { $gt: after };
 
   const messages = await Message.find(query)
     .sort({ createdAt: -1 }) // Fetch in Descending order (newest to oldest)
@@ -23,15 +29,18 @@ export const getMessages = async (req: Request, res: Response) => {
     .exec();
 
   const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
-  const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
+  const sliced = moreMessagesExist
+    ? messages.slice(0, MESSAGES_PER_PAGE)
+    : messages;
 
   // Sort this specific batch in ascending order (oldest to newest) before returning
   sliced.reverse();
 
   res.status(200).json({
-    success: true, data: {
+    success: true,
+    data: {
       messages: sliced,
-      nextCursor: moreMessagesExist ? sliced[0]._id : null,
+      nextCursor: moreMessagesExist ? (sliced[0]?._id ?? '') : null,
     },
   });
 };
@@ -55,7 +64,8 @@ export const getDmMessages = async (req: Request, res: Response) => {
 
   if (!room || !room.isActive) {
     res.status(200).json({
-      success: true, data: {
+      success: true,
+      data: {
         messages: [],
         nextCursor: null,
       },
@@ -64,13 +74,13 @@ export const getDmMessages = async (req: Request, res: Response) => {
     return;
   }
 
-  const query: { _id?: { $lt: string } | { $gt: string }, room: string } = { room: roomId };
+  const query: { _id?: { $lt: string } | { $gt: string }; room: string } = {
+    room: roomId,
+  };
 
-  if (before)
-    query._id = { $lt: before };
+  if (before) query._id = { $lt: before };
 
-  if (after)
-    query._id = { $gt: after };
+  if (after) query._id = { $gt: after };
 
   const messages = await Message.find(query)
     .sort({ createdAt: -1 }) // Fetch in Descending order (newest to oldest)
@@ -78,15 +88,18 @@ export const getDmMessages = async (req: Request, res: Response) => {
     .exec();
 
   const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
-  const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
+  const sliced = moreMessagesExist
+    ? messages.slice(0, MESSAGES_PER_PAGE)
+    : messages;
 
   // Sort this specific batch in ascending order (oldest to newest) before returning
   sliced.reverse();
 
   res.status(200).json({
-    success: true, data: {
+    success: true,
+    data: {
       messages: sliced,
-      nextCursor: moreMessagesExist ? sliced[0]._id : null,
+      nextCursor: moreMessagesExist ? (sliced[0]?._id ?? '') : null,
     },
   });
 };
@@ -97,11 +110,13 @@ export const getDmMessageById = async (req: Request, res: Response) => {
 
   const room = await DMRoom.findOne({ _id: roomId, members: userId });
 
-  if (!room)
-    throw new APIError('Room not found', HTTP_STATUS_CODES.NotFound);
+  if (!room) throw new APIError('Room not found', HTTP_STATUS_CODES.NotFound);
 
   if (!room.isActive)
-    throw new APIError('The person is not on your friend list.', HTTP_STATUS_CODES.BadRequest);
+    throw new APIError(
+      'The person is not on your friend list.',
+      HTTP_STATUS_CODES.BadRequest,
+    );
 
   const message = await Message.findById(messageId);
 

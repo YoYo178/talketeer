@@ -1,4 +1,4 @@
-import { IBan } from '@src/types';
+import type { IBan } from '@src/types/ban.types.js';
 import mongoose from 'mongoose';
 
 const banSchema = new mongoose.Schema<IBan>({

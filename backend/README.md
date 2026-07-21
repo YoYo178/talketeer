@@ -9,8 +9,8 @@
 - **Authentication:** JWT (Access & Refresh Tokens)
 - **Email Service:** Nodemailer
 - **Validation:** Zod
-- **Security:** Bcrypt.js (password hashing)
-- **Environment Management:** dotenv
+- **Security:** Argon2 (Migrated from bcrypt)
+- **Environment Management:** Node's native env file feature
 - **Architecture:** Modular service-based structure (Controllers, Services, Routes, Models)
 
 ## 📁 Folder Structure
@@ -35,8 +35,14 @@ backend/
 │ ├── types/              # TypeScript definitions
 │ └── utils/              # Utility helpers
 │
-├── eslint.config.js      # ESLint configuration
-└── vitest.config.mts     # Vitest configuration (unfortunately, currently unused)
+├── .dockerignore         # Docker ignore file
+├── .editorconfig         # Editor configuration file
+├── .gitignore            # Git ignore file
+├── .prettierignore       # Prettier ignore file
+├── .prettierrc           # Prettier configuration file
+├── Dockerfile            # Docker file of the application
+├── oxlint.config.js      # Oxlint configuration
+├── tsconfig.json         # TypeScript configuration file
 ```
 
 ## ⚙️ Environment Variables
@@ -60,10 +66,10 @@ pnpm start
 ## 🧰 Scripts
 | Command	| Description |
 |---------|-------------|
-| pnpm run dev	| Run in watch mode using ts-node-dev |
+| pnpm run dev	| Run in watch mode using tsx |
 | pnpm run build	| Compile TypeScript to JavaScript |
 | pnpm start |	Start compiled server |
-| pnpm run lint | Run ESLint checks |
+| pnpm run lint | Run Oxlint checks |
 
 ## 🧱 Design Decisions
 - Service-based architecture to keep controllers clean

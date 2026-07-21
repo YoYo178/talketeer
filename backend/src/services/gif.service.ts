@@ -1,13 +1,10 @@
-/* eslint-disable n/no-unsupported-features/node-builtins */
-/* eslint-disable max-len */
-
 /**
  * @note This file contains parts of Tenor's official V2 API documentation.
  * @see https://developers.google.com/tenor/guides/quickstart
  */
 
-import ENV from '@src/common/ENV';
-import logger from '@src/utils/logger.utils';
+import ENV from '@src/common/env.js';
+import logger from '@src/utils/logger.utils.js';
 
 // Helper type to obscure (omit) key fields
 type Obs<T> = Omit<T, 'key' | 'client-key'>;
@@ -186,4 +183,4 @@ export class TenorClient {
   // TODO: Add register share endpoint and posts endpoint methods
 }
 
-TenorClient.init(ENV.TenorApiKey, ENV.TenorApiBaseUrl, ENV.TenorApiClientKey);
+TenorClient.init(ENV.TENOR_API_KEY, ENV.TENOR_API_BASE_URL, ENV.TENOR_API_CLIENT_KEY);

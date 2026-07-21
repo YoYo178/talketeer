@@ -1,9 +1,9 @@
 import winston from 'winston';
-import ENV from '@src/common/ENV';
+import ENV, { NODE_ENVS } from '@src/common/env.js';
 
 // Create logger instance
 const logger = winston.createLogger({
-  level: ENV.NodeEnv === 'production' ? 'warn' : 'debug',
+  level: ENV.NODE_ENV === NODE_ENVS.PRODUCTION ? 'warn' : 'debug',
   format: winston.format.combine(
     winston.format.timestamp({
       format: 'YYYY-MM-DD HH:mm:ss',
@@ -30,7 +30,7 @@ const logger = winston.createLogger({
 });
 
 // If we're not in production, log to the console as well
-if (ENV.NodeEnv !== 'production') {
+if (ENV.NODE_ENV !== NODE_ENVS.PRODUCTION) {
   logger.add(new winston.transports.Console({
     format: winston.format.combine(
       winston.format.colorize(),

@@ -1,4 +1,4 @@
-import { IUser, IUserFriend } from '@src/types';
+import type { IUser, IUserFriend } from '@src/types/user.types.js';
 import mongoose from 'mongoose';
 
 const userFriendSchema = new mongoose.Schema<IUserFriend>({

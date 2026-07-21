@@ -1,7 +1,7 @@
-import HTTP_STATUS_CODES from '@src/common/HTTP_STATUS_CODES';
-import { User } from '@src/models';
-import { TNotificationIdParams } from '@src/schemas';
-import { APIError } from '@src/utils';
+import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
+import { User } from '@src/models/user.model.js';
+import type { TNotificationIdParams } from '@src/schemas/notifications.schema.js';
+import { APIError } from '@src/utils/api.utils.js';
 import type { Request, Response } from 'express';
 
 export const getNotifications = async (req: Request, res: Response) => {

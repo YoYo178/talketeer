@@ -1,39 +1,40 @@
-import { NODE_ENVS } from '@src/common/constants';
-import ENV from '@src/common/ENV';
-import logger from '@src/utils/logger.utils';
-import nodemailer, { Transporter } from 'nodemailer';
-import Mail from 'nodemailer/lib/mailer';
-import SESTransport from 'nodemailer/lib/ses-transport';
-import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import Stream from 'stream';
+import ENV, { NODE_ENVS } from "@src/common/env.js";
+import logger from "@src/utils/logger.utils.js";
+import nodemailer, { type Transporter } from "nodemailer";
+import Mail from "nodemailer/lib/mailer/index.js";
+import SESTransport from "nodemailer/lib/ses-transport/index.js";
+import SMTPTransport from "nodemailer/lib/smtp-transport/index.js";
+import Stream from "stream";
 
 interface SMTPClientInitOptions {
-    appName: string;
-    provider: string;
-    email: string;
-    password: string;
+  appName: string;
+  provider: string;
+  email: string;
+  password: string;
 }
 
 export class SMTPClient {
   private static instance: SMTPClient;
 
   private constructor(
-        private readonly transporter: Transporter,
-        private readonly appName: string,
-        private readonly email: string,
-        private readonly provider: string,
-  ) { }
+    private readonly transporter: Transporter,
+    private readonly appName: string,
+    private readonly email: string,
+    private readonly provider: string,
+  ) {}
 
   public static init(options: SMTPClientInitOptions) {
     if (!SMTPClient.instance) {
       if (!options.provider || !options.email || !options.password)
-        throw new Error('[SMTPClient] SMTP credentials not set. Initialization failed.');
+        throw new Error(
+          "[SMTPClient] SMTP credentials not set. Initialization failed.",
+        );
 
       // The below 'host' and 'port' properties are overridden based on the 'service' value.
       // If you plan to use Ethereal for testing, you can generate test accounts manually
       // see: https://ethereal.email/
       const transporter = nodemailer.createTransport({
-        host: 'smtp.ethereal.email',
+        host: "smtp.ethereal.email",
         port: 587,
         service: options.provider,
         auth: {
@@ -42,10 +43,15 @@ export class SMTPClient {
         },
       });
 
-      SMTPClient.instance = new SMTPClient(transporter, options.appName, options.email, options.provider);
+      SMTPClient.instance = new SMTPClient(
+        transporter,
+        options.appName,
+        options.email,
+        options.provider,
+      );
       Object.freeze(SMTPClient.instance);
     } else {
-      logger.warn('[SMTPClient] Attempted to initialize more than once!');
+      logger.warn("[SMTPClient] Attempted to initialize more than once!");
     }
 
     return SMTPClient.getInstance();
@@ -53,7 +59,9 @@ export class SMTPClient {
 
   public static getInstance(): SMTPClient {
     if (!SMTPClient.instance)
-      throw new Error('[SMTPClient] getInstance() called before initialization!');
+      throw new Error(
+        "[SMTPClient] getInstance() called before initialization!",
+      );
 
     return SMTPClient.instance;
   }
@@ -65,38 +73,46 @@ export class SMTPClient {
     html,
     attachments,
   }: {
-        to: string | Mail.Address | (string | Mail.Address)[],
-        subject: string,
-        text?: string | Buffer | Stream.Readable,
-        html?: string | Buffer | Stream.Readable,
-        attachments?: Mail.Attachment[],
-    }) {
-    if (!this.transporter)
-      return;
+    to: string | Mail.Address | (string | Mail.Address)[];
+    subject: string;
+    text?: string | Buffer | Stream.Readable;
+    html?: string | Buffer | Stream.Readable;
+    attachments?: Mail.Attachment[];
+  }) {
+    if (!this.transporter) return;
 
-    const isDebug = ENV.NodeEnv === NODE_ENVS.Dev || ENV.NodeEnv === NODE_ENVS.Test;
-    const isEthereal = this.provider.toLowerCase() === 'ethereal';
+    const isDebug =
+      ENV.NODE_ENV === NODE_ENVS.DEVELOPMENT || ENV.NODE_ENV === NODE_ENVS.TEST;
+    const isEthereal = this.provider.toLowerCase() === "ethereal";
 
     if (isDebug) {
-      logger.info('[Ethereal] New mail draft:');
-      logger.info({ from: `'${this.appName}' <${this.email}>`, to, subject, text, html, attachments });
+      logger.info("[Ethereal] New mail draft:");
+      logger.info({
+        from: `'${this.appName}' <${this.email}>`,
+        to,
+        subject,
+        text,
+        html,
+        attachments,
+      });
     }
 
-    const info: SESTransport.SentMessageInfo | SMTPTransport.SentMessageInfo = await this.transporter.sendMail({
-      from: `'${this.appName}' <${this.email}>`,
-      to,
-      subject,
-      text,
-      html,
-      attachments,
-    }) as SESTransport.SentMessageInfo | SMTPTransport.SentMessageInfo;
+    const info: SESTransport.SentMessageInfo | SMTPTransport.SentMessageInfo =
+      (await this.transporter.sendMail({
+        from: `'${this.appName}' <${this.email}>`,
+        to,
+        subject,
+        text,
+        html,
+        attachments,
+      })) as SESTransport.SentMessageInfo | SMTPTransport.SentMessageInfo;
 
     if (isDebug) {
-      logger.info('[Ethereal] Message sent:');
+      logger.info("[Ethereal] Message sent:");
       logger.info(info.messageId);
 
       if (isEthereal) {
-        logger.info('[Ethereal] Preview URL:');
+        logger.info("[Ethereal] Preview URL:");
         logger.info(nodemailer.getTestMessageUrl(info));
       }
     }
@@ -106,8 +122,8 @@ export class SMTPClient {
 }
 
 SMTPClient.init({
-  appName: ENV.AppName,
-  email: ENV.SmtpEmail,
-  password: ENV.SmtpPass,
-  provider: ENV.SmtpProvider,
+  appName: ENV.APP_NAME,
+  email: ENV.SMTP_EMAIL,
+  password: ENV.SMTP_PASS,
+  provider: ENV.SMTP_PROVIDER,
 });

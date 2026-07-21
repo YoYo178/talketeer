@@ -1,10 +1,10 @@
-import ENV from '@src/common/ENV';
-import { CorsOptions } from 'cors';
+import ENV from '@src/common/env.js';
+import type { CorsOptions } from 'cors';
 
 const allowedOrigins = [
   'https://localhost:5173',
   'https://yoyo178.github.io',
-  ENV.FrontendOrigin,
+  ENV.FRONTEND_ORIGIN,
 ];
 
 export const CORSConfig: CorsOptions = {

@@ -1,8 +1,8 @@
-import { leaveRoom } from '@src/services/room.service';
-import { getUser } from '@src/services/user.service';
-import { TalketeerSocket, TalketeerSocketServer } from '@src/types';
-import logger from '@src/utils/logger.utils';
-import { onlineMembers } from '@src/utils';
+import { leaveRoom } from '@src/services/room.service.js';
+import { getUser } from '@src/services/user.service.js';
+import type { TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import logger from '@src/utils/logger.utils.js';
+import { onlineMembers } from '@src/utils/socket.utils.js';
 
 export const getDisconnectEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket) => {
   return async (reason: string, description: string) => {
