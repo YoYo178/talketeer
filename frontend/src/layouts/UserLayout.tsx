@@ -1,5 +1,6 @@
 import { ChatSidebar } from '@/components/chat/ChatSidebar';
 import { ChatWindow } from '@/components/chat/ChatWindow';
+import { ProfileDialog } from '@/components/chat/profile/ProfileDialog';
 import { BannedDialog } from '@/components/chat/rooms/dialogs/info/BannedDialog';
 import { KickedDialog } from '@/components/chat/rooms/dialogs/info/KickedDialog';
 import { RoomDeletedDialog } from '@/components/chat/rooms/dialogs/info/RoomDeletedDialog';
@@ -55,6 +56,7 @@ export const UserLayout = () => {
       <KickedDialog />
       <BannedDialog />
       <RoomDeletedDialog />
+      <ProfileDialog />
     </div>
   );
 };

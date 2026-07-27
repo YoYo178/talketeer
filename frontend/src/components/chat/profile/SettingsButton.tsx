@@ -5,17 +5,18 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useLogoutMutation } from '@/hooks/network/auth/useLogoutMutation';
+import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 import { useSettingsStore } from '@/hooks/state/useSettingsStore';
 import { useQueryClient } from '@tanstack/react-query';
-import { LogOut, Moon, Settings, Sun } from 'lucide-react';
+import { CircleUserRound, LogOut, Moon, Settings, Sun } from 'lucide-react';
 import { useState } from 'react';
-import { ProfileDialog } from './ProfileDialog';
 
 export const SettingsButton = () => {
   const queryClient = useQueryClient();
 
   const [isOpen, setIsOpen] = useState(false);
   const { isDark, setIsDark } = useSettingsStore();
+  const { setIsProfileDialogOpen } = useGlobalStore();
 
   const handleToggleTheme = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -33,6 +34,11 @@ export const SettingsButton = () => {
       console.error('An error occured while logging out!');
       console.error(e?.message || e);
     }
+  };
+
+  const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsProfileDialogOpen(true);
   };
 
   return (
@@ -53,8 +59,10 @@ export const SettingsButton = () => {
         alignOffset={20}
         className='*:cursor-pointer'
       >
-        {/* Exports a DropdownMenuItem at the 'surface level' */}
-        <ProfileDialog />
+        <DropdownMenuItem onClick={handleProfileClick}>
+          <CircleUserRound />
+          Profile
+        </DropdownMenuItem>
 
         <DropdownMenuItem onClick={handleToggleTheme}>
           {isDark ? <Sun /> : <Moon />}

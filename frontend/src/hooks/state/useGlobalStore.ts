@@ -10,6 +10,9 @@ interface GlobalState {
   isAvatarCardOpen: boolean;
   setIsAvatarCardOpen: (isAvatarCardOpen: boolean) => void;
 
+  isProfileDialogOpen: boolean;
+  setIsProfileDialogOpen: (isProfileDialogOpen: boolean) => void;
+
   isSidebarOpen: boolean;
   setIsSidebarOpen: (isSidebarOpen: boolean) => void;
 
@@ -26,6 +29,9 @@ export const useGlobalStore = create<GlobalState>((set) => ({
 
   isAvatarCardOpen: false,
   setIsAvatarCardOpen: (isAvatarCardOpen) => set({ isAvatarCardOpen }),
+
+  isProfileDialogOpen: false,
+  setIsProfileDialogOpen: (isProfileDialogOpen) => set({ isProfileDialogOpen }),
 
   isSidebarOpen: true,
   setIsSidebarOpen: (isSidebarOpen: boolean) => set({ isSidebarOpen }),

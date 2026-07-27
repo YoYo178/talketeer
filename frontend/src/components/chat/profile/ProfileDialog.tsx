@@ -1,3 +1,4 @@
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -7,25 +8,24 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
+import { useUpdateAvatarMutation } from '@/hooks/network/files/useUpdateAvatarMutation';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { useUpdateMeMutation } from '@/hooks/network/users/useUpdateMeMutation';
+import type { ReactSetState } from '@/types/react.types';
+import { getAvatarUrl } from '@/utils/avatar.utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { CircleUserRound, Pencil } from 'lucide-react';
+import { Pencil } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import z from 'zod';
 import { AvatarCropper } from './AvatarCropper';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useUpdateAvatarMutation } from '@/hooks/network/files/useUpdateAvatarMutation';
-import { getAvatarUrl } from '@/utils/avatar.utils';
+import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 
 const profileFormSchema = z.object({
   firstName: z.string().nonempty('First name is required'),
@@ -40,11 +40,12 @@ export const ProfileDialog = () => {
   const queryClient = useQueryClient();
   const { register, handleSubmit, reset, formState } = useForm<ProfileFormFields>();
 
+  const { isProfileDialogOpen, setIsProfileDialogOpen } = useGlobalStore();
+
   const me = useMe();
   const updateMeMutation = useUpdateMeMutation({});
   const updateAvatarMutation = useUpdateAvatarMutation({});
 
-  const [isOpen, setIsOpen] = useState(false);
   const [errors, setErrors] = useState<
     { [K in keyof ProfileFormFields]?: string } & { general?: string }
   >({});
@@ -65,11 +66,6 @@ export const ProfileDialog = () => {
     lastName: me.name.split(' ')[1] || '',
     displayName: me.displayName || '',
     bio: me.bio || '',
-  };
-
-  const handleProfileClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsOpen(true);
   };
 
   const onSubmit: SubmitHandler<ProfileFormFields> = async (data: ProfileFormFields) => {
@@ -139,11 +135,11 @@ export const ProfileDialog = () => {
       }
     }
 
-    if (!Object.keys(errors).length) setIsOpen(false);
+    if (!Object.keys(errors).length) setIsProfileDialogOpen(false);
   };
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isProfileDialogOpen) {
       if (formState.isDirty) {
         reset(initialFormState, {
           keepDirty: false,
@@ -154,7 +150,7 @@ export const ProfileDialog = () => {
       setSelectedAvatarImage('');
       setNewAvatar(null);
     }
-  }, [isOpen]);
+  }, [isProfileDialogOpen]);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -173,14 +169,7 @@ export const ProfileDialog = () => {
     .join('');
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <DropdownMenuItem onClick={handleProfileClick}>
-          <CircleUserRound />
-          Profile
-        </DropdownMenuItem>
-      </DialogTrigger>
-
+    <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
       <DialogContent className='max-h-[85vh] overflow-hidden'>
         <DialogHeader>
           <DialogTitle>Profile</DialogTitle>
