@@ -51,7 +51,11 @@ export async function updateUser(
   return User.findByIdAndUpdate(
     userId,
     { $set: newUserData },
-    { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing' },
+    {
+      new: true,
+      lean: true,
+      select: publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing',
+    },
   ).exec();
 }
 
@@ -63,7 +67,11 @@ export async function updateUserRoom(userId: string, roomId: string | null, publ
   return User.findByIdAndUpdate(
     userId,
     { $set: { room: roomId } },
-    { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing' },
+    {
+      new: true,
+      lean: true,
+      select: publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing',
+    },
   ).exec();
 }
 

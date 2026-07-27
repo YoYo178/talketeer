@@ -5,7 +5,10 @@ import { APIError } from '@src/utils/api.utils.js';
 import type { Request, Response } from 'express';
 
 export const getMe = async (req: Request, res: Response) => {
-  const user = await User.findById(req.user.id).select('-passwordHash -hasLegacyHashing').lean().exec();
+  const user = await User.findById(req.user.id)
+    .select('-passwordHash -hasLegacyHashing')
+    .lean()
+    .exec();
 
   if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
