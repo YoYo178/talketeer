@@ -1,9 +1,16 @@
 import { leaveRoom } from '@src/services/room.service.js';
-import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
-export const getLeaveRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['leaveRoom'] => {
+export const getLeaveRoomEventCallback = (
+  _: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['leaveRoom'] => {
   return async (roomId, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to leave room');
@@ -11,8 +18,7 @@ export const getLeaveRoomEventCallback = (_: TalketeerSocketServer, socket: Talk
     }
 
     try {
-      if (!mongoose.isValidObjectId(roomId))
-        throw new Error('Invalid room ID');
+      if (!mongoose.isValidObjectId(roomId)) throw new Error('Invalid room ID');
 
       const userId = socket.data.user.id;
 

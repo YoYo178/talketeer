@@ -14,18 +14,27 @@ const sensitiveUserFields = [
   'verifiedAt',
 ];
 
-const publicUserFilterString = sensitiveUserFields.map(key => `-${key}`).join(' ');
+const publicUserFilterString = sensitiveUserFields.map((key) => `-${key}`).join(' ');
 
 export async function getAllUsers(filter = {}, publicUser?: boolean): Promise<IUser[]> {
-  return User.find(filter).select(publicUser ? publicUserFilterString : '-passwordHash').lean().exec();
+  return User.find(filter)
+    .select(publicUser ? publicUserFilterString : '-passwordHash')
+    .lean()
+    .exec();
 }
 
 export async function getUser(userId: string, publicUser?: boolean): Promise<IUser | null> {
-  return User.findById(userId).select(publicUser ? publicUserFilterString : '-passwordHash').lean().exec();
+  return User.findById(userId)
+    .select(publicUser ? publicUserFilterString : '-passwordHash')
+    .lean()
+    .exec();
 }
 
 export async function getUserByEmail(email: string, publicUser?: boolean): Promise<IUser | null> {
-  return User.findOne({ email }).select(publicUser ? publicUserFilterString : '-passwordHash').lean().exec();
+  return User.findOne({ email })
+    .select(publicUser ? publicUserFilterString : '-passwordHash')
+    .lean()
+    .exec();
 }
 
 export async function createUser(userData: Partial<IUser>): Promise<IUser> {
@@ -33,7 +42,11 @@ export async function createUser(userData: Partial<IUser>): Promise<IUser> {
   return user.toObject();
 }
 
-export async function updateUser(userId: string, newUserData: Partial<IUser>, publicUser?: boolean): Promise<IUser | null> {
+export async function updateUser(
+  userId: string,
+  newUserData: Partial<IUser>,
+  publicUser?: boolean,
+): Promise<IUser | null> {
   return User.findByIdAndUpdate(
     userId,
     { $set: newUserData },
@@ -98,21 +111,15 @@ export async function acceptUserFriendRequest(senderId: string, receiverId: stri
 }
 
 export async function removeFriendObject(userOneId: string, userTwoId: string) {
-  await User.findOneAndUpdate(
-    { _id: userOneId },
-    { $pull: { friends: { userId: userTwoId } } },
-  );
+  await User.findOneAndUpdate({ _id: userOneId }, { $pull: { friends: { userId: userTwoId } } });
 
-  await User.findOneAndUpdate(
-    { _id: userTwoId },
-    { $pull: { friends: { userId: userOneId } } },
-  );
+  await User.findOneAndUpdate({ _id: userTwoId }, { $pull: { friends: { userId: userOneId } } });
 }
 
 export function getPublicUser(user: IUser) {
   const publicUser = Object.fromEntries(
     Object.entries(user).filter(([key]) => !sensitiveUserFields.includes(key)),
-  ) as Omit<IUser, typeof sensitiveUserFields[number]>;
+  ) as Omit<IUser, (typeof sensitiveUserFields)[number]>;
 
   return publicUser;
 }

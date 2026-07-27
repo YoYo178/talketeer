@@ -8,6 +8,10 @@ import { getNotifications, getNotification } from '@src/controllers/notification
 const NotificationsRouter = Router();
 
 NotificationsRouter.get('/', getNotifications);
-NotificationsRouter.get('/:notificationId', validate({ params: notificationIdParams }), getNotification);
+NotificationsRouter.get(
+  '/:notificationId',
+  validate({ params: notificationIdParams }),
+  getNotification,
+);
 
 export default NotificationsRouter;

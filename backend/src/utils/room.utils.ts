@@ -6,16 +6,14 @@ import logger from './logger.utils.js';
 export const populateRoomData = async () => {
   const rooms = await Room.find({ isSystemGenerated: true }).lean().exec();
 
-  if (MAX_SYSTEM_ROOMS - rooms.length <= 0)
-    return;
+  if (MAX_SYSTEM_ROOMS - rooms.length <= 0) return;
 
   logger.info('Generating system rooms...');
 
   for (let i = 0; i != MAX_SYSTEM_ROOMS; i++) {
     const roomCode = `tkt${String(i + 1).padStart(3, '0')}`;
 
-    if (rooms.find(room => room.code === roomCode))
-      continue;
+    if (rooms.find((room) => room.code === roomCode)) continue;
 
     await Room.create({
       ...DEFAULT_SYSTEM_ROOM_CONFIG,
@@ -40,7 +38,7 @@ export function generateRoomCode(length: number): string {
 }
 
 export function sanitizeRoomObj(room: IRoom, userID: string): IRoom | IRoomPublicView {
-  const isUserInRoom = room.members.some(mem => mem.user.toString() === userID);
+  const isUserInRoom = room.members.some((mem) => mem.user.toString() === userID);
 
   if (!isUserInRoom)
     return {

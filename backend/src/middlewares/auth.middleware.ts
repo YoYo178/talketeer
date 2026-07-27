@@ -4,10 +4,7 @@ import { parseCookie } from 'cookie';
 
 import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
 
-import {
-  DEFAULT_ACCESS_TOKEN_EXPIRY,
-  tokenConfig,
-} from '@src/config/jwt.config.js';
+import { DEFAULT_ACCESS_TOKEN_EXPIRY, tokenConfig } from '@src/config/jwt.config.js';
 import { cookieConfig } from '@src/config/cookies.config.js';
 import { User } from '@src/models/user.model.js';
 import type { TalketeerSocket } from '@src/types/socket.types.js';
@@ -71,8 +68,7 @@ const verifyAuth = async (
 
     // Access token and Refresh token mismatch, malicious user spotted
     // Add the user to blacklist
-    const isMaliciousUser =
-      decodedRefreshToken.data.user.id !== decodedAccessToken.data.user.id;
+    const isMaliciousUser = decodedRefreshToken.data.user.id !== decodedAccessToken.data.user.id;
     if (isMaliciousUser) {
       returnObj.isMaliciousUser = true;
       return returnObj;
@@ -111,22 +107,14 @@ const verifyAuth = async (
   return returnObj;
 };
 
-export const requireAuth = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  const {
-    accessToken,
-    refreshToken,
-  }: { accessToken?: string; refreshToken?: string } = req.cookies;
+export const requireAuth = async (req: Request, res: Response, next: NextFunction) => {
+  const { accessToken, refreshToken }: { accessToken?: string; refreshToken?: string } =
+    req.cookies;
 
   const authDetails = await verifyAuth(refreshToken, accessToken);
 
   if (!authDetails.success && authDetails.error) {
-    res
-      .status(authDetails.error.code)
-      .json({ success: false, message: authDetails.error.message });
+    res.status(authDetails.error.code).json({ success: false, message: authDetails.error.message });
     return;
   }
 
@@ -157,10 +145,7 @@ export const requireAuth = async (
     return;
   }
 
-  throw new APIError(
-    'Authentication failed',
-    HTTP_STATUS_CODES.InternalServerError,
-  );
+  throw new APIError('Authentication failed', HTTP_STATUS_CODES.InternalServerError);
 };
 
 export const requireSocketAuth = async (
@@ -177,11 +162,7 @@ export const requireSocketAuth = async (
 
   if (authDetails.isMaliciousUser) {
     // TODO: Blacklist by IP
-    next(
-      new Error(
-        'Malicious activity detected, you have been added to the blacklist.',
-      ),
-    );
+    next(new Error('Malicious activity detected, you have been added to the blacklist.'));
     return;
   }
 

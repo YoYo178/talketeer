@@ -15,7 +15,9 @@ export async function getRoomByCode(code: string): Promise<IRoom | null> {
   return Room.findOne({ code }).lean().exec();
 }
 
-export async function createRoom(roomData: Partial<Omit<IRoom, '_id' | 'createdAt' | 'updatedAt'>>): Promise<IRoom> {
+export async function createRoom(
+  roomData: Partial<Omit<IRoom, '_id' | 'createdAt' | 'updatedAt'>>,
+): Promise<IRoom> {
   const newRoom = await Room.create({ ...roomData });
   return newRoom.toObject();
 }
@@ -62,10 +64,7 @@ export async function isUserInRoom(roomId: string, userId: string): Promise<bool
 }
 
 export async function isUserRoomOwner(userId: string, roomId: string): Promise<boolean> {
-  const room = await Room.findOne({ _id: roomId, owner: userId })
-    .select('_id')
-    .lean()
-    .exec();
+  const room = await Room.findOne({ _id: roomId, owner: userId }).select('_id').lean().exec();
   return !!room;
 }
 
@@ -94,7 +93,9 @@ export async function joinRoom(userId: string, roomId: string, isAdmin?: boolean
       return { user, room };
     });
   } catch (error) {
-    throw new Error(`Failed to join room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to join room: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   } finally {
     await session.endSession();
   }
@@ -125,7 +126,9 @@ export async function leaveRoom(userId: string, roomId: string) {
       return { user, room };
     });
   } catch (error) {
-    throw new Error(`Failed to leave room: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    throw new Error(
+      `Failed to leave room: ${error instanceof Error ? error.message : 'Unknown error'}`,
+    );
   } finally {
     await session.endSession();
   }
@@ -136,10 +139,18 @@ export async function checkDMRoom(userId: string, otherUserId: string) {
   const userObjectId = new mongoose.Types.ObjectId(userId);
   const otherUserObjectId = new mongoose.Types.ObjectId(otherUserId);
 
-  const existingRoom = await DMRoom.findOne({ members: { $all: [userObjectId, otherUserObjectId] } }).lean().exec();
+  const existingRoom = await DMRoom.findOne({
+    members: { $all: [userObjectId, otherUserObjectId] },
+  })
+    .lean()
+    .exec();
 
   if (existingRoom) {
-    const updatedRoom = await DMRoom.findOneAndUpdate({ _id: existingRoom._id }, { isActive: true }, { lean: true, new: true }).exec();
+    const updatedRoom = await DMRoom.findOneAndUpdate(
+      { _id: existingRoom._id },
+      { isActive: true },
+      { lean: true, new: true },
+    ).exec();
     return updatedRoom;
   } else {
     const room = await DMRoom.create({

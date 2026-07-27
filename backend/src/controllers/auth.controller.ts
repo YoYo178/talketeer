@@ -18,22 +18,14 @@ import type {
   TResetPasswordBody,
   TSignUpBody,
 } from '@src/schemas/auth.schema.js';
-import {
-  createUser,
-  getUser,
-  getUserByEmail,
-  updateUser,
-} from '@src/services/user.service.js';
+import { createUser, getUser, getUserByEmail, updateUser } from '@src/services/user.service.js';
 import {
   cleanupVerification,
   generateVerificationObject,
   getVerificationObject,
 } from '@src/services/verification.service.js';
 import { APIError } from '@src/utils/api.utils.js';
-import {
-  generateAccessToken,
-  generateRefreshToken,
-} from '@src/utils/jwt.utils.js';
+import { generateAccessToken, generateRefreshToken } from '@src/utils/jwt.utils.js';
 import {
   sendPasswordResetMail,
   sendVerificationMail,
@@ -46,17 +38,13 @@ export const verifyEmail = async (req: Request, res: Response) => {
   const verificationObj = await getVerificationObject(userId);
 
   if (!verificationObj || verificationObj.purpose === 'reset-password')
-    throw new APIError(
-      'Invalid or expired request',
-      HTTP_STATUS_CODES.BadRequest,
-    );
+    throw new APIError('Invalid or expired request', HTTP_STATUS_CODES.BadRequest);
 
   const user = await getUser(userId);
 
   if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
-  if (user.isVerified)
-    throw new APIError('User is already verified', HTTP_STATUS_CODES.Forbidden);
+  if (user.isVerified) throw new APIError('User is already verified', HTTP_STATUS_CODES.Forbidden);
 
   switch (method) {
     case 'code':
@@ -125,10 +113,7 @@ export const checkEmail = async (req: Request, res: Response) => {
 
   // If the user does not exist, respond with a 404 Not Found
   if (!user)
-    throw new APIError(
-      'No user exists with the specified email.',
-      HTTP_STATUS_CODES.NotFound,
-    );
+    throw new APIError('No user exists with the specified email.', HTTP_STATUS_CODES.NotFound);
 
   if (!user.isVerified) {
     const existingObj = await getVerificationObject(user._id.toString());
@@ -164,10 +149,7 @@ export const login = async (req: Request, res: Response) => {
   const user = await User.findOne({ email }).lean().exec();
 
   if (!user)
-    throw new APIError(
-      'No user exists with the specified email.',
-      HTTP_STATUS_CODES.NotFound,
-    );
+    throw new APIError('No user exists with the specified email.', HTTP_STATUS_CODES.NotFound);
 
   if (!user.isVerified)
     throw new APIError(
@@ -177,8 +159,7 @@ export const login = async (req: Request, res: Response) => {
 
   const passwordMatches = await argon2.verify(user.passwordHash, password);
 
-  if (!passwordMatches)
-    throw new APIError('Invalid password', HTTP_STATUS_CODES.BadRequest);
+  if (!passwordMatches) throw new APIError('Invalid password', HTTP_STATUS_CODES.BadRequest);
 
   const refreshToken = generateRefreshToken({
     user: { id: user._id.toString(), email: user.email },
@@ -238,35 +219,23 @@ export const logout = (_: Request, res: Response) => {
     maxAge: tokenConfig.refreshToken?.expiry ?? DEFAULT_REFRESH_TOKEN_EXPIRY,
   });
 
-  res
-    .status(HTTP_STATUS_CODES.Ok)
-    .json({ success: true, message: 'Logged out successfully!' });
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Logged out successfully!' });
 };
 
 export const signup = async (req: Request, res: Response) => {
-  const { username, name, displayName, email, password } =
-    req.body as TSignUpBody;
+  const { username, name, displayName, email, password } = req.body as TSignUpBody;
 
   const hashedPassword = await argon2.hash(password);
 
   const emailExists = !!(await getUserByEmail(email));
 
   if (emailExists)
-    throw new APIError(
-      'An account already exists with this email!',
-      HTTP_STATUS_CODES.Conflict,
-    );
+    throw new APIError('An account already exists with this email!', HTTP_STATUS_CODES.Conflict);
 
-  const usernameExists = !!(await User.findOne({ username })
-    .select('-passwordHash')
-    .lean()
-    .exec());
+  const usernameExists = !!(await User.findOne({ username }).select('-passwordHash').lean().exec());
 
   if (usernameExists)
-    throw new APIError(
-      'This username is already taken, try another.',
-      HTTP_STATUS_CODES.Conflict,
-    );
+    throw new APIError('This username is already taken, try another.', HTTP_STATUS_CODES.Conflict);
 
   const user = await createUser({
     username,
@@ -300,16 +269,9 @@ export const resendVerification = async (req: Request, res: Response) => {
 
   if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
-  if (user.isVerified)
-    throw new APIError(
-      'User is already verified',
-      HTTP_STATUS_CODES.BadRequest,
-    );
+  if (user.isVerified) throw new APIError('User is already verified', HTTP_STATUS_CODES.BadRequest);
 
-  const [token = '', code = ''] = await generateVerificationObject(
-    userId,
-    'email-verification',
-  );
+  const [token = '', code = ''] = await generateVerificationObject(userId, 'email-verification');
   await sendVerificationMail(user.email, userId, code, token);
 
   res
@@ -327,10 +289,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
   const existingObj = await getVerificationObject(user._id.toString());
 
   if (!existingObj) {
-    const [token = ''] = await generateVerificationObject(
-      user._id.toString(),
-      'reset-password',
-    );
+    const [token = ''] = await generateVerificationObject(user._id.toString(), 'reset-password');
     await sendPasswordResetMail(user.email, user._id.toString(), token);
   }
 
@@ -345,23 +304,16 @@ export const resetPassword = async (req: Request, res: Response) => {
   const user = await getUser(userId);
 
   if (!user)
-    throw new APIError(
-      'No user exists with the specified email.',
-      HTTP_STATUS_CODES.NotFound,
-    );
+    throw new APIError('No user exists with the specified email.', HTTP_STATUS_CODES.NotFound);
 
   const verificationObj = await getVerificationObject(user._id.toString());
 
   if (!verificationObj)
-    throw new APIError(
-      'Invalid or expired request',
-      HTTP_STATUS_CODES.NotFound,
-    );
+    throw new APIError('Invalid or expired request', HTTP_STATUS_CODES.NotFound);
 
   const tokenMatches = await argon2.verify(verificationObj.token, token);
 
-  if (!tokenMatches)
-    throw new APIError('Invalid token', HTTP_STATUS_CODES.BadRequest);
+  if (!tokenMatches) throw new APIError('Invalid token', HTTP_STATUS_CODES.BadRequest);
 
   const hashedPassword = await argon2.hash(password);
   await updateUser(userId, { passwordHash: hashedPassword });

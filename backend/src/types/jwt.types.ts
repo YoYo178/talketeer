@@ -1,41 +1,40 @@
-
 import type { HttpStatusCodes } from '@src/common/HttpStatusCodes.js';
 import type { IUser } from './user.types.js';
 
 export type TTokenConfig = Record<string, { expiry: number }>;
 
 export interface TDecodedToken<T> {
-    valid: boolean;
-    expired: boolean;
-    data: T;
+  valid: boolean;
+  expired: boolean;
+  data: T;
 }
 
 export interface TAccessTokenPayload {
-    user: {
-        id: string,
-        email: string,
-        username: string,
-    };
+  user: {
+    id: string;
+    email: string;
+    username: string;
+  };
 }
 
 export interface TRefreshTokenPayload {
-    user: {
-        id: string,
-        email: string,
-    };
+  user: {
+    id: string;
+    email: string;
+  };
 }
 
 export interface TVerifyAuthReturn {
-    success: boolean;
-    isMaliciousUser: boolean;
+  success: boolean;
+  isMaliciousUser: boolean;
 
-    error?: {
-        message: string,
-        code: HttpStatusCodes,
-    };
+  error?: {
+    message: string;
+    code: HttpStatusCodes;
+  };
 
-    data: {
-        accessToken?: string | null,
-        user: Omit<IUser, 'passwordHash'> | null,
-    };
+  data: {
+    accessToken?: string | null;
+    user: Omit<IUser, 'passwordHash'> | null;
+  };
 }

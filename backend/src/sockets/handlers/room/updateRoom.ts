@@ -1,10 +1,17 @@
 import { updateRoom, getRoom } from '@src/services/room.service.js';
 import { getUser } from '@src/services/user.service.js';
-import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import { updateRoomSchema } from '@src/schemas/rooms.schema.js';
 import logger from '@src/utils/logger.utils.js';
 
-export const getUpdateRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['updateRoom'] => {
+export const getUpdateRoomEventCallback = (
+  _: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['updateRoom'] => {
   return async (roomId, name, visibility, memberLimit, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to update room');
@@ -17,12 +24,10 @@ export const getUpdateRoomEventCallback = (_: TalketeerSocketServer, socket: Tal
 
       const userId = socket.data.user.id;
       const user = await getUser(userId);
-      if (!user)
-        throw new Error('User not found');
+      if (!user) throw new Error('User not found');
 
       const room = await getRoom(roomId);
-      if (!room)
-        throw new Error('Room not found');
+      if (!room) throw new Error('Room not found');
 
       await updateRoom(roomId, {
         name,

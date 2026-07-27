@@ -31,12 +31,11 @@ const logger = winston.createLogger({
 
 // If we're not in production, log to the console as well
 if (ENV.NODE_ENV !== NODE_ENVS.PRODUCTION) {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple(),
-    ),
-  }));
+  logger.add(
+    new winston.transports.Console({
+      format: winston.format.combine(winston.format.colorize(), winston.format.simple()),
+    }),
+  );
 }
 
 // Create a stream for Morgan HTTP logging

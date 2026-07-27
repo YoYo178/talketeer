@@ -1,4 +1,5 @@
 # 🗨️ Talketeer Backend
+
 - Click [here](https://github.com/YoYo178/talketeer) to visit application's main repository.
 
 ## 🚀 Tech Stack
@@ -46,6 +47,7 @@ backend/
 ```
 
 ## ⚙️ Environment Variables
+
 Rename `.env.example` to `.env` or `.env.<environment>` found in the `backend/config` directory and add values accordingly.
 
 ## 🧠 Development
@@ -64,14 +66,16 @@ pnpm start
 ```
 
 ## 🧰 Scripts
-| Command	| Description |
-|---------|-------------|
-| pnpm run dev	| Run in watch mode using tsx |
-| pnpm run build	| Compile TypeScript to JavaScript |
-| pnpm start |	Start compiled server |
-| pnpm run lint | Run Oxlint checks |
+
+| Command        | Description                      |
+| -------------- | -------------------------------- |
+| pnpm run dev   | Run in watch mode using tsx      |
+| pnpm run build | Compile TypeScript to JavaScript |
+| pnpm start     | Start compiled server            |
+| pnpm run lint  | Run Oxlint checks                |
 
 ## 🧱 Design Decisions
+
 - Service-based architecture to keep controllers clean
 - Typed Socket events using TypeScript generics
 - Access/Refresh token system for secure, scalable authentication
@@ -79,4 +83,5 @@ pnpm start
 - Event-driven socket logic for real-time synchronization
 
 ## 🧑‍💻 Author
+
 [-\_YoYo178\_-](https://github.com/YoYo178)

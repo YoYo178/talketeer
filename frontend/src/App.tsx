@@ -1,5 +1,5 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { GuestLayout } from './layouts/GuestLayout.tsx';
 import { ErrorBoundary } from './components/ErrorBoundary.tsx';
@@ -15,19 +15,19 @@ import { NotFound } from './pages/NotFound.tsx';
 
 const queryClient = new QueryClient();
 
-const THEME_STORAGE_KEY = 'theme-preference'
+const THEME_STORAGE_KEY = 'theme-preference';
 
 function App() {
   const { isDark } = useSettingsStore();
 
   useEffect(() => {
-    const root = document.documentElement
+    const root = document.documentElement;
     if (isDark) {
-      root.classList.add('dark')
-      window.localStorage.setItem(THEME_STORAGE_KEY, 'dark')
+      root.classList.add('dark');
+      window.localStorage.setItem(THEME_STORAGE_KEY, 'dark');
     } else {
-      root.classList.remove('dark')
-      window.localStorage.setItem(THEME_STORAGE_KEY, 'light')
+      root.classList.remove('dark');
+      window.localStorage.setItem(THEME_STORAGE_KEY, 'light');
     }
   }, [isDark]);
 
@@ -45,20 +45,22 @@ function App() {
               <Route index element={<LandingPage />} />
               <Route element={<GuestRoute />}>
                 <Route path='/auth' element={<AuthPage />}>
-                  <Route path='login' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
-                  <Route path='signup' element={<Outlet />} /> {/* Handled by the parent AuthPage component */}
+                  <Route path='login' element={<Outlet />} />{' '}
+                  {/* Handled by the parent AuthPage component */}
+                  <Route path='signup' element={<Outlet />} />{' '}
+                  {/* Handled by the parent AuthPage component */}
                   <Route path='reset' element={<ResetPage />} />
                   <Route path='verify' element={<VerifyPage />} />
                 </Route>
               </Route>
             </Route>
 
-            <Route path="/*" element={<NotFound />} />
+            <Route path='/*' element={<NotFound />} />
           </Routes>
         </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>
-  )
+  );
 }
 
-export default App
+export default App;

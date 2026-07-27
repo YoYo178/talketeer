@@ -39,9 +39,7 @@
     // Path aliases
     "paths": {
       "@src/*": ["./src/*"]
-    },
+    }
   },
-  "include": [
-    "src/**/*.ts"
-  ]
+  "include": ["src/**/*.ts"]
 }

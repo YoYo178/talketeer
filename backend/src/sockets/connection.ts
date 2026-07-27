@@ -8,18 +8,22 @@ import { registerFriendHandlers } from './handlers/friends/index.js';
 import { DMRoom } from '@src/models/room.model.js';
 
 async function joinDMRooms(socket: TalketeerSocket) {
-  const rooms = await DMRoom.find({ members: socket.data.user.id }).select('_id isActive').lean().exec() || [];
+  const rooms =
+    (await DMRoom.find({ members: socket.data.user.id }).select('_id isActive').lean().exec()) ||
+    [];
   let connectedRooms = 0;
 
   if (rooms.length) {
-    rooms.forEach(room => {
+    rooms.forEach((room) => {
       if (room.isActive) {
         socket.join(room._id.toString());
         connectedRooms++;
       }
     });
 
-    logger.info(`User ${socket.data.user.id} connected to ${connectedRooms}/${rooms.length} DM rooms.`);
+    logger.info(
+      `User ${socket.data.user.id} connected to ${connectedRooms}/${rooms.length} DM rooms.`,
+    );
   }
 }
 

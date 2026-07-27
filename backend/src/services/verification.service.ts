@@ -4,7 +4,7 @@ import { Verification } from '@src/models/verification.model.js';
 import type { IVerification } from '@src/types/verification.types.js';
 
 export async function getVerificationObject(userId: string) {
-  const obj = await Verification.findOne({ userId }).lean().exec()
+  const obj = await Verification.findOne({ userId }).lean().exec();
   return obj;
 }
 

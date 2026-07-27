@@ -13,12 +13,15 @@ const notificationTypes = [
   'unknown',
 ];
 
-const notificationSchema = new mongoose.Schema<INotification>({
-  content: { type: String, required: true },
-  type: { type: String, required: true, enum: notificationTypes, default: 'unknown' },
+const notificationSchema = new mongoose.Schema<INotification>(
+  {
+    content: { type: String, required: true },
+    type: { type: String, required: true, enum: notificationTypes, default: 'unknown' },
 
-  // TTL target field
-  createdAt: { type: Date, expires: '7d', default: Date.now },
-}, { timestamps: true });
+    // TTL target field
+    createdAt: { type: Date, expires: '7d', default: Date.now },
+  },
+  { timestamps: true },
+);
 
 export const Notification = mongoose.model<INotification>('Notification', notificationSchema);

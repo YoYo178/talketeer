@@ -3,7 +3,12 @@ import { Router } from 'express';
 import { validate } from '@src/middlewares/validation.middleware.js';
 import { messagesQuerySchema, messageIdParamsSchema } from '@src/schemas/messages.schema.js';
 
-import { getMessages, getMessageById, getDmMessages, getDmMessageById } from '@src/controllers/messages.controller.js';
+import {
+  getMessages,
+  getMessageById,
+  getDmMessages,
+  getDmMessageById,
+} from '@src/controllers/messages.controller.js';
 
 const MessagesRouter = Router();
 

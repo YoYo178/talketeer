@@ -32,32 +32,13 @@ const limit = (options?: Partial<Options>) =>
 const AuthRouter = Router();
 
 // Login/Signup routes
-AuthRouter.post(
-  '/login',
-  limit({ limit: 5 }),
-  validate({ body: loginSchema }),
-  login,
-);
-AuthRouter.post(
-  '/check-email',
-  limit({ limit: 10 }),
-  validate({ body: emailSchema }),
-  checkEmail,
-);
+AuthRouter.post('/login', limit({ limit: 5 }), validate({ body: loginSchema }), login);
+AuthRouter.post('/check-email', limit({ limit: 10 }), validate({ body: emailSchema }), checkEmail);
 AuthRouter.post('/logout', requireAuth, logout);
-AuthRouter.post(
-  '/signup',
-  limit({ limit: 15 }),
-  validate({ body: signupSchema }),
-  signup,
-);
+AuthRouter.post('/signup', limit({ limit: 15 }), validate({ body: signupSchema }), signup);
 
 // Email verification
-AuthRouter.post(
-  '/verify-email',
-  validate({ body: emailVerificationBodySchema }),
-  verifyEmail,
-);
+AuthRouter.post('/verify-email', validate({ body: emailVerificationBodySchema }), verifyEmail);
 AuthRouter.post(
   '/resend-verification',
   limit({ limit: 7 }),

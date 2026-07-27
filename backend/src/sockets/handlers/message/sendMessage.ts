@@ -1,10 +1,17 @@
 import { DMRoom, Room } from '@src/models/room.model.js';
 import { Message } from '@src/models/message.model.js';
-import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import { sendMessageSchema } from '@src/schemas/messages.schema.js';
 import logger from '@src/utils/logger.utils.js';
 
-export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendMessage'] => {
+export const getSendMessageEventCallback = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['sendMessage'] => {
   return async (isDM, roomId, messageContent, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to send message');
@@ -18,8 +25,7 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
       const room = isDM ? await DMRoom.findById(roomId) : await Room.findById(roomId);
 
       // @ts-expect-error because typescript being typescript
-      if (isDM && !room.isActive)
-        throw new Error('This person is not on your friend list.');
+      if (isDM && !room.isActive) throw new Error('This person is not on your friend list.');
 
       const message = await Message.create({
         content: messageContent,
@@ -34,10 +40,8 @@ export const getSendMessageEventCallback = (io: TalketeerSocketServer, socket: T
       });
 
       // Broadcast message to everyone in the room (including sender for confirmation)
-      if (isDM)
-        io.to(roomId).emit('newDmMessage', roomId, socket.data.user.id, message.toObject());
-      else
-        io.to(roomId).emit('newMessage', roomId, socket.data.user.id, message.toObject());
+      if (isDM) io.to(roomId).emit('newDmMessage', roomId, socket.data.user.id, message.toObject());
+      else io.to(roomId).emit('newMessage', roomId, socket.data.user.id, message.toObject());
 
       ack({ success: true });
     } catch (err) {

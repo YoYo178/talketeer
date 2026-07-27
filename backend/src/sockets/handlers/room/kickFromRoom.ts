@@ -1,10 +1,17 @@
 import { kickFromRoomSchema } from '@src/schemas/rooms.schema.js';
 import { getRoom, isUserInRoom, leaveRoom } from '@src/services/room.service.js';
 import { getUser } from '@src/services/user.service.js';
-import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import logger from '@src/utils/logger.utils.js';
 
-export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['kickFromRoom'] => {
+export const getKickFromRoomEventCallback = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['kickFromRoom'] => {
   return async (roomId, userId, kickedBy, reason) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to kick a member from a room');
@@ -16,21 +23,18 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
 
       const room = await getRoom(roomId);
 
-      if (!room)
-        throw new Error('Room not found');
+      if (!room) throw new Error('Room not found');
 
       const admin = await getUser(kickedBy);
 
-      if (!admin)
-        throw new Error('The person trying to kick the user cannot be found.');
+      if (!admin) throw new Error('The person trying to kick the user cannot be found.');
 
       if (admin._id.toString() !== room.owner?.toString())
         throw new Error('You are not the owner of this room');
 
       const user = await getUser(userId);
 
-      if (!user)
-        throw new Error('The person you are trying to kick cannot be found');
+      if (!user) throw new Error('The person you are trying to kick cannot be found');
 
       const isMember = await isUserInRoom(roomId, user._id.toString());
 
@@ -42,11 +46,14 @@ export const getKickFromRoomEventCallback = (io: TalketeerSocketServer, socket: 
       const targetSocket = (await io.in(user._id.toString()).fetchSockets())[0];
       targetSocket?.leave?.(roomId);
 
-      logger.info(`${admin._id.toString()} kicked ${user._id.toString()} from ${room._id.toString()}`, {
-        roomId,
-        kickedBy,
-        userId,
-      });
+      logger.info(
+        `${admin._id.toString()} kicked ${user._id.toString()} from ${room._id.toString()}`,
+        {
+          roomId,
+          kickedBy,
+          userId,
+        },
+      );
 
       io.emit('memberKicked', roomId, user._id.toString(), admin._id.toString(), reason);
 

@@ -1,11 +1,6 @@
 import { DEFAULT_ROOM_CODE_LENGTH } from '@src/config/rooms.config.js';
 import { createRoomSchema } from '@src/schemas/rooms.schema.js';
-import {
-  createRoom,
-  isUserInRoom,
-  joinRoom,
-  leaveRoom,
-} from '@src/services/room.service.js';
+import { createRoom, isUserInRoom, joinRoom, leaveRoom } from '@src/services/room.service.js';
 import { getUser } from '@src/services/user.service.js';
 import type {
   ClientToServerEvents,
@@ -43,13 +38,10 @@ export const getCreateRoomEventCallback = (
 
           // Leave the specified room for the client
           socket.leave(roomId);
-          logger.info(
-            `${socket.data.user.id} left room ${roomId} to create new room`,
-            {
-              userId: socket.data.user.id,
-              oldRoomId: roomId,
-            },
-          );
+          logger.info(`${socket.data.user.id} left room ${roomId} to create new room`, {
+            userId: socket.data.user.id,
+            oldRoomId: roomId,
+          });
 
           // Broadcast the member leave event to everyone in this room
           socket.to(roomId).emit('memberLeft', roomId, userId);

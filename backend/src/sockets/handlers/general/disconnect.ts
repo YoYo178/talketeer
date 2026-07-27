@@ -21,7 +21,6 @@ export const getDisconnectEventCallback = (io: TalketeerSocketServer, socket: Ta
 
     const user = await getUser(userId);
     if (user?.room) {
-
       await leaveRoom(userId, user.room.toString());
 
       // Broadcast room update to all other users

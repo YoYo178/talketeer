@@ -1,6 +1,6 @@
-import { Copy, X } from 'lucide-react'
-import { Button } from '../ui/button'
-import { ChatButton } from './rich-text/utility/ChatButton'
+import { Copy, X } from 'lucide-react';
+import { Button } from '../ui/button';
+import { ChatButton } from './rich-text/utility/ChatButton';
 import { useState } from 'react';
 import { socket } from '@/socket';
 import { stopListeningRoomEvents } from '@/sockets/room.sockets';
@@ -17,95 +17,99 @@ import { useGetUser } from '@/hooks/network/users/useGetUserQuery';
 import { useDMRooms } from '@/hooks/network/rooms/useGetDmRoomsQuery';
 
 export const ChatHeader = () => {
-    const { dmRoomId, setDmRoomId } = useRoomsStore();
-    const queryClient = useQueryClient();
+  const { dmRoomId, setDmRoomId } = useRoomsStore();
+  const queryClient = useQueryClient();
 
-    const [isLeaving, setIsLeaving] = useState(false);
-    const [didCopyCode, setDidCopyCode] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [didCopyCode, setDidCopyCode] = useState(false);
 
-    const roomsStore = useRoomsStore();
-    const { joinedRoomId, setJoinedRoomId } = roomsStore as typeof roomsStore & { joinedRoomId: string };
+  const roomsStore = useRoomsStore();
+  const { joinedRoomId, setJoinedRoomId } = roomsStore as typeof roomsStore & {
+    joinedRoomId: string;
+  };
 
-    const me = useMe();
-    const room = useRoom<{ room: IRoom }>(joinedRoomId);
+  const me = useMe();
+  const room = useRoom<{ room: IRoom }>(joinedRoomId);
 
-    const dmRoom = useDMRooms().find(room => room._id === dmRoomId);
+  const dmRoom = useDMRooms().find((room) => room._id === dmRoomId);
 
-    const friend = useGetUser(dmRoom?.members?.find(userId => userId !== me?._id) || '') ?? null;
+  const friend = useGetUser(dmRoom?.members?.find((userId) => userId !== me?._id) || '') ?? null;
 
-    if ((!room && !dmRoom) || !me)
-        return;
+  if ((!room && !dmRoom) || !me) return;
 
-    const isRoomOwner = !dmRoomId ? room?.owner === me._id : false;
+  const isRoomOwner = !dmRoomId ? room?.owner === me._id : false;
 
-    const handleRoomLeave = () => {
-        if (dmRoomId) {
-            setDmRoomId(null);
-            return;
-        }
-
-        if (!room || isLeaving)
-            return;
-
-        setIsLeaving(true);
-        socket.emit('leaveRoom', room._id, ({ success }) => {
-            if (success) {
-                queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
-                stopListeningRoomEvents(socket);
-                setJoinedRoomId(null);
-            }
-            setIsLeaving(false);
-        });
+  const handleRoomLeave = () => {
+    if (dmRoomId) {
+      setDmRoomId(null);
+      return;
     }
 
-    const handleCopyRoomCode = async () => {
-        if (didCopyCode || !room) return;
+    if (!room || isLeaving) return;
 
-        try {
-            await navigator.clipboard.writeText(room.code);
-            toast('Copied room code!', { toasterId: 'room-code-copied-toast' });
-            setDidCopyCode(true);
-            setTimeout(() => setDidCopyCode(false), 2000);
-        } catch (err) {
-            console.error("Clipboard write failed:", err);
-            toast('Failed to copy code. Please try again.', { toasterId: 'room-code-error-toast' });
-        }
-    };
+    setIsLeaving(true);
+    socket.emit('leaveRoom', room._id, ({ success }) => {
+      if (success) {
+        queryClient.invalidateQueries({ queryKey: ['rooms', room._id] });
+        stopListeningRoomEvents(socket);
+        setJoinedRoomId(null);
+      }
+      setIsLeaving(false);
+    });
+  };
 
-    return (
-        <div className='flex items-center p-4 justify-between'>
-            <div className='flex gap-2 items-center'>
-                <p className='text-sm md:text-base lg:text-lg font-semibold'>{dmRoomId ? `@${friend?.username}` : room!.name}</p>
-                {!dmRoomId && (
-                    <div className='flex'>
-                        {/* Copy room code button */}
-                        {(room!.visibility === 'public' || isRoomOwner) && (
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <ChatButton onClick={handleCopyRoomCode}>
-                                        <Copy className='size-4' />
-                                    </ChatButton>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Copy room code</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        )}
+  const handleCopyRoomCode = async () => {
+    if (didCopyCode || !room) return;
 
-                        {!dmRoomId && isRoomOwner && (
-                            <>
-                                <EditRoomDialog />
-                                <DeleteRoomDialog />
-                            </>
-                        )}
-                    </div>
-                )}
-            </div>
+    try {
+      await navigator.clipboard.writeText(room.code);
+      toast('Copied room code!', { toasterId: 'room-code-copied-toast' });
+      setDidCopyCode(true);
+      setTimeout(() => setDidCopyCode(false), 2000);
+    } catch (err) {
+      console.error('Clipboard write failed:', err);
+      toast('Failed to copy code. Please try again.', { toasterId: 'room-code-error-toast' });
+    }
+  };
 
-            <Button onClick={handleRoomLeave} >
-                <X className='size-4' />
-                <span className='text-xs sm:text-sm md:text-base font-bold'>{dmRoomId ? 'Close DM' : 'Leave room'}</span>
-            </Button>
-        </div>
-    )
-}
+  return (
+    <div className='flex items-center p-4 justify-between'>
+      <div className='flex gap-2 items-center'>
+        <p className='text-sm md:text-base lg:text-lg font-semibold'>
+          {dmRoomId ? `@${friend?.username}` : room!.name}
+        </p>
+        {!dmRoomId && (
+          <div className='flex'>
+            {/* Copy room code button */}
+            {(room!.visibility === 'public' || isRoomOwner) && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <ChatButton onClick={handleCopyRoomCode}>
+                    <Copy className='size-4' />
+                  </ChatButton>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Copy room code</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+
+            {!dmRoomId && isRoomOwner && (
+              <>
+                <EditRoomDialog />
+                <DeleteRoomDialog />
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      <Button onClick={handleRoomLeave}>
+        <X className='size-4' />
+        <span className='text-xs sm:text-sm md:text-base font-bold'>
+          {dmRoomId ? 'Close DM' : 'Leave room'}
+        </span>
+      </Button>
+    </div>
+  );
+};

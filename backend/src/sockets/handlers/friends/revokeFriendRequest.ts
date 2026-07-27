@@ -1,29 +1,35 @@
 import { saveNotification } from '@src/services/notification.service.js';
 import { getUser, removeFriendObject } from '@src/services/user.service.js';
-import type { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  AckFunc,
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
-export const getRevokeFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['revokeFriendRequest'] => {
+export const getRevokeFriendRequestCallback = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['revokeFriendRequest'] => {
   return async (userId: string, ack: AckFunc) => {
     // Since we're the one 'revoking' the friend request, we're also the sender
     const senderId = socket.data.user.id;
     const receiverId = userId;
 
     try {
-
-      if (!mongoose.isValidObjectId(userId))
-        throw new Error('Invalid user ID');
+      if (!mongoose.isValidObjectId(userId)) throw new Error('Invalid user ID');
 
       const sender = (await getUser(senderId))!; // Non-null assertion because if we sent this event then we exist (probably...)
-      const existingFriendObj = sender.friends.find(friendObj => friendObj.userId.toString() === receiverId);
+      const existingFriendObj = sender.friends.find(
+        (friendObj) => friendObj.userId.toString() === receiverId,
+      );
 
       const receiver = await getUser(receiverId);
-      if (!receiver)
-        throw new Error('Invalid User ID');
+      if (!receiver) throw new Error('Invalid User ID');
 
-      if (!existingFriendObj)
-        throw new Error('No such friend request found');
+      if (!existingFriendObj) throw new Error('No such friend request found');
 
       // Make sure the sender doesn't accept it themselves somehow, lol
       if (existingFriendObj.direction === 'incoming')
@@ -37,13 +43,10 @@ export const getRevokeFriendRequestCallback = (io: TalketeerSocketServer, socket
       await removeFriendObject(senderId, receiverId);
 
       // Save notification
-      const notificationObj = await saveNotification(
-        receiverId,
-        {
-          content: `${sender.username} has revoked their friend request.`,
-          type: 'friend-delete',
-        },
-      ); // TODO: type: 'friend-revoked'?
+      const notificationObj = await saveNotification(receiverId, {
+        content: `${sender.username} has revoked their friend request.`,
+        type: 'friend-delete',
+      }); // TODO: type: 'friend-revoked'?
 
       // Push notification to the sender
       io.to(receiverId).emit('notification', notificationObj);

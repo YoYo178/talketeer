@@ -1,8 +1,11 @@
-import { useMutationBase } from "../useMutationBase";
-import { APIEndpoints } from "../../../config/api.config";
+import { useMutationBase } from '../useMutationBase';
+import { APIEndpoints } from '../../../config/api.config';
 
 export interface TCheckEmailBody {
-    email: string;
+  email: string;
 }
 
-export const useCheckEmailMutation = useMutationBase<TCheckEmailBody>(APIEndpoints.CHECK_EMAIL, "Checking if email exists");
+export const useCheckEmailMutation = useMutationBase<TCheckEmailBody>(
+  APIEndpoints.CHECK_EMAIL,
+  'Checking if email exists',
+);

@@ -1,10 +1,6 @@
 import { banFromRoomSchema } from '@src/schemas/rooms.schema.js';
 import { banUser, isUserBanned } from '@src/services/ban.service.js';
-import {
-  getRoom,
-  isUserInRoom,
-  leaveRoom,
-} from '@src/services/room.service.js';
+import { getRoom, isUserInRoom, leaveRoom } from '@src/services/room.service.js';
 import { getUser } from '@src/services/user.service.js';
 import type {
   ClientToServerEvents,
@@ -34,28 +30,21 @@ export const getBanFromRoomEventCallback = (
 
       const admin = await getUser(bannedBy);
 
-      if (!admin)
-        throw new Error('The person trying to ban the user cannot be found');
+      if (!admin) throw new Error('The person trying to ban the user cannot be found');
 
-      if (bannedBy !== room.owner?.toString())
-        throw new Error('You are not the admin of the room');
+      if (bannedBy !== room.owner?.toString()) throw new Error('You are not the admin of the room');
 
       const user = await getUser(userId);
 
-      if (!user)
-        throw new Error('The user you are trying to ban cannot be found');
+      if (!user) throw new Error('The user you are trying to ban cannot be found');
 
       const isMember = await isUserInRoom(roomId, userId);
 
-      if (!isMember)
-        throw new Error(
-          'The user you are trying to ban is not a member of this room',
-        );
+      if (!isMember) throw new Error('The user you are trying to ban is not a member of this room');
 
       const alreadyBanned = await isUserBanned(userId, roomId);
 
-      if (alreadyBanned)
-        throw new Error('The user you are trying to ban is already banned');
+      if (alreadyBanned) throw new Error('The user you are trying to ban is already banned');
 
       // See ban.model.ts
       // Even if we accidentally set up both isPermanent as true, and expiresAt to a value
@@ -69,10 +58,7 @@ export const getBanFromRoomEventCallback = (
         expiresAt: new Date(Date.now() + duration),
       });
 
-      if (!ban)
-        throw new Error(
-          'An error occured in the server while banning the user.',
-        );
+      if (!ban) throw new Error('An error occured in the server while banning the user.');
 
       await leaveRoom(userId, roomId);
 

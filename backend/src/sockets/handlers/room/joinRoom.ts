@@ -1,11 +1,18 @@
 import { getRoom, getRoomByCode, joinRoom } from '@src/services/room.service.js';
 import type { IRoom } from '@src/types/room.types.js';
-import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import { joinRoomSchema } from '@src/schemas/rooms.schema.js';
 import logger from '@src/utils/logger.utils.js';
 import { getBan, isUserBanned } from '@src/services/ban.service.js';
 
-export const getJoinRoomEventCallback = (_: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['joinRoom'] => {
+export const getJoinRoomEventCallback = (
+  _: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['joinRoom'] => {
   return async ({ method, data }, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to join room');
@@ -23,28 +30,25 @@ export const getJoinRoomEventCallback = (_: TalketeerSocketServer, socket: Talke
       let roomByCode: IRoom | null = null;
 
       switch (method) {
-      case 'id':
-        roomById = await getRoom(data);
-        if (!roomById)
-          throw new Error('Room not found');
-        roomId = data;
-        break;
+        case 'id':
+          roomById = await getRoom(data);
+          if (!roomById) throw new Error('Room not found');
+          roomId = data;
+          break;
 
-      case 'code':
-        roomByCode = await getRoomByCode(data);
-        if (!roomByCode)
-          throw new Error('Room not found');
-        roomId = roomByCode._id.toString();
-        break;
+        case 'code':
+          roomByCode = await getRoomByCode(data);
+          if (!roomByCode) throw new Error('Room not found');
+          roomId = roomByCode._id.toString();
+          break;
 
-      default:
-        throw new Error('Unknown join method');
+        default:
+          throw new Error('Unknown join method');
       }
 
       const room = await getRoom(roomId);
 
-      if (!room)
-        throw new Error('Room ID not found');
+      if (!room) throw new Error('Room ID not found');
 
       const isBanned = await isUserBanned(userId, roomId);
 
@@ -53,8 +57,7 @@ export const getJoinRoomEventCallback = (_: TalketeerSocketServer, socket: Talke
         const ban = await getBan(userId, roomId);
 
         // Not possible unless something went REALLY BAD
-        if (!ban)
-          return;
+        if (!ban) return;
 
         ack({
           success: false,
@@ -66,7 +69,10 @@ export const getJoinRoomEventCallback = (_: TalketeerSocketServer, socket: Talke
               isPermanent: ban.isPermanent,
             },
           },
-          error: 'You have been' + (ban.isPermanent ? ' permanently' : '') + ' banned from joining this room.',
+          error:
+            'You have been' +
+            (ban.isPermanent ? ' permanently' : '') +
+            ' banned from joining this room.',
         });
         return;
       }

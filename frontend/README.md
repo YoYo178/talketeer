@@ -1,4 +1,5 @@
 # 🗨️ Talketeer Frontend
+
 - Click [here](https://github.com/YoYo178/talketeer) to visit application's main repository.
 
 ## 🧩 Tech Stack
@@ -14,19 +15,21 @@
 
 ## 🚀 Scripts
 
-| Command | Description |
-|----------|-------------|
-| `pnpm run dev` | Start the development server |
-| `pnpm run build` | Build the production bundle |
+| Command            | Description                   |
+| ------------------ | ----------------------------- |
+| `pnpm run dev`     | Start the development server  |
+| `pnpm run build`   | Build the production bundle   |
 | `pnpm run preview` | Preview the built app locally |
-| `pnpm run lint` | Run ESLint checks |
-
+| `pnpm run lint`    | Run ESLint checks             |
 
 ## ⚙️ Environment Variables
+
 Rename `.env.example` to `.env` or `.env.<environment>` and add values accordingly.
-  - Note: The server URLs are modified before usage, see `api.config.ts`.
+
+- Note: The server URLs are modified before usage, see `api.config.ts`.
 
 ## 📁 Project Structure
+
 ```bash
 /
 ├── src/
@@ -66,4 +69,5 @@ Rename `.env.example` to `.env` or `.env.<environment>` and add values according
 - 🌐 Activity messages in chat (System announcements, user joined, user left, etc)
 
 ## 🧑‍💻 Author
+
 [-\_YoYo178\_-](https://github.com/YoYo178)

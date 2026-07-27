@@ -1,6 +1,14 @@
 import ENV from '@src/common/env.js';
-import { DEFAULT_ACCESS_TOKEN_EXPIRY, DEFAULT_REFRESH_TOKEN_EXPIRY, tokenConfig } from '@src/config/jwt.config.js';
-import type { TAccessTokenPayload, TDecodedToken, TRefreshTokenPayload } from '@src/types/jwt.types.js';
+import {
+  DEFAULT_ACCESS_TOKEN_EXPIRY,
+  DEFAULT_REFRESH_TOKEN_EXPIRY,
+  tokenConfig,
+} from '@src/config/jwt.config.js';
+import type {
+  TAccessTokenPayload,
+  TDecodedToken,
+  TRefreshTokenPayload,
+} from '@src/types/jwt.types.js';
 import jwt from 'jsonwebtoken';
 import logger from './logger.utils.js';
 
@@ -24,7 +32,9 @@ export function generateRefreshToken(data: TRefreshTokenPayload): string {
   return refreshToken;
 }
 
-export function verifyAccessToken(token: string | undefined): TDecodedToken<TAccessTokenPayload> & { isBlank: boolean } {
+export function verifyAccessToken(
+  token: string | undefined,
+): TDecodedToken<TAccessTokenPayload> & { isBlank: boolean } {
   if (!token?.length)
     return { valid: false, expired: false, isBlank: true, data: {} as TAccessTokenPayload };
 

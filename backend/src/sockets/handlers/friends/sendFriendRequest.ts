@@ -1,37 +1,42 @@
 import { saveNotification } from '@src/services/notification.service.js';
 import { getUser, sendUserFriendRequest } from '@src/services/user.service.js';
-import type { AckFunc, ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  AckFunc,
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
-export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['sendFriendRequest'] => {
+export const getSendFriendRequestCallback = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['sendFriendRequest'] => {
   return async (userId: string, ack: AckFunc) => {
     const senderId = socket.data.user.id;
     const receiverId = userId;
 
     try {
-
-      if (!mongoose.isValidObjectId(userId))
-        throw new Error('Invalid user ID');
-      if (receiverId === senderId)
-        throw new Error('You cannot send friend requests to yourself');
+      if (!mongoose.isValidObjectId(userId)) throw new Error('Invalid user ID');
+      if (receiverId === senderId) throw new Error('You cannot send friend requests to yourself');
 
       const sender = await getUser(senderId);
       const receiver = await getUser(receiverId);
 
-      if (!sender || !receiver)
-        throw new Error('Invalid user ID');
+      if (!sender || !receiver) throw new Error('Invalid user ID');
 
-      const existingFriendObj = receiver.friends.find(friendObj => friendObj.userId.toString() === senderId);
+      const existingFriendObj = receiver.friends.find(
+        (friendObj) => friendObj.userId.toString() === senderId,
+      );
 
       if (existingFriendObj?.status === 'confirmed')
         throw new Error('The user is already in your friend list');
 
       if (existingFriendObj?.direction === 'incoming')
-        throw new Error('The user\'s has already sent you a friend request.');
+        throw new Error("The user's has already sent you a friend request.");
 
-      if (existingFriendObj)
-        throw new Error('Your friend request is already pending');
+      if (existingFriendObj) throw new Error('Your friend request is already pending');
 
       logger.info(`${senderId} sent a friend request to ${receiverId}`, {
         senderId,
@@ -41,13 +46,10 @@ export const getSendFriendRequestCallback = (io: TalketeerSocketServer, socket: 
       await sendUserFriendRequest(senderId, receiverId);
 
       // Save notification
-      const notificationObj = await saveNotification(
-        receiverId,
-        {
-          content: `${sender.username} has sent you a friend request.`,
-          type: 'friend-request',
-        },
-      );
+      const notificationObj = await saveNotification(receiverId, {
+        content: `${sender.username} has sent you a friend request.`,
+        type: 'friend-request',
+      });
 
       // Push notification to the receiver
       io.to(receiverId).emit('notification', notificationObj);

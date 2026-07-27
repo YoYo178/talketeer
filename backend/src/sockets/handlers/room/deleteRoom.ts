@@ -1,11 +1,18 @@
 import { Message } from '@src/models/message.model.js';
 import { deleteRoom, leaveRoom, isUserRoomOwner, getRoom } from '@src/services/room.service.js';
 import { getUser } from '@src/services/user.service.js';
-import type { ClientToServerEvents, TalketeerSocket, TalketeerSocketServer } from '@src/types/socket.types.js';
+import type {
+  ClientToServerEvents,
+  TalketeerSocket,
+  TalketeerSocketServer,
+} from '@src/types/socket.types.js';
 import logger from '@src/utils/logger.utils.js';
 import mongoose from 'mongoose';
 
-export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: TalketeerSocket): ClientToServerEvents['deleteRoom'] => {
+export const getDeleteRoomEventCallback = (
+  io: TalketeerSocketServer,
+  socket: TalketeerSocket,
+): ClientToServerEvents['deleteRoom'] => {
   return async (roomId, ack) => {
     if (!socket.data?.user) {
       logger.warn('Unauthenticated user attempted to delete room');
@@ -13,24 +20,19 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
     }
 
     try {
-      if (!mongoose.isValidObjectId(roomId))
-        throw new Error('Invalid room ID');
+      if (!mongoose.isValidObjectId(roomId)) throw new Error('Invalid room ID');
 
       const room = await getRoom(roomId);
-      if (!room)
-        throw new Error('Room not found');
+      if (!room) throw new Error('Room not found');
 
-      if (room.isSystemGenerated)
-        throw new Error('System rooms cannot be deleted');
+      if (room.isSystemGenerated) throw new Error('System rooms cannot be deleted');
 
       const userId = socket.data.user.id;
       const user = await getUser(userId);
-      if (!user)
-        throw new Error('User not found');
+      if (!user) throw new Error('User not found');
 
       const isOwner = isUserRoomOwner(userId, roomId);
-      if (!isOwner)
-        throw new Error('You are not the owner of this room');
+      if (!isOwner) throw new Error('You are not the owner of this room');
 
       // Leave room for admin
       await leaveRoom(userId, roomId);
@@ -43,13 +45,16 @@ export const getDeleteRoomEventCallback = (io: TalketeerSocketServer, socket: Ta
       });
 
       const memberCount = io.sockets.adapter.rooms.get(roomId)?.size ?? 0;
-      logger.info(`${socket.data.user.id} initiated room deletion, disconnecting ${memberCount} client(s) from this room...`, {
-        userId: socket.data.user.id,
-        roomId,
-      });
+      logger.info(
+        `${socket.data.user.id} initiated room deletion, disconnecting ${memberCount} client(s) from this room...`,
+        {
+          userId: socket.data.user.id,
+          roomId,
+        },
+      );
 
       // Leave room for everyone else
-      await Promise.all(room.members.map(mem => leaveRoom(mem.user.toString(), roomId)));
+      await Promise.all(room.members.map((mem) => leaveRoom(mem.user.toString(), roomId)));
 
       // Emit event before kicking clients
       io.emit('roomDeleted', roomId, user._id.toString());

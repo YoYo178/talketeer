@@ -11,7 +11,7 @@ import { getRemoveFriendCallback } from './removeFriend.js';
 export function registerFriendHandlers(io: TalketeerSocketServer, socket: TalketeerSocket) {
   socket.on('acceptFriendRequest', getAcceptFriendRequestCallback(io, socket));
   socket.on('declineFriendRequest', getDeclineFriendRequestCallback(io, socket));
-    
+
   socket.on('sendFriendRequest', getSendFriendRequestCallback(io, socket));
   socket.on('revokeFriendRequest', getRevokeFriendRequestCallback(io, socket));
 

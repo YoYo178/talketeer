@@ -30,10 +30,7 @@ const fileFilter: multer.Options['fileFilter'] = (_, file, callback) => {
     callback(null, true);
   } else {
     callback(
-      new APIError(
-        'Only JPEG, PNG, and WEBP images are allowed!',
-        HTTP_STATUS_CODES.BadRequest,
-      ),
+      new APIError('Only JPEG, PNG, and WEBP images are allowed!', HTTP_STATUS_CODES.BadRequest),
     );
   }
 };
@@ -46,14 +43,8 @@ const upload = multer({ storage, fileFilter, limits });
 
 const FilesRouter = Router();
 
-FilesRouter.post(
-  '/avatar',
-  upload.single('avatar'),
-  (_: Request, res: Response) => {
-    res
-      .status(HTTP_STATUS_CODES.Ok)
-      .json({ success: true, message: 'Updated avatar successfully!' });
-  },
-);
+FilesRouter.post('/avatar', upload.single('avatar'), (_: Request, res: Response) => {
+  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Updated avatar successfully!' });
+});
 
 export default FilesRouter;

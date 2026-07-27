@@ -47,7 +47,6 @@ export const leaveRoomSchema = z.object({
 
 export type TLeaveRoomBody = z.infer<typeof leaveRoomSchema>;
 
-
 export const banFromRoomSchema = z.object({
   roomId: mongooseObjectId,
   userId: mongooseObjectId,

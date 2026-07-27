@@ -15,8 +15,7 @@ export async function banUser(banData: Omit<IBan, '_id' | 'createdAt'>) {
 
   const isBanned = await isUserBanned(userId, roomId);
 
-  if (isBanned)
-    return getBan(userId, roomId);
+  if (isBanned) return getBan(userId, roomId);
 
   const newBan = await Ban.create({ ...banData });
   return newBan.toObject();
@@ -25,16 +24,12 @@ export async function banUser(banData: Omit<IBan, '_id' | 'createdAt'>) {
 export async function unbanUser(userId: string, roomId: string) {
   const isBanned = await isUserBanned(userId, roomId);
 
-  if (!isBanned)
-    return;
+  if (!isBanned) return;
 
   await Ban.deleteOne({ userId, roomId });
 }
 
 export async function isUserBanned(userId: string, roomId: string): Promise<boolean> {
-  const ban = await Ban.findOne({ userId, roomId })
-    .select('_id')
-    .lean()
-    .exec();
+  const ban = await Ban.findOne({ userId, roomId }).select('_id').lean().exec();
   return !!ban;
 }

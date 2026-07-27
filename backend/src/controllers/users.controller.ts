@@ -7,8 +7,7 @@ import type { Request, Response } from 'express';
 export const getMe = async (req: Request, res: Response) => {
   const user = await User.findById(req.user.id).select('-passwordHash').lean().exec();
 
-  if (!user)
-    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
+  if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { user } });
 };
@@ -18,8 +17,7 @@ export const updateMe = async (req: Request, res: Response) => {
 
   const user = await User.findById(req.user.id).select('-passwordHash').exec();
 
-  if (!user)
-    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
+  if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   user.name = name ?? user.name;
   user.displayName = displayName ?? user.displayName;
@@ -29,13 +27,16 @@ export const updateMe = async (req: Request, res: Response) => {
 
   req.io.emit('userUpdated', req.user.id);
 
-  res.status(HTTP_STATUS_CODES.Ok).json({ success: true, message: 'Updated user successfully', data: { user } });
+  res
+    .status(HTTP_STATUS_CODES.Ok)
+    .json({ success: true, message: 'Updated user successfully', data: { user } });
 };
 
 export const getUser = async (req: Request, res: Response) => {
   const { userId } = req.params as TUserIdParams;
   const user = await User.findById(userId)
-    .select(`
+    .select(
+      `
             -passwordHash
             -name
             -email
@@ -45,12 +46,12 @@ export const getUser = async (req: Request, res: Response) => {
             -updatedAt
             -isVerified
             -verifiedAt
-        `)
+        `,
+    )
     .lean()
     .exec();
 
-  if (!user)
-    throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
+  if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { user } });
 };

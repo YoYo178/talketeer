@@ -16,15 +16,10 @@ const SmtpClient = SMTPClient.getInstance();
 export async function validateEmailMx(email: string) {
   const domain = email.split('@')[1] ?? '';
 
-  if (!domain)
-    throw new APIError(
-      'Something went wrong!',
-      HTTP_STATUS_CODES.InternalServerError,
-    );
+  if (!domain) throw new APIError('Something went wrong!', HTTP_STATUS_CODES.InternalServerError);
 
   const mxRecords = await dns.resolveMx(domain).catch(() => []);
-  if (!mxRecords.length)
-    throw new APIError('Invalid email address', HTTP_STATUS_CODES.BadRequest);
+  if (!mxRecords.length) throw new APIError('Invalid email address', HTTP_STATUS_CODES.BadRequest);
 }
 
 export function obfuscateEmail(email: string) {
@@ -51,10 +46,7 @@ export async function sendVerificationMail(
 
   return await SmtpClient.sendMail({
     to,
-    subject: verificationMailTemplate.subject.replace(
-      '{appName}',
-      ENV.APP_NAME,
-    ),
+    subject: verificationMailTemplate.subject.replace('{appName}', ENV.APP_NAME),
     html: verificationMailTemplate.body
       .replace('{appName}', ENV.APP_NAME)
       .replace('{link}', link)
@@ -71,12 +63,7 @@ export async function sendPasswordResetMail(
 
   return await SmtpClient.sendMail({
     to,
-    subject: passwordResetMailTemplate.subject.replace(
-      '{appName}',
-      ENV.APP_NAME,
-    ),
-    html: passwordResetMailTemplate.body
-      .replace('{appName}', ENV.APP_NAME)
-      .replace('{link}', link),
+    subject: passwordResetMailTemplate.subject.replace('{appName}', ENV.APP_NAME),
+    html: passwordResetMailTemplate.body.replace('{appName}', ENV.APP_NAME).replace('{link}', link),
   });
 }

@@ -29,9 +29,7 @@ export const getMessages = async (req: Request, res: Response) => {
     .exec();
 
   const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
-  const sliced = moreMessagesExist
-    ? messages.slice(0, MESSAGES_PER_PAGE)
-    : messages;
+  const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
 
   // Sort this specific batch in ascending order (oldest to newest) before returning
   sliced.reverse();
@@ -50,8 +48,7 @@ export const getMessageById = async (req: Request, res: Response) => {
 
   const message = await Message.findById(messageId);
 
-  if (!message)
-    throw new APIError('Message not found', HTTP_STATUS_CODES.NotFound);
+  if (!message) throw new APIError('Message not found', HTTP_STATUS_CODES.NotFound);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { message } });
 };
@@ -88,9 +85,7 @@ export const getDmMessages = async (req: Request, res: Response) => {
     .exec();
 
   const moreMessagesExist = messages.length > MESSAGES_PER_PAGE;
-  const sliced = moreMessagesExist
-    ? messages.slice(0, MESSAGES_PER_PAGE)
-    : messages;
+  const sliced = moreMessagesExist ? messages.slice(0, MESSAGES_PER_PAGE) : messages;
 
   // Sort this specific batch in ascending order (oldest to newest) before returning
   sliced.reverse();
@@ -113,15 +108,11 @@ export const getDmMessageById = async (req: Request, res: Response) => {
   if (!room) throw new APIError('Room not found', HTTP_STATUS_CODES.NotFound);
 
   if (!room.isActive)
-    throw new APIError(
-      'The person is not on your friend list.',
-      HTTP_STATUS_CODES.BadRequest,
-    );
+    throw new APIError('The person is not on your friend list.', HTTP_STATUS_CODES.BadRequest);
 
   const message = await Message.findById(messageId);
 
-  if (!message)
-    throw new APIError('Message not found', HTTP_STATUS_CODES.NotFound);
+  if (!message) throw new APIError('Message not found', HTTP_STATUS_CODES.NotFound);
 
   res.status(HTTP_STATUS_CODES.Ok).json({ success: true, data: { message } });
 };
