@@ -1,4 +1,5 @@
 import argon2 from 'argon2';
+import bcrypt from 'bcrypt';
 import type { Request, Response } from 'express';
 
 import HTTP_STATUS_CODES from '@src/common/HttpStatusCodes.js';
@@ -31,6 +32,7 @@ import {
   sendVerificationMail,
   validateEmailMx,
 } from '@src/utils/mail.utils.js';
+import { handleHashMigration } from '@src/utils/auth.utils.js';
 
 export const verifyEmail = async (req: Request, res: Response) => {
   const { userId, method, data } = req.body as TEmailVerificationBody;
@@ -157,7 +159,11 @@ export const login = async (req: Request, res: Response) => {
       HTTP_STATUS_CODES.Unauthorized,
     );
 
-  const passwordMatches = await argon2.verify(user.passwordHash, password);
+  const passwordMatches = user.hasLegacyHashing
+    ? await bcrypt.compare(password, user.passwordHash)
+    : await argon2.verify(user.passwordHash, password);
+
+  if (user.hasLegacyHashing) await handleHashMigration(user._id?.toString?.() ?? '', password);
 
   if (!passwordMatches) throw new APIError('Invalid password', HTTP_STATUS_CODES.BadRequest);
 

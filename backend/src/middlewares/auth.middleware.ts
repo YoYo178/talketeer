@@ -77,7 +77,7 @@ const verifyAuth = async (
 
   // Fetch the user via ID from database, and exclude password because we ain't need any of that
   const user = await User.findById(decodedRefreshToken.data.user.id)
-    .select('-passwordHash')
+    .select('-passwordHash -hasLegacyHashing')
     .lean()
     .exec();
 

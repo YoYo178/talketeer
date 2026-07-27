@@ -5,7 +5,7 @@ import { APIError } from '@src/utils/api.utils.js';
 import type { Request, Response } from 'express';
 
 export const getMe = async (req: Request, res: Response) => {
-  const user = await User.findById(req.user.id).select('-passwordHash').lean().exec();
+  const user = await User.findById(req.user.id).select('-passwordHash -hasLegacyHashing').lean().exec();
 
   if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
@@ -15,7 +15,7 @@ export const getMe = async (req: Request, res: Response) => {
 export const updateMe = async (req: Request, res: Response) => {
   const { bio, displayName, name } = req.body as TUpdateMeBody;
 
-  const user = await User.findById(req.user.id).select('-passwordHash').exec();
+  const user = await User.findById(req.user.id).select('-passwordHash -hasLegacyHashing').exec();
 
   if (!user) throw new APIError('User not found', HTTP_STATUS_CODES.NotFound);
 
@@ -38,6 +38,7 @@ export const getUser = async (req: Request, res: Response) => {
     .select(
       `
             -passwordHash
+            -hasLegacyHashing
             -name
             -email
             -friends

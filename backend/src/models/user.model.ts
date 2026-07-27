@@ -30,6 +30,8 @@ const userSchema = new mongoose.Schema<IUser>(
 
     room: { type: mongoose.Schema.Types.ObjectId, ref: 'Room', default: null },
 
+    hasLegacyHashing: { type: Boolean, default: false },
+
     isVerified: { type: Boolean, default: false },
     verifiedAt: { type: Date, default: Date.now },
   },

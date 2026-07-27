@@ -50,6 +50,9 @@ export interface IUser {
   /** The date when the user was verified */
   verifiedAt: Date;
 
+  /** Whether the user has legacy hashing or not */
+  hasLegacyHashing: boolean;
+
   createdAt: number;
   updatedAt: number;
 }

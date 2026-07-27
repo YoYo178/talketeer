@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 const sensitiveUserFields = [
   'passwordHash',
+  'hasLegacyHashing',
   'name',
   'email',
   'friends',
@@ -18,21 +19,21 @@ const publicUserFilterString = sensitiveUserFields.map((key) => `-${key}`).join(
 
 export async function getAllUsers(filter = {}, publicUser?: boolean): Promise<IUser[]> {
   return User.find(filter)
-    .select(publicUser ? publicUserFilterString : '-passwordHash')
+    .select(publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing')
     .lean()
     .exec();
 }
 
 export async function getUser(userId: string, publicUser?: boolean): Promise<IUser | null> {
   return User.findById(userId)
-    .select(publicUser ? publicUserFilterString : '-passwordHash')
+    .select(publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing')
     .lean()
     .exec();
 }
 
 export async function getUserByEmail(email: string, publicUser?: boolean): Promise<IUser | null> {
   return User.findOne({ email })
-    .select(publicUser ? publicUserFilterString : '-passwordHash')
+    .select(publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing')
     .lean()
     .exec();
 }
@@ -50,7 +51,7 @@ export async function updateUser(
   return User.findByIdAndUpdate(
     userId,
     { $set: newUserData },
-    { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash' },
+    { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing' },
   ).exec();
 }
 
@@ -62,7 +63,7 @@ export async function updateUserRoom(userId: string, roomId: string | null, publ
   return User.findByIdAndUpdate(
     userId,
     { $set: { room: roomId } },
-    { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash' },
+    { new: true, lean: true, select: publicUser ? publicUserFilterString : '-passwordHash -hasLegacyHashing' },
   ).exec();
 }
 
