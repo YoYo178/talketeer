@@ -16,7 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useUpdateAvatarMutation } from '@/hooks/network/files/useUpdateAvatarMutation';
 import { useMe } from '@/hooks/network/users/useGetMeQuery';
 import { useUpdateMeMutation } from '@/hooks/network/users/useUpdateMeMutation';
-import type { ReactSetState } from '@/types/react.types';
+import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 import { getAvatarUrl } from '@/utils/avatar.utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -25,7 +25,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import z from 'zod';
 import { AvatarCropper } from './AvatarCropper';
-import { useGlobalStore } from '@/hooks/state/useGlobalStore';
 
 const profileFormSchema = z.object({
   firstName: z.string().nonempty('First name is required'),
