@@ -39,7 +39,7 @@ export const ChatHeader = () => {
     const isRoomOwner = !dmRoomId ? room?.owner === me._id : false;
 
     const handleRoomLeave = () => {
-        if (!!dmRoomId) {
+        if (dmRoomId) {
             setDmRoomId(null);
             return;
         }
@@ -104,7 +104,7 @@ export const ChatHeader = () => {
 
             <Button onClick={handleRoomLeave} >
                 <X className='size-4' />
-                <span className='text-xs sm:text-sm md:text-base font-bold'>{!!dmRoomId ? 'Close DM' : 'Leave room'}</span>
+                <span className='text-xs sm:text-sm md:text-base font-bold'>{dmRoomId ? 'Close DM' : 'Leave room'}</span>
             </Button>
         </div>
     )

@@ -8,7 +8,6 @@ export default defineConfig({
   },
 
   rules: {
-    'eslint/no-console': 'warn',
     'eslint/no-unused-vars': 'warn',
     'eslint/prefer-const': 'warn',
   },

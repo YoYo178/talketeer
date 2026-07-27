@@ -22,10 +22,10 @@ export const useInfiniteQueryBase = <ResponseType = undefined>(
     return ({ queryKey, pathParams, queryParams, enabled = true }: InfiniteQueryBaseParams) => {
         let URL = endpoint.URL;
 
-        if (!!pathParams)
+        if (pathParams)
             URL = injectPathParams(URL, pathParams);
 
-        if (!!queryParams)
+        if (queryParams)
             URL = injectQueryParams(URL, queryParams);
 
         return useInfiniteQuery({

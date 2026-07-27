@@ -44,7 +44,7 @@ export const MessageText: FC<MessageTextProps> = ({ content, isSelfMessage }) =>
                 {parts.map((part, j) => {
                     const protocolObj = supportedProtocols.find(p => part.startsWith(`${p.protocol}://`));
 
-                    if (!!protocolObj) {
+                    if (protocolObj) {
                         return (
                             <a
                                 key={`part-${i}-${j}`}

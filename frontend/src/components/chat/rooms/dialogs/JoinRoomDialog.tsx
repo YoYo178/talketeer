@@ -21,7 +21,7 @@ export const JoinRoomDialog = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        if (!!joinedRoomId) {
+        if (joinedRoomId) {
             socket.emit('leaveRoom', joinedRoomId, ({ success, error }) => {
                 if (success) {
                     stopListeningRoomEvents(socket);

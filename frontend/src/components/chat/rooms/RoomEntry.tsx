@@ -41,7 +41,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
     }
 
     const handleRoomJoin = async () => {
-        if (!!dmRoomId)
+        if (dmRoomId)
             setDmRoomId(null);
 
         if (!selectedRoom || selectedRoomId === joinedRoomId || isJoining || !me)
@@ -52,7 +52,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
 
         setIsJoining(true);
 
-        if (!!joinedRoomId) {
+        if (joinedRoomId) {
             // First leave the current room
             socket.emit('leaveRoom', joinedRoomId, ({ success }) => {
                 if (success) {
@@ -73,7 +73,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
                                 setJoinedRoomId(room._id);
                                 setSelectedRoomId(null);
                             } else {
-                                if (!!data?.ban)
+                                if (data?.ban)
                                     setDialogData({
                                         type: 'ban',
                                         ...data.ban
@@ -95,7 +95,7 @@ export const RoomEntry: FC<RoomEntryProps> = ({ room: localRoom }) => {
                     setJoinedRoomId(room._id);
                     setSelectedRoomId(null);
                 } else {
-                    if (!!data?.ban)
+                    if (data?.ban)
                         setDialogData({
                             type: 'ban',
                             ...data.ban

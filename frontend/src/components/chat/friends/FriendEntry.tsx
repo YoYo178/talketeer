@@ -43,7 +43,7 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
     const handleAcceptFriendRequest = () => socket.emit('acceptFriendRequest', user._id, ({ success }) => {
         successCallback({ success });
 
-        if (!!dmRoomId)
+        if (dmRoomId)
             queryClient.invalidateQueries({ queryKey: ['dm-rooms', dmRoomId] });
     })
 
@@ -53,7 +53,7 @@ export const FriendEntry: FC<FriendEntryProps> = ({ friendObject }) => {
     const handleRemoveFriend = () => socket.emit('removeFriend', user._id, ({ success }) => {
         successCallback({ success });
 
-        if (!!dmRoomId)
+        if (dmRoomId)
             queryClient.invalidateQueries({ queryKey: ['dm-rooms', dmRoomId] });
     });
 

@@ -8,7 +8,7 @@ function getInitialIsDark(): boolean {
 
     const stored = window.localStorage.getItem(THEME_STORAGE_KEY);
 
-    if (!!stored)
+    if (stored)
         return stored === 'dark';
 
     return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;

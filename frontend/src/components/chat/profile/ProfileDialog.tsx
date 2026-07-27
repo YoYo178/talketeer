@@ -69,8 +69,8 @@ export const ProfileDialog = () => {
                 await updateAvatarMutation.mutateAsync({ payload: formData })
 
                 queryClient.invalidateQueries({ queryKey: ['users', 'me'] })
-            } catch (error) {
-                setErrors({ general: 'Something went wrong. Please try again.' })
+            } catch (error: any) {
+                setErrors({ general: error?.message ?? 'Something went wrong. Please try again.' })
             }
         }
 

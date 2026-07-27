@@ -51,7 +51,7 @@ export const ChatWindow = () => {
 
         setIsJoining(true);
 
-        if (!!joinedRoomId) {
+        if (joinedRoomId) {
             // First leave the current room
             socket.emit('leaveRoom', joinedRoomId, ({ success }) => {
                 if (success) {
@@ -72,7 +72,7 @@ export const ChatWindow = () => {
                                 setJoinedRoomId(selectedRoom._id);
                                 setSelectedRoomId(null);
                             } else {
-                                if (!!data?.ban)
+                                if (data?.ban)
                                     setDialogData({
                                         type: 'ban',
                                         ...data.ban
@@ -94,7 +94,7 @@ export const ChatWindow = () => {
                     setJoinedRoomId(selectedRoom._id);
                     setSelectedRoomId(null);
                 } else {
-                    if (!!data?.ban)
+                    if (data?.ban)
                         setDialogData({
                             type: 'ban',
                             ...data.ban

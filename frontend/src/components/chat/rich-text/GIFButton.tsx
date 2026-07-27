@@ -55,9 +55,9 @@ export const GIFButton: FC<GIFButtonProps> = ({ disabled }) => {
         return;
 
     const handleSendGIF = (link: string) => {
-        if (!!dmRoomId)
+        if (dmRoomId)
             socket.emit('sendMessage', true, dmRoomId, link, ({ success }) => setIsOpen(!success))
-        else if (!!joinedRoomId)
+        else if (joinedRoomId)
             socket.emit('sendMessage', false, joinedRoomId, link, ({ success }) => setIsOpen(!success))
     }
 

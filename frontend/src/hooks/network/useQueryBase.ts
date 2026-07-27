@@ -22,10 +22,10 @@ export const useQueryBase = <ResponseType = unknown>(
     return <ResponseTypeOverride = ResponseType>({ queryKey, pathParams, queryParams, enabled = true }: QueryBaseParams) => {
         let URL = endpoint.URL;
 
-        if (!!pathParams)
+        if (pathParams)
             URL = injectPathParams(URL, pathParams);
 
-        if (!!queryParams)
+        if (queryParams)
             URL = injectQueryParams(URL, queryParams);
 
         return useQuery({

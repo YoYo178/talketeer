@@ -58,8 +58,8 @@ export const ChatComposer = () => {
     const { joinedRoomId, dmRoomId, typingUsers } = useRoomsStore();
     const [message, setMessage] = useState('');
 
-    const dmTypingUsers = !!dmRoomId ? typingUsers.filter(usr => usr.roomType === 'dm' && usr.roomId === dmRoomId) : [];
-    const roomTypingUsers = !!joinedRoomId ? typingUsers.filter(usr => usr.roomType === 'normal' && usr.roomId === joinedRoomId) : [];
+    const dmTypingUsers = dmRoomId ? typingUsers.filter(usr => usr.roomType === 'dm' && usr.roomId === dmRoomId) : [];
+    const roomTypingUsers = joinedRoomId ? typingUsers.filter(usr => usr.roomType === 'normal' && usr.roomId === joinedRoomId) : [];
 
     const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const inputElement = useRef<HTMLTextAreaElement>(null);
@@ -78,7 +78,7 @@ export const ChatComposer = () => {
     })
 
     const dmRoom = data?.data?.room;
-    const canSendMessage = !!dmRoomId ? (dmRoom && dmRoom.isActive) : true;
+    const canSendMessage = dmRoomId ? (dmRoom && dmRoom.isActive) : true;
 
     // Autofocus chat on visiblity change
     useEffect(() => {
@@ -101,7 +101,7 @@ export const ChatComposer = () => {
 
         setMessage(e.target.value);
 
-        if (!!dmRoomId) {
+        if (dmRoomId) {
             if (!e.target.value.length) {
                 if (typingTimer.current)
                     clearTimeout(typingTimer.current);
@@ -123,7 +123,7 @@ export const ChatComposer = () => {
                 socket.emit('stopDmTyping', me._id, dmRoomId)
                 typingTimer.current = null;
             }, 3000);
-        } else if (!!joinedRoomId) {
+        } else if (joinedRoomId) {
             if (!e.target.value.length) {
                 if (typingTimer.current)
                     clearTimeout(typingTimer.current);
@@ -152,12 +152,12 @@ export const ChatComposer = () => {
         if (!me)
             return;
 
-        if (!!dmRoomId) {
+        if (dmRoomId) {
             socket.emit('sendMessage', true, dmRoomId, message, ({ success }) => {
                 if (success)
                     setMessage('');
             })
-        } else if (!!joinedRoomId) {
+        } else if (joinedRoomId) {
             socket.emit('sendMessage', false, joinedRoomId, message, ({ success }) => {
                 if (success)
                     setMessage('');
@@ -168,9 +168,9 @@ export const ChatComposer = () => {
             clearTimeout(typingTimer.current);
             typingTimer.current = null;
 
-            if (!!dmRoomId)
+            if (dmRoomId)
                 socket.emit('stopDmTyping', me._id, dmRoomId);
-            else if (!!joinedRoomId)
+            else if (joinedRoomId)
                 socket.emit('stopTyping', me._id, joinedRoomId);
         }
     }
@@ -192,7 +192,7 @@ export const ChatComposer = () => {
     return (
         <form onSubmit={handleSubmit} className='p-3 pt-2 flex items-center gap-3'>
             <div className="w-full flex flex-col gap-2">
-                {!!dmRoomId ? buildTypingString(dmTypingUsers) : buildTypingString(roomTypingUsers)}
+                {dmRoomId ? buildTypingString(dmTypingUsers) : buildTypingString(roomTypingUsers)}
                 <div className="flex w-full gap-2">
                     <AttachFileButton disabled={!canSendMessage} />
                     <Textarea

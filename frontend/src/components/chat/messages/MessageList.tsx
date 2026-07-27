@@ -56,7 +56,7 @@ export const MessageList = () => {
         enabled: !!dmRoomId
     })
 
-    const pages = (!!dmRoomId ? dmMessagesQuery.data?.pages : messagesQuery.data?.pages) || [];
+    const pages = (dmRoomId ? dmMessagesQuery.data?.pages : messagesQuery.data?.pages) || [];
 
     const messagePages = useMemo(
         () => [...pages].reverse(),
@@ -68,10 +68,10 @@ export const MessageList = () => {
 
         isAtBottom.current = element.scrollHeight - element.scrollTop - element.clientHeight < 50;
 
-        if (element.scrollTop === 0 && (!!dmRoomId ? dmMessagesQuery.hasNextPage : messagesQuery.hasNextPage)) {
+        if (element.scrollTop === 0 && (dmRoomId ? dmMessagesQuery.hasNextPage : messagesQuery.hasNextPage)) {
             const prevHeight = element.scrollHeight;
 
-            (!!dmRoomId ? dmMessagesQuery.fetchNextPage?.() : messagesQuery.fetchNextPage?.()).then(() => {
+            (dmRoomId ? dmMessagesQuery.fetchNextPage() : messagesQuery.fetchNextPage()).then(() => {
                 requestAnimationFrame(() => {
                     const newHeight = element.scrollHeight;
                     element.scrollTop = newHeight - prevHeight;
@@ -134,11 +134,11 @@ export const MessageList = () => {
     if (!messageElements.length) {
         return (
             <div className='flex-1 flex items-center justify-center overflow-hidden m-6'>
-                {(!!dmRoomId ? dmMessagesQuery.isLoading : messagesQuery.isLoading) ? (
+                {(dmRoomId ? dmMessagesQuery.isLoading : messagesQuery.isLoading) ? (
                     <MessageListSkeleton />
                 ) : (
                     <div className='text-center'>
-                        <p className='text-base text-muted-foreground md:text-xl'>{!!dmRoomId ? 'This conversation is currently empty.' : 'This room currently has no messages.'}</p>
+                        <p className='text-base text-muted-foreground md:text-xl'>{dmRoomId ? 'This conversation is currently empty.' : 'This room currently has no messages.'}</p>
                         <p className='text-sm text-muted-foreground md:text-base'>Send a message to get started!</p>
                     </div>
                 )}
@@ -149,11 +149,11 @@ export const MessageList = () => {
     return (
         <ScrollArea className='flex flex-col flex-1 p-4 pt-0 pb-0 overflow-y-auto overflow-x-hidden' onScroll={handleScroll}>
             <div className="flex flex-col">
-                {messageElements.length > 0 && (!!dmRoomId ? !dmMessagesQuery.hasNextPage : !messagesQuery.hasNextPage) && (
+                {messageElements.length > 0 && (dmRoomId ? !dmMessagesQuery.hasNextPage : !messagesQuery.hasNextPage) && (
                     <div className="flex items-center my-2">
                         <Separator className='flex-1' />
                         <span className="mx-2 bg-transparent text-center px-2 dark:text-muted-foreground text-sm md:text-base">
-                            {!!dmRoomId ? `This is the beginning of your conversation with @${friendUser?.username}` : 'You\'ve reached the end of this chatroom!'}
+                            {dmRoomId ? `This is the beginning of your conversation with @${friendUser?.username}` : 'You\'ve reached the end of this chatroom!'}
                         </span>
                         <Separator className='flex-1' />
                     </div>
