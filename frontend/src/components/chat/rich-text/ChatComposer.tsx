@@ -61,7 +61,7 @@ export const ChatComposer = () => {
     const dmTypingUsers = !!dmRoomId ? typingUsers.filter(usr => usr.roomType === 'dm' && usr.roomId === dmRoomId) : [];
     const roomTypingUsers = !!joinedRoomId ? typingUsers.filter(usr => usr.roomType === 'normal' && usr.roomId === joinedRoomId) : [];
 
-    const typingTimer = useRef<NodeJS.Timeout>(null);
+    const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const inputElement = useRef<HTMLTextAreaElement>(null);
 
     const focusChat = () => {
